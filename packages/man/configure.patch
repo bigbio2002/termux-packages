@@ -7,7 +7,7 @@
 -MANPATH_BASE="/usr/share/man:/usr/X11R6/man"
 -MANPATH_DEFAULT="/usr/share/man:/usr/X11R6/man:/usr/local/man"
 +MANPATH_BASE="@TERMUX_PREFIX@/share/man"
-+MANPATH_DEFAULT="@TERMUX_PREFIX@/share/man"
++MANPATH_DEFAULT="@TERMUX_PREFIX@/share/man:@TERMUX_PREFIX@/local/share/man"
  OSENUM=
  OSNAME=
  UTF8_LOCALE=

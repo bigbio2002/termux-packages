@@ -33,7 +33,7 @@
  .Xr man.conf 5
  file, or with
 -.Pa /usr/share/man : Ns Pa /usr/X11R6/man : Ns Pa /usr/local/man
-+.Pa @TERMUX_PREFIX@/share/man
++.Pa @TERMUX_PREFIX@/share/man : Ns Pa @TERMUX_PREFIX@/local/share/man
  by default.
  Within each of these, directories are searched in the order provided.
  Within each directory, the search proceeds according to the following
@@ -59,7 +59,7 @@
  .El
  .Sh EXAMPLES
  The following configuration file reproduces the defaults:
-@@ -112,9 +112,7 @@
+@@ -112,9 +112,8 @@
  .Nm
  file at all.
  .Bd -literal -offset indent
@@ -67,6 +67,7 @@
 -manpath /usr/X11R6/man
 -manpath /usr/local/man
 +manpath @TERMUX_PREFIX@/share/man
++manpath @TERMUX_PREFIX@/local/share/man
  .Ed
  .Sh SEE ALSO
  .Xr apropos 1 ,
@@ -86,13 +87,13 @@
  .Xr man.conf 5
  file and falling back to the default of
 -.Pa /usr/share/man : Ns Pa /usr/X11R6/man : Ns Pa /usr/local/man ,
-+.Pa @TERMUX_PREFIX@/share/man ,
++.Pa @TERMUX_PREFIX@/share/man : Ns Pa @TERMUX_PREFIX@/local/share/man ,
  also configurable at compile time using the
  .Dv MANPATH_DEFAULT
  preprocessor macro.
 --- a/mandoc.db.5
 +++ b/mandoc.db.5
-@@ -186,16 +186,9 @@
+@@ -186,14 +186,10 @@
  followed by the number 0.
  .El
  .Sh FILES
@@ -106,8 +107,7 @@
 -.Xr X 7
 -Window System.
 -.It Pa /usr/local/man/mandoc.db
--The same for
--.Xr packages 7 .
++.It Pa @TERMUX_PREFIX@/local/share/man/mandoc.db
+ The same for
+ .Xr packages 7 .
  .El
- .Pp
- A program to dump
