@@ -1,0 +1,41 @@
+diff -Naur libidn2-2.3.4/lib/idn2.map libidn2-2.3.4-new/lib/idn2.map
+--- libidn2-2.3.4/lib/idn2.map	2022-07-11 15:39:17.000000000 -0400
++++ libidn2-2.3.4-new/lib/idn2.map	2023-11-26 16:57:30.758132411 -0500
+@@ -24,7 +24,6 @@
+     idn2_register_u8;
+ 
+     idn2_lookup_ul;
+-    idn2_decode_ul;
+     idn2_register_ul;
+ 
+     idn2_to_ascii_4i;
+diff -Naur libidn2-2.3.4/lib/Makefile.am libidn2-2.3.4-new/lib/Makefile.am
+--- libidn2-2.3.4/lib/Makefile.am	2022-10-22 05:50:02.000000000 -0400
++++ libidn2-2.3.4-new/lib/Makefile.am	2023-11-20 15:20:17.151613608 -0500
+@@ -103,7 +103,7 @@
+ if HAVE_LD_VERSION_SCRIPT
+ libidn2_la_LDFLAGS += -Wl,--version-script=$(srcdir)/idn2.map
+ else
+-libidn2_la_LDFLAGS += -export-symbols-regex '^idn2_.*'
++libidn2_la_LDFLAGS += -export-symbols-regex '^idn2_.*|_idn2_punycode_..code'
+ endif
+ 
+ if HAVE_LD_OUTPUT_DEF
+diff -Naur libidn2-2.3.4/lib/punycode.h libidn2-2.3.4-new/lib/punycode.h
+--- libidn2-2.3.4/lib/punycode.h	2022-10-17 08:28:31.000000000 -0400
++++ libidn2-2.3.4-new/lib/punycode.h	2023-11-20 15:06:02.529281980 -0500
+@@ -32,12 +32,12 @@
+ # include <stddef.h>
+ # include <stdint.h>
+ 
+-extern int
++extern _IDN2_API int
+ _idn2_punycode_encode_internal (size_t input_length,
+ 				const uint32_t input[],
+ 				size_t *output_length, char output[]);
+ 
+-extern int
++extern _IDN2_API int
+ _idn2_punycode_decode_internal (size_t input_length,
+ 				const char input[],
+ 				size_t *output_length, uint32_t output[]);
