@@ -1,22 +1,35 @@
 TERMUX_PKG_HOMEPAGE=https://gcc.gnu.org/
 TERMUX_PKG_DESCRIPTION="GNU C compiler"
-TERMUX_PKG_DEPENDS="binutils, libgmp, libmpfr, libmpc, ndk-sysroot, libisl"
+TERMUX_PKG_DEPENDS="binutils-2.25, libgmp, libmpfr, libmpc, ndk-sysroot, libisl"
 TERMUX_PKG_VERSION=4.9.2
 TERMUX_PKG_BUILD_REVISION=1
 TERMUX_PKG_SRCURL=https://ftp.gnu.org/gnu/gcc/gcc-${TERMUX_PKG_VERSION}/gcc-${TERMUX_PKG_VERSION}.tar.bz2
 TERMUX_PKG_SHA256=2020c98295856aa13fda0f2f3a4794490757fc24bcca918d52cc8b4917b972dd
-TERMUX_PKG_EXTRA_CONFIGURE_ARGS="--enable-languages=c,c++ --with-system-zlib --disable-multilib --disable-lto"
+
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS="--enable-languages=c,c++ --with-system-zlib --disable-multilib --disable-lto --disable-nls"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --target=$TERMUX_HOST_PLATFORM"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-gmp=$TERMUX_PREFIX --with-mpfr=$TERMUX_PREFIX --with-mpc=$TERMUX_PREFIX"
 # To build gcc as a PIE binary:
-TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-isl-include=$TERMUX_PREFIX/include --with-isl-lib=$TERMUX_PREFIX/lib"
+#TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-isl-include=$TERMUX_PREFIX/include --with-isl-lib=$TERMUX_PREFIX/lib"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-isl=$TERMUX_PREFIX"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --disable-isl-version-check"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-stage1-ldflags=\"-specs=$TERMUX_SCRIPTDIR/termux.spec\""
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --disable-tls"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --enable-host-shared"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --enable-default-pie"
 
-TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" CFLAGS=\"-O2 -std=c99\" CXXFLAGS=\"-O2 -std=c++98 -fbracket-depth=384\""
+# my additions
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --enable-link-mutex --with-sysroot=$TERMUX_PREFIX/.."
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-cpp-install-dir=lib --with-local-prefix=$TERMUX_PREFIX/local"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --enable-version-specific-runtime-libs --program-suffix=-4.9"
+
+# TODO
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-build-time-tools=$TERMUX_PREFIX/bin"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" CPPFLAGS=-I$TERMUX_PREFIX/include/aarch64-linux-android"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-native-system-header-dir=/usr/include/aarch64-linux-android"
+
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" CC=clang CFLAGS=\"-O2 -std=c99\""
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" CXX=clang++ CXXFLAGS=\"-O2 -std=c++11 -fbracket-depth=1024\""
 
 if [ "$TERMUX_ARCH" = "arm" ]; then
         TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-arch=armv7-a --with-fpu=neon --with-float=softfp"
@@ -26,7 +39,7 @@ elif [ "$TERMUX_ARCH" = "i686" ]; then
         # -mstackrealign -msse3 -m32
         TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-arch=i686 --with-tune=atom --with-fpmath=sse"
 fi
-TERMUX_PKG_RM_AFTER_INSTALL="bin/gcc-ar bin/gcc-ranlib bin/*c++ bin/gcc-nm lib/gcc/*-linux-*/${TERMUX_PKG_VERSION}/plugin lib/gcc/*-linux-*/${TERMUX_PKG_VERSION}/include-fixed lib/gcc/*-linux-*/$TERMUX_PKG_VERSION/install-tools libexec/gcc/*-linux-*/${TERMUX_PKG_VERSION}/plugin libexec/gcc/*-linux-*/${TERMUX_PKG_VERSION}/install-tools share/man/man7"
+TERMUX_PKG_RM_AFTER_INSTALL="bin/gcc-ar bin/gcc-ranlib bin/*c++ bin/gcc-nm lib/gcc/*-linux-*/${TERMUX_PKG_VERSION}/plugin lib/gcc/*-linux-*/${TERMUX_PKG_VERSION}/include-fixed lib/gcc/*-linux-*/${TERMUX_PKG_VERSION}/install-tools libexec/gcc/*-linux-*/${TERMUX_PKG_VERSION}/plugin libexec/gcc/*-linux-*/${TERMUX_PKG_VERSION}/install-tools share/man/man7"
 
 export AR_FOR_TARGET="${AR-}"
 export AS_FOR_TARGET="${AS-}"
