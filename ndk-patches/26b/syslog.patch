@@ -1,9 +1,9 @@
 diff -uNr sysroot.orig/usr/include/syslog.h sysroot/usr/include/syslog.h
 --- sysroot.orig/usr/include/syslog.h	2019-02-12 16:12:24.000000000 +0000
 +++ sysroot/usr/include/syslog.h	2019-03-20 13:19:44.315965728 +0000
-@@ -158,4 +158,22 @@
+@@ -163,4 +163,22 @@
   */
- void vsyslog(int __priority, const char* __fmt, va_list __args) __printflike(2, 0);
+ void vsyslog(int __priority, const char* _Nonnull __fmt, va_list __args) __printflike(2, 0);
  
 +static __inline__ void android_polyfill_syslog_r(int syslog_priority, void* d, const char* format, ...)
 +{
