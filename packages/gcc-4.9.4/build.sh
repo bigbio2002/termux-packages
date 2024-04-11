@@ -1,6 +1,6 @@
 TERMUX_PKG_HOMEPAGE=https://gcc.gnu.org/
 TERMUX_PKG_DESCRIPTION="GNU C compiler"
-TERMUX_PKG_DEPENDS="binutils-2.25, libgmp, libmpfr, libmpc, ndk-sysroot, libisl"
+TERMUX_PKG_DEPENDS="binutils, libgmp, libmpfr, libmpc, ndk-sysroot, libisl"
 TERMUX_PKG_VERSION=4.9.4
 TERMUX_PKG_BUILD_REVISION=1
 TERMUX_PKG_SRCURL=https://ftp.gnu.org/gnu/gcc/gcc-${TERMUX_PKG_VERSION}/gcc-${TERMUX_PKG_VERSION}.tar.bz2
