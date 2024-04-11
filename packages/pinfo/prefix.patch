@@ -1,0 +1,11 @@
+--- a/src/datatypes.c
++++ b/src/datatypes.c
+@@ -29,7 +29,7 @@
+ char *maileditor = "mail";
+ char *printutility = "lpr";
+ char *manlinks = "1:8:2:3:4:5:6:7:9:n:l:p:o:3X11:3Xt:3X:3x";
+-char *configuredinfopath = ".:/usr/share/info:/usr/info:/usr/local/share/info:/usr/local/info:/opt/info";
++char *configuredinfopath = ".:@TERMUX_PREFIX@/share/info:@TERMUX_PREFIX@/local/share/info";
+ char *ignoredmacros = 0;
+ char *rcfile = NULL;
+ 

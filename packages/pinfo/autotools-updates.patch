@@ -1,0 +1,198 @@
+--- a/macros/gettext.m4~	2024-04-04 18:59:19.636473187 -0400
++++ b/macros/gettext.m4	2024-04-04 23:07:53.517576945 -0400
+@@ -128,20 +128,17 @@
+         define([gt_cv_func_gnugettext_libintl], [gt_cv_func_gnugettext]gt_api_version[_libintl])
+ 
+         AC_CACHE_CHECK([for GNU gettext in libc], gt_cv_func_gnugettext_libc,
+-         [AC_TRY_LINK([#include <libintl.h>
+-]ifelse([$2], [need-formatstring-macros],
+-[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
++         [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <libintl.h>
++ifelse($2, need-formatstring-macros,
++#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+ #define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
+ #endif
+ changequote(,)dnl
+ typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
+ changequote([,])dnl
+-], [])[extern int _nl_msg_cat_cntr;
+-extern int *_nl_domain_bindings;],
+-            [bindtextdomain ("", "");
+-return * gettext ("")]ifelse([$2], [need-ngettext], [ + * ngettext ("", "", 0)], [])[ + _nl_msg_cat_cntr + *_nl_domain_bindings],
+-            gt_cv_func_gnugettext_libc=yes,
+-            gt_cv_func_gnugettext_libc=no)])
++, )extern int _nl_msg_cat_cntr;
++extern int *_nl_domain_bindings;]], [[bindtextdomain ("", "");
++return * gettext ("")ifelse($2, need-ngettext,  + * ngettext ("", "", 0), ) + _nl_msg_cat_cntr + *_nl_domain_bindings]])],[gt_cv_func_gnugettext_libc=yes],[gt_cv_func_gnugettext_libc=no])])
+ 
+         if test "$gt_cv_func_gnugettext_libc" != "yes"; then
+           dnl Sometimes libintl requires libiconv, so first search for libiconv.
+@@ -160,47 +157,42 @@
+             gt_save_LIBS="$LIBS"
+             LIBS="$LIBS $LIBINTL"
+             dnl Now see whether libintl exists and does not depend on libiconv.
+-            AC_TRY_LINK([#include <libintl.h>
+-]ifelse([$2], [need-formatstring-macros],
+-[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
++            AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <libintl.h>
++ifelse($2, need-formatstring-macros,
++#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+ #define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
+ #endif
+ changequote(,)dnl
+ typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
+ changequote([,])dnl
+-], [])[extern int _nl_msg_cat_cntr;
++, )extern int _nl_msg_cat_cntr;
+ extern
+ #ifdef __cplusplus
+ "C"
+ #endif
+-const char *_nl_expand_alias (const char *);],
+-              [bindtextdomain ("", "");
+-return * gettext ("")]ifelse([$2], [need-ngettext], [ + * ngettext ("", "", 0)], [])[ + _nl_msg_cat_cntr + *_nl_expand_alias ("")],
+-              gt_cv_func_gnugettext_libintl=yes,
+-              gt_cv_func_gnugettext_libintl=no)
++const char *_nl_expand_alias (const char *);]], [[bindtextdomain ("", "");
++return * gettext ("")ifelse($2, need-ngettext,  + * ngettext ("", "", 0), ) + _nl_msg_cat_cntr + *_nl_expand_alias ("")]])],[gt_cv_func_gnugettext_libintl=yes],[gt_cv_func_gnugettext_libintl=no])
+             dnl Now see whether libintl exists and depends on libiconv.
+             if test "$gt_cv_func_gnugettext_libintl" != yes && test -n "$LIBICONV"; then
+               LIBS="$LIBS $LIBICONV"
+-              AC_TRY_LINK([#include <libintl.h>
+-]ifelse([$2], [need-formatstring-macros],
+-[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
++              AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <libintl.h>
++ifelse($2, need-formatstring-macros,
++#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+ #define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
+ #endif
+ changequote(,)dnl
+ typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
+ changequote([,])dnl
+-], [])[extern int _nl_msg_cat_cntr;
++, )extern int _nl_msg_cat_cntr;
+ extern
+ #ifdef __cplusplus
+ "C"
+ #endif
+-const char *_nl_expand_alias (const char *);],
+-                [bindtextdomain ("", "");
+-return * gettext ("")]ifelse([$2], [need-ngettext], [ + * ngettext ("", "", 0)], [])[ + _nl_msg_cat_cntr + *_nl_expand_alias ("")],
+-               [LIBINTL="$LIBINTL $LIBICONV"
++const char *_nl_expand_alias (const char *);]], [[bindtextdomain ("", "");
++return * gettext ("")ifelse($2, need-ngettext,  + * ngettext ("", "", 0), ) + _nl_msg_cat_cntr + *_nl_expand_alias ("")]])],[LIBINTL="$LIBINTL $LIBICONV"
+                 LTLIBINTL="$LTLIBINTL $LTLIBICONV"
+                 gt_cv_func_gnugettext_libintl=yes
+-               ])
++               ],[])
+             fi
+             CPPFLAGS="$gt_save_CPPFLAGS"
+             LIBS="$gt_save_LIBS"])
+@@ -364,8 +356,7 @@
+   AC_REQUIRE([AC_CANONICAL_HOST])dnl
+   AC_REQUIRE([gt_GLIBC2])dnl
+   AC_REQUIRE([AC_PROG_RANLIB])dnl
+-  AC_REQUIRE([AC_ISC_POSIX])dnl
+-  AC_REQUIRE([AC_HEADER_STDC])dnl
++  AC_REQUIRE([AC_SEARCH_LIBS([strerror],[cposix])])dnl
+   AC_REQUIRE([AC_C_CONST])dnl
+   AC_REQUIRE([bh_C_SIGNED])dnl
+   AC_REQUIRE([AC_C_INLINE])dnl
+@@ -492,10 +483,7 @@
+      CPPFLAGS="$CPPFLAGS -I/System/Library/Frameworks/CoreFoundation.framework/Headers"
+      gt_save_LIBS="$LIBS"
+      LIBS="$LIBS -framework CoreFoundation"
+-     AC_TRY_LINK([#include <CFPreferences.h>],
+-       [CFPreferencesCopyAppValue(NULL, NULL)],
+-       [gt_cv_func_CFPreferencesCopyAppValue=yes],
+-       [gt_cv_func_CFPreferencesCopyAppValue=no])
++     AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <CFPreferences.h>]], [[CFPreferencesCopyAppValue(NULL, NULL)]])],[gt_cv_func_CFPreferencesCopyAppValue=yes],[gt_cv_func_CFPreferencesCopyAppValue=no])
+      CPPFLAGS="$gt_save_CPPFLAGS"
+      LIBS="$gt_save_LIBS"])
+   if test $gt_cv_func_CFPreferencesCopyAppValue = yes; then
+@@ -508,9 +496,7 @@
+      CPPFLAGS="$CPPFLAGS -I/System/Library/Frameworks/CoreFoundation.framework/Headers"
+      gt_save_LIBS="$LIBS"
+      LIBS="$LIBS -framework CoreFoundation"
+-     AC_TRY_LINK([#include <CFLocale.h>], [CFLocaleCopyCurrent();],
+-       [gt_cv_func_CFLocaleCopyCurrent=yes],
+-       [gt_cv_func_CFLocaleCopyCurrent=no])
++     AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <CFLocale.h>]], [[CFLocaleCopyCurrent();]])],[gt_cv_func_CFLocaleCopyCurrent=yes],[gt_cv_func_CFLocaleCopyCurrent=no])
+      CPPFLAGS="$gt_save_CPPFLAGS"
+      LIBS="$gt_save_LIBS"])
+   if test $gt_cv_func_CFLocaleCopyCurrent = yes; then
+@@ -530,11 +516,11 @@
+ AC_DEFUN([gt_CHECK_DECL],
+ [
+   AC_CACHE_CHECK([whether $1 is declared], ac_cv_have_decl_$1,
+-    [AC_TRY_COMPILE([$2], [
++    [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[$2]], [[
+ #ifndef $1
+   char *p = (char *) $1;
+ #endif
+-], ac_cv_have_decl_$1=yes, ac_cv_have_decl_$1=no)])
++]])],[ac_cv_have_decl_$1=yes],[ac_cv_have_decl_$1=no])])
+   if test $ac_cv_have_decl_$1 = yes; then
+     gt_value=1
+   else
+--- a/configure.orig.ac	2024-04-04 18:37:53.289678375 -0400
++++ b/configure.ac	2024-04-04 19:01:47.239821225 -0400
+@@ -52,7 +52,6 @@
+ ####################################################
+ # find C compiler
+ AC_PROG_CC
+-AC_PROG_CC_C99
+ 
+ # set correct LIBS for (almost obsolete) INTERACTIVE UNIX
+ AC_SEARCH_LIBS([strerror],[cposix])
+@@ -119,7 +118,7 @@
+ 
+ # curses
+ AX_WITH_CURSES
+-if test "x$ax_cv_curses" != xyes; then
++if test "x$ax_cv_curses" != "xyes"; then
+ 	AC_MSG_ERROR([requires a (n)curses library])
+ fi
+ # check for some functions in curses
+@@ -164,7 +163,7 @@
+ 
+ # Specify locale stuff destination
+ AC_ARG_WITH(localedir,
+-	[  --with-localedir=PATH      specify where the locale stuff should go ])
++	[AS_HELP_STRING([--with-localedir=PATH], [specify where the locale stuff should go])])
+ if test "x$LOCALEDIR" = "x"; then
+ 	if test "x$with_localedir" != "x"; then
+ 		LOCALEDIR=$with_localedir
+@@ -181,9 +180,9 @@
+ # do you want to see cursor when working with pinfo?
+ ## TODO: this should really be a command line/config file option
+ AC_ARG_ENABLE(showcursor,
+-	[  --enable-cursor         enable cursor when working with pinfo [default=no]], , )
++	[AS_HELP_STRING([--enable-showcursor], [enable cursor when working with pinfo [default=no]])], , )
+ if test "x$enable_showcursor" != "xyes" ; then
+-	AC_DEFINE(HIDECURSOR,FALSE,[don't show cursor]) #'
++	AC_DEFINE(HIDECURSOR,FALSE,[show cursor])
+ else
+ 	AC_DEFINE(HIDECURSOR,TRUE,[don't show cursor]) #'
+ fi
+@@ -193,7 +192,7 @@
+ # should save few instructions to CPU ;)
+ ## TODO: do we still need this with current computing powers?
+ AC_ARG_ENABLE(use_static,
+-	[  --disable-static        enable using static buffers ], ,
++	[AS_HELP_STRING([--disable-use-static], [enable using static buffers])], ,
+ 	enable_use_static=yes)
+ if test "x$enable_use_static" = "xyes" ; then
+ 	AC_DEFINE(___USE_STATIC___, 1, [don't use dynamic buffer]) #'
+@@ -202,9 +201,9 @@
+ # do you want to use regexp searches?
+ ## TODO: this should really be a command line/config file option
+ AC_ARG_WITH(regexp_search,
+-	[  --with-regexp-search    use regular expression search [default=yes]])
++	[AS_HELP_STRING([--with-regexp-search], [use regular expression search [default=yes]])])
+ if test "x$with_regexp_search" = "xno"; then
+-        AC_DEFINE(___DONT_USE_REGEXP_SEARCH___,1,
++        AC_DEFINE(___DONT_USE_REGEXP_SEARCH___, 1,
+ 			[Don't use regexp search engine]) #'
+ fi
+ 

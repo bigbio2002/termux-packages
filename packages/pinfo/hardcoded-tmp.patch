@@ -1,0 +1,11 @@
+--- a/src/utils.c
++++ b/src/utils.c
+@@ -851,7 +851,7 @@
+ 	size_t len;
+ 
+ 	/* TODO: fix hardcoded /tmp */
+-	char tmpfile_template[] = "/tmp/pinfo.XXXXXX";
++	char tmpfile_template[] = "@TERMUX_PREFIX@/tmp/pinfo.XXXXXX";
+ 
+ 	/* create a tmpfile */
+ 	int fd = mkstemp(tmpfile_template);
