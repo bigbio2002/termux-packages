@@ -14,7 +14,7 @@
 --disable-isl-version-check
 --with-stage1-ldflags="-L/data/data/com.termux/files/usr/aarch64-linux/android/lib -specs=/data/data/com.termux/files/home/sources/termux-packages/scripts/termux.spec"
 --disable-tls
---enable-host-shared
+#--enable-host-shared
 --enable-default-pie
 
 CC=clang
@@ -31,8 +31,9 @@ CXXFLAGS="-O2 -std=gnu++11"
 --with-cpp-install-dir=lib
 --with-local-prefix=/data/data/com.termux/files/usr/local
 --enable-version-specific-runtime-libs
---program-suffix=-4.9
 --enable-__cxa_atexit
+--enable-gnu-indirect-function
+--program-suffix=-4.9
 
 # todo
 CPPFLAGS_FOR_TARGET=-I/data/data/com.termux/files/usr/include/aarch64-linux-android
