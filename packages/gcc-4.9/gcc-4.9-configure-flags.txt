@@ -20,7 +20,8 @@
 CC=clang
 CFLAGS="-O2 -std=c99"
 CXX=clang++
-CXXFLAGS="-O2 -std=c++11 -fbracket-depth=1024"
+CXXFLAGS_FOR_BUILD="-O2 -std=c++11 -fbracket-depth=1024"
+CXXFLAGS="-O2 -std=gnu++11"
 --with-arch=armv8-a
 
 # my
@@ -31,10 +32,11 @@ CXXFLAGS="-O2 -std=c++11 -fbracket-depth=1024"
 --with-local-prefix=/data/data/com.termux/files/usr/local
 --enable-version-specific-runtime-libs
 --program-suffix=-4.9
+--enable-__cxa_atexit
 
 # todo
 CPPFLAGS_FOR_TARGET=-I/data/data/com.termux/files/usr/include/aarch64-linux-android
---with-build-time-tools=/data/data/com.termux/files/usr/local/aarch64-linux-android/local/bin
+--with-build-time-tools=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin
 --with-native-system-header-dir=/usr/include
 
 # unneeded/old

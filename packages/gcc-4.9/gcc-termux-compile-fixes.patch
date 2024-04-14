@@ -1,6 +1,6 @@
 diff -Naur gcc-4.9.2/gcc/bitmap.c gcc-4.9.2_curr/gcc/bitmap.c
---- gcc-4.9.2/gcc/bitmap.c	2014-01-02 17:23:26.000000000 -0500
-+++ gcc-4.9.2_curr/gcc/bitmap.c	2024-03-04 05:45:22.294576439 -0500
+--- ../gcc-4.9.2/gcc/bitmap.c	2014-01-02 17:23:26.000000000 -0500
++++ ./gcc/bitmap.c	2024-03-04 05:45:22.294576439 -0500
 @@ -2166,9 +2166,9 @@
        s[41] = 0;
        fprintf (stderr,
@@ -24,8 +24,8 @@ diff -Naur gcc-4.9.2/gcc/bitmap.c gcc-4.9.2_curr/gcc/bitmap.c
    fprintf (stderr, "---------------------------------------------------------------------------------\n");
  }
 diff -Naur gcc-4.9.2/gcc/cgraph.c gcc-4.9.2_curr/gcc/cgraph.c
---- gcc-4.9.2/gcc/cgraph.c	2014-06-20 05:57:53.000000000 -0400
-+++ gcc-4.9.2_curr/gcc/cgraph.c	2024-03-04 05:47:30.074589168 -0500
+--- ../gcc-4.9.2/gcc/cgraph.c	2014-06-20 05:57:53.000000000 -0400
++++ ./gcc/cgraph.c	2024-03-04 05:47:30.074589168 -0500
 @@ -1976,7 +1976,7 @@
    fprintf (f, "  First run: %i\n", node->tp_first_run);
    fprintf (f, "  Function flags:");
@@ -54,8 +54,8 @@ diff -Naur gcc-4.9.2/gcc/cgraph.c gcc-4.9.2_curr/gcc/cgraph.c
        if (edge->frequency)
  	fprintf (f, "(%.2f per call) ",
 diff -Naur gcc-4.9.2/gcc/config/elfos.h gcc-4.9.2_curr/gcc/config/elfos.h
---- gcc-4.9.2/gcc/config/elfos.h	2014-04-07 09:27:39.000000000 -0400
-+++ gcc-4.9.2_curr/gcc/config/elfos.h	2024-03-04 14:03:45.878152314 -0500
+--- ../gcc-4.9.2/gcc/config/elfos.h	2014-04-07 09:27:39.000000000 -0400
++++ ./gcc/config/elfos.h	2024-03-04 14:03:45.878152314 -0500
 @@ -99,7 +99,7 @@
  
  #undef  ASM_OUTPUT_SKIP
@@ -75,8 +75,8 @@ diff -Naur gcc-4.9.2/gcc/config/elfos.h gcc-4.9.2_curr/gcc/config/elfos.h
      }									\
    while (0)
 diff -Naur gcc-4.9.2/gcc/cp/cfns.h gcc-4.9.2_curr/gcc/cp/cfns.h
---- gcc-4.9.2/gcc/cp/cfns.h	2014-01-02 17:23:26.000000000 -0500
-+++ gcc-4.9.2_curr/gcc/cp/cfns.h	2024-03-04 15:43:09.182079704 -0500
+--- ../gcc-4.9.2/gcc/cp/cfns.h	2014-01-02 17:23:26.000000000 -0500
++++ ./gcc/cp/cfns.h	2024-03-04 15:43:09.182079704 -0500
 @@ -65,7 +65,7 @@
  #endif
  #endif
@@ -124,8 +124,8 @@ diff -Naur gcc-4.9.2/gcc/cp/cfns.h gcc-4.9.2_curr/gcc/cp/cfns.h
                if (*str == *s && !strcmp (str + 1, s + 1))
                  return s;
 diff -Naur gcc-4.9.2/gcc/cppbuiltin.c gcc-4.9.2_curr/gcc/cppbuiltin.c
---- gcc-4.9.2/gcc/cppbuiltin.c	2014-01-24 18:13:49.000000000 -0500
-+++ gcc-4.9.2_curr/gcc/cppbuiltin.c	2024-03-04 05:48:52.897930752 -0500
+--- ../gcc-4.9.2/gcc/cppbuiltin.c	2014-01-24 18:13:49.000000000 -0500
++++ ./gcc/cppbuiltin.c	2024-03-04 05:48:52.897930752 -0500
 @@ -129,7 +129,7 @@
  define_builtin_macros_for_type_sizes (cpp_reader *pfile)
  {
@@ -136,8 +136,8 @@ diff -Naur gcc-4.9.2/gcc/cppbuiltin.c gcc-4.9.2_curr/gcc/cppbuiltin.c
  
    define_type_sizeof ("__SIZEOF_INT__", integer_type_node);
 diff -Naur gcc-4.9.2/gcc/dwarf2cfi.c gcc-4.9.2_curr/gcc/dwarf2cfi.c
---- gcc-4.9.2/gcc/dwarf2cfi.c	2014-01-02 17:23:26.000000000 -0500
-+++ gcc-4.9.2_curr/gcc/dwarf2cfi.c	2024-03-04 05:50:50.044609088 -0500
+--- ../gcc-4.9.2/gcc/dwarf2cfi.c	2014-01-02 17:23:26.000000000 -0500
++++ ./gcc/dwarf2cfi.c	2024-03-04 05:50:50.044609088 -0500
 @@ -3176,7 +3176,7 @@
      case DW_CFA_offset_extended:
      case DW_CFA_offset_extended_sf:
@@ -173,8 +173,8 @@ diff -Naur gcc-4.9.2/gcc/dwarf2cfi.c gcc-4.9.2_curr/gcc/dwarf2cfi.c
  	}
        break;
 diff -Naur gcc-4.9.2/gcc/dwarf2out.c gcc-4.9.2_curr/gcc/dwarf2out.c
---- gcc-4.9.2/gcc/dwarf2out.c	2014-10-01 16:57:44.000000000 -0400
-+++ gcc-4.9.2_curr/gcc/dwarf2out.c	2024-03-04 05:51:32.824613350 -0500
+--- ../gcc-4.9.2/gcc/dwarf2out.c	2014-10-01 16:57:44.000000000 -0400
++++ ./gcc/dwarf2out.c	2024-03-04 05:51:32.824613350 -0500
 @@ -5324,8 +5324,8 @@
  	  fprintf (outfile, HOST_WIDE_INT_PRINT_UNSIGNED, AT_unsigned (a));
  	  break;
@@ -187,8 +187,8 @@ diff -Naur gcc-4.9.2/gcc/dwarf2out.c gcc-4.9.2_curr/gcc/dwarf2out.c
  		   a->dw_attr_val.v.val_double.low);
  	  break;
 diff -Naur gcc-4.9.2/gcc/gengtype-lex.c gcc-4.9.2_curr/gcc/gengtype-lex.c
---- gcc-4.9.2/gcc/gengtype-lex.c	2014-10-30 04:31:06.000000000 -0400
-+++ gcc-4.9.2_curr/gcc/gengtype-lex.c	2024-03-01 10:22:15.252241570 -0500
+--- ../gcc-4.9.2/gcc/gengtype-lex.c	2014-10-30 04:31:06.000000000 -0400
++++ ./gcc/gengtype-lex.c	2024-03-01 10:22:15.252241570 -0500
 @@ -1406,9 +1406,9 @@
   */
  YY_DECL
@@ -276,8 +276,8 @@ diff -Naur gcc-4.9.2/gcc/gengtype-lex.c gcc-4.9.2_curr/gcc/gengtype-lex.c
  		;
  
 diff -Naur gcc-4.9.2/gcc/ipa-devirt.c gcc-4.9.2_curr/gcc/ipa-devirt.c
---- gcc-4.9.2/gcc/ipa-devirt.c	2014-10-04 22:50:01.000000000 -0400
-+++ gcc-4.9.2_curr/gcc/ipa-devirt.c	2024-03-04 07:11:43.885431243 -0500
+--- ../gcc-4.9.2/gcc/ipa-devirt.c	2014-10-04 22:50:01.000000000 -0400
++++ ./gcc/ipa-devirt.c	2024-03-04 07:11:43.885431243 -0500
 @@ -1634,7 +1634,7 @@
      {
        fprintf (f, "    Contained in type:");
@@ -288,8 +288,8 @@ diff -Naur gcc-4.9.2/gcc/ipa-devirt.c gcc-4.9.2_curr/gcc/ipa-devirt.c
      }
  
 diff -Naur gcc-4.9.2/gcc/ipa-inline.c gcc-4.9.2_curr/gcc/ipa-inline.c
---- gcc-4.9.2/gcc/ipa-inline.c	2014-05-21 01:40:09.000000000 -0400
-+++ gcc-4.9.2_curr/gcc/ipa-inline.c	2024-03-04 07:12:08.282100340 -0500
+--- ../gcc-4.9.2/gcc/ipa-inline.c	2014-05-21 01:40:09.000000000 -0400
++++ ./gcc/ipa-inline.c	2024-03-04 07:12:08.282100340 -0500
 @@ -1727,7 +1727,7 @@
  		   badness,
  		   edge->frequency / (double)CGRAPH_FREQ_BASE);
@@ -300,8 +300,8 @@ diff -Naur gcc-4.9.2/gcc/ipa-inline.c gcc-4.9.2_curr/gcc/ipa-inline.c
  	  if (dump_flags & TDF_DETAILS)
  	    edge_badness (edge, true);
 diff -Naur gcc-4.9.2/gcc/ipa-profile.c gcc-4.9.2_curr/gcc/ipa-profile.c
---- gcc-4.9.2/gcc/ipa-profile.c	2014-01-02 17:23:26.000000000 -0500
-+++ gcc-4.9.2_curr/gcc/ipa-profile.c	2024-03-04 07:13:50.985443905 -0500
+--- ../gcc-4.9.2/gcc/ipa-profile.c	2014-01-02 17:23:26.000000000 -0500
++++ ./gcc/ipa-profile.c	2024-03-04 07:13:50.985443905 -0500
 @@ -163,7 +163,7 @@
      {
        cumulated_time += histogram[i]->count * histogram[i]->time;
@@ -339,8 +339,8 @@ diff -Naur gcc-4.9.2/gcc/ipa-profile.c gcc-4.9.2_curr/gcc/ipa-profile.c
  		   (HOST_WIDEST_INT)threshold,
  		   cumulated_time * 100.0 / overall_time,
 diff -Naur gcc-4.9.2/gcc/ipa-prop.c gcc-4.9.2_curr/gcc/ipa-prop.c
---- gcc-4.9.2/gcc/ipa-prop.c	2014-06-26 10:33:06.000000000 -0400
-+++ gcc-4.9.2_curr/gcc/ipa-prop.c	2024-03-04 07:14:46.688782787 -0500
+--- ../gcc-4.9.2/gcc/ipa-prop.c	2014-06-26 10:33:06.000000000 -0400
++++ ./gcc/ipa-prop.c	2024-03-04 07:14:46.688782787 -0500
 @@ -244,7 +244,7 @@
  	{
  	  fprintf (f, "KNOWN TYPE: base  ");
@@ -360,8 +360,8 @@ diff -Naur gcc-4.9.2/gcc/ipa-prop.c gcc-4.9.2_curr/gcc/ipa-prop.c
  		   jump_func->value.ancestor.offset);
  	  print_generic_expr (f, jump_func->value.ancestor.type, 0);
 diff -Naur gcc-4.9.2/gcc/loop-iv.c gcc-4.9.2_curr/gcc/loop-iv.c
---- gcc-4.9.2/gcc/loop-iv.c	2014-01-17 05:47:59.000000000 -0500
-+++ gcc-4.9.2_curr/gcc/loop-iv.c	2024-03-04 07:15:59.312123355 -0500
+--- ../gcc-4.9.2/gcc/loop-iv.c	2014-01-17 05:47:59.000000000 -0500
++++ ./gcc/loop-iv.c	2024-03-04 07:15:59.312123355 -0500
 @@ -2297,7 +2297,7 @@
    if (andmax)
      nmax = MIN (nmax, andmax);
@@ -372,8 +372,8 @@ diff -Naur gcc-4.9.2/gcc/loop-iv.c gcc-4.9.2_curr/gcc/loop-iv.c
    return nmax;
  }
 diff -Naur gcc-4.9.2/gcc/output.h gcc-4.9.2_curr/gcc/output.h
---- gcc-4.9.2/gcc/output.h	2014-01-20 15:13:10.000000000 -0500
-+++ gcc-4.9.2_curr/gcc/output.h	2024-03-02 19:16:53.272077771 -0500
+--- ../gcc-4.9.2/gcc/output.h	2014-01-20 15:13:10.000000000 -0500
++++ ./gcc/output.h	2024-03-02 19:16:53.272077771 -0500
 @@ -117,7 +117,7 @@
  
  /* Output a string of assembler code, substituting numbers, strings
@@ -384,8 +384,8 @@ diff -Naur gcc-4.9.2/gcc/output.h gcc-4.9.2_curr/gcc/output.h
  #else
  #define ATTRIBUTE_ASM_FPRINTF(m, n) ATTRIBUTE_NONNULL(m)
 diff -Naur gcc-4.9.2/gcc/profile.c gcc-4.9.2_curr/gcc/profile.c
---- gcc-4.9.2/gcc/profile.c	2014-02-01 03:40:31.000000000 -0500
-+++ gcc-4.9.2_curr/gcc/profile.c	2024-03-04 07:17:34.928799547 -0500
+--- ../gcc-4.9.2/gcc/profile.c	2014-02-01 03:40:31.000000000 -0500
++++ ./gcc/profile.c	2024-03-04 07:17:34.928799547 -0500
 @@ -318,7 +318,7 @@
  	      if (dump_file)
  		{
@@ -396,8 +396,8 @@ diff -Naur gcc-4.9.2/gcc/profile.c gcc-4.9.2_curr/gcc/profile.c
  		  dump_bb (dump_file, e->src, 0, TDF_DETAILS);
  		  dump_bb (dump_file, e->dest, 0, TDF_DETAILS);
 diff -Naur gcc-4.9.2/gcc/reload1.c gcc-4.9.2_curr/gcc/reload1.c
---- gcc-4.9.2/gcc/reload1.c	2014-02-26 16:57:40.000000000 -0500
-+++ gcc-4.9.2_curr/gcc/reload1.c	2024-03-04 11:58:50.127405590 -0500
+--- ../gcc-4.9.2/gcc/reload1.c	2014-02-26 16:57:40.000000000 -0500
++++ ./gcc/reload1.c	2024-03-04 11:58:50.127405590 -0500
 @@ -441,7 +441,7 @@
  
    while (memory_address_p (QImode, tem))
@@ -408,8 +408,8 @@ diff -Naur gcc-4.9.2/gcc/reload1.c gcc-4.9.2_curr/gcc/reload1.c
      }
  
 diff -Naur gcc-4.9.2/gcc/stor-layout.c gcc-4.9.2_curr/gcc/stor-layout.c
---- gcc-4.9.2/gcc/stor-layout.c	2014-10-15 06:27:26.000000000 -0400
-+++ gcc-4.9.2_curr/gcc/stor-layout.c	2024-03-04 12:29:32.380922449 -0500
+--- ../gcc-4.9.2/gcc/stor-layout.c	2014-10-15 06:27:26.000000000 -0400
++++ ./gcc/stor-layout.c	2024-03-04 12:29:32.380922449 -0500
 @@ -236,7 +236,7 @@
    fntype = build_function_type (return_type, param_type_list);
  
@@ -420,8 +420,8 @@ diff -Naur gcc-4.9.2/gcc/stor-layout.c gcc-4.9.2_curr/gcc/stor-layout.c
    fndecl = build_decl (input_location, FUNCTION_DECL, fnname, fntype);
    for (t = param_decl_list; t; t = DECL_CHAIN (t))
 diff -Naur gcc-4.9.2/gcc/system.h gcc-4.9.2_curr/gcc/system.h
---- gcc-4.9.2/gcc/system.h	2024-03-05 10:17:37.794807888 -0500
-+++ gcc-4.9.2_curr/gcc/system.h	2024-03-01 13:05:09.393215274 -0500
+--- ../gcc-4.9.2/gcc/system.h	2024-03-05 10:17:37.794807888 -0500
++++ ./gcc/system.h	2024-03-01 13:05:09.393215274 -0500
 @@ -399,16 +399,20 @@
  #endif
  
@@ -449,8 +449,8 @@ diff -Naur gcc-4.9.2/gcc/system.h gcc-4.9.2_curr/gcc/system.h
  
  #if HAVE_SYS_STAT_H
 diff -Naur gcc-4.9.2/gcc/toplev.c gcc-4.9.2_curr/gcc/toplev.c
---- gcc-4.9.2/gcc/toplev.c	2014-10-16 09:49:11.000000000 -0400
-+++ gcc-4.9.2_curr/gcc/toplev.c	2024-03-04 12:32:43.340941473 -0500
+--- ../gcc-4.9.2/gcc/toplev.c	2014-10-16 09:49:11.000000000 -0400
++++ ./gcc/toplev.c	2024-03-04 12:32:43.340941473 -0500
 @@ -1041,7 +1041,7 @@
  	}
  
@@ -461,8 +461,8 @@ diff -Naur gcc-4.9.2/gcc/toplev.c gcc-4.9.2_curr/gcc/toplev.c
  	       loc.line,
  	       loc.column,
 diff -Naur gcc-4.9.2/gcc/tree-browser.c gcc-4.9.2_curr/gcc/tree-browser.c
---- gcc-4.9.2/gcc/tree-browser.c	2014-01-02 17:23:26.000000000 -0500
-+++ gcc-4.9.2_curr/gcc/tree-browser.c	2024-03-04 15:26:34.698647302 -0500
+--- ../gcc-4.9.2/gcc/tree-browser.c	2014-01-02 17:23:26.000000000 -0500
++++ ./gcc/tree-browser.c	2024-03-04 15:26:34.698647302 -0500
 @@ -938,7 +938,7 @@
  
        while (--copy > 0)
@@ -473,8 +473,8 @@ diff -Naur gcc-4.9.2/gcc/tree-browser.c gcc-4.9.2_curr/gcc/tree-browser.c
              goto lose;
            else if ((*p++ = c) == '\n')
 diff -Naur gcc-4.9.2/gcc/tree-ssa-reassoc.c gcc-4.9.2_curr/gcc/tree-ssa-reassoc.c
---- gcc-4.9.2/gcc/tree-ssa-reassoc.c	2014-10-17 06:53:36.000000000 -0400
-+++ gcc-4.9.2_curr/gcc/tree-ssa-reassoc.c	2024-03-04 13:44:24.648036633 -0500
+--- ../gcc-4.9.2/gcc/tree-ssa-reassoc.c	2014-10-17 06:53:36.000000000 -0400
++++ ./gcc/tree-ssa-reassoc.c	2024-03-04 13:44:24.648036633 -0500
 @@ -4208,7 +4208,7 @@
  		      if (elt < vec_len - 1)
  			fputs (" * ", dump_file);
@@ -494,8 +494,8 @@ diff -Naur gcc-4.9.2/gcc/tree-ssa-reassoc.c gcc-4.9.2_curr/gcc/tree-ssa-reassoc.
  
  	  reassociate_stats.pows_created++;
 diff -Naur gcc-4.9.2/gcc/value-prof.c gcc-4.9.2_curr/gcc/value-prof.c
---- gcc-4.9.2/gcc/value-prof.c	2014-01-02 17:23:26.000000000 -0500
-+++ gcc-4.9.2_curr/gcc/value-prof.c	2024-03-04 13:48:09.721392388 -0500
+--- ../gcc-4.9.2/gcc/value-prof.c	2014-01-02 17:23:26.000000000 -0500
++++ ./gcc/value-prof.c	2024-03-04 13:48:09.721392388 -0500
 @@ -266,10 +266,10 @@
  	   unsigned int i;
  	   fprintf (dump_file, " [");

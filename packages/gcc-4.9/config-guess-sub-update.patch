@@ -1,5 +1,5 @@
---- gcc-4.9.2_orig/config.guess	2013-10-01 12:50:56.000000000 -0400
-+++ gcc-4.9.2/config.guess	2024-03-05 21:12:19.372984144 -0500
+--- ../gcc-4.9.2_orig/config.guess	2013-10-01 12:50:56.000000000 -0400
++++ ./config.guess	2024-03-05 21:12:19.372984144 -0500
 @@ -1,12 +1,14 @@
 -#! /bin/sh
 +#!/data/data/com.termux/files/usr/bin/sh
@@ -2354,8 +2354,8 @@
  # time-stamp-start: "timestamp='"
  # time-stamp-format: "%:y-%02m-%02d"
  # time-stamp-end: "'"
---- gcc-4.9.2_orig/config.sub	2013-10-01 12:50:56.000000000 -0400
-+++ gcc-4.9.2/config.sub	2024-03-05 21:12:19.372984144 -0500
+--- ../gcc-4.9.2_orig/config.sub	2013-10-01 12:50:56.000000000 -0400
++++ ./config.sub	2024-03-05 21:12:19.372984144 -0500
 @@ -1,12 +1,14 @@
 -#! /bin/sh
 +#!/data/data/com.termux/files/usr/bin/sh
