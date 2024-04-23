@@ -1,37 +1,25 @@
 --- ./usr/include/android/versioning.orig.h	2024-03-31 04:36:42.791286584 -0400
 +++ ./usr/include/android/versioning.h	2024-03-31 04:35:30.314612697 -0400
-@@ -59,9 +59,15 @@
- #define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level)
- #endif
+@@ -16,6 +16,17 @@
  
-+#if defined(__GNUC__)
+ #pragma once
+ 
++#if defined(__GNUC__)	/* */
 +#define __INTRODUCED_IN(api_level)
 +#define __DEPRECATED_IN(api_level)
 +#define __REMOVED_IN(api_level)
-+#else
- #define __INTRODUCED_IN(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
- #define __DEPRECATED_IN(api_level) __BIONIC_AVAILABILITY(deprecated=api_level)
- #define __REMOVED_IN(api_level) __BIONIC_AVAILABILITY(obsoleted=api_level)
-+#endif
- 
- // The same availability attribute can't be annotated multiple times. Therefore, the macros are
- // defined for the configuration that it is valid for so that declarations like the below doesn't
-@@ -83,6 +89,10 @@
- #define __INTRODUCED_IN_64(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
- #endif
- 
-+#if defined(__GNUC__)
++#define __INTRODUCED_IN_32(api_level)
++#define __INTRODUCED_IN_64(api_level)
 +#define __INTRODUCED_IN_ARM(api_level)
 +#define __INTRODUCED_IN_X86(api_level)
++#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
++#define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level)
 +#else
- #if defined(__arm__) || defined(__aarch64__)
- #define __INTRODUCED_IN_ARM(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
- #define __INTRODUCED_IN_X86(api_level)
-@@ -93,6 +103,7 @@
- #define __INTRODUCED_IN_ARM(api_level)
- #define __INTRODUCED_IN_X86(api_level)
- #endif
-+#endif
- 
- #define __VERSIONER_NO_GUARD
+ // The `annotate` attribute always pulls the annotated (inline) function into the object files, thus
+ // we should only annotate headers when we are running versioner.
+ #if defined(__BIONIC_VERSIONER)
+@@ -98,3 +109,4 @@
  #define __VERSIONER_FORTIFY_INLINE
+ 
+ #endif  // defined(__BIONIC_VERSIONER)
++#endif  // defined(__GNUC__)

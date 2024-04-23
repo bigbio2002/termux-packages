@@ -1,0 +1,15 @@
+--- a/usr/include/sys/resource.h
++++ b/usr/include/sys/resource.h
+@@ -36,6 +36,12 @@
+ 
+ __BEGIN_DECLS
+ 
++#if defined(__GNUC__)
++#define _Nullable
++#define _Nonnull
++#define _Null_unspecified
++#endif
++
+ /* The kernel header doesn't have these, but POSIX does. */
+ #define RLIM_SAVED_CUR RLIM_INFINITY
+ #define RLIM_SAVED_MAX RLIM_INFINITY
