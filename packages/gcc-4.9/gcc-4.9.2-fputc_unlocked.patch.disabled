@@ -105,17 +105,6 @@ diff -Naur gcc-4.9.2/gcc/read-md.c gcc-4.9.2_termux/gcc/read-md.c
  
  /* Associates PTR (which can be a string, etc.) with the file location
     specified by FILENAME and LINENO.  */
-diff -Naur gcc-4.9.2/gcc/system.h gcc-4.9.2_termux/gcc/system.h
---- ../gcc-4.9.2/gcc/system.h	2014-01-02 17:23:26.000000000 -0500
-+++ ./gcc/system.h	2024-02-21 23:47:37.877323689 -0500
-@@ -88,6 +88,7 @@
-    an error about 'using std::malloc'.  */
- #ifdef __cplusplus
- #include <cstdlib>
-+#include <map>
- #endif
- 
- /* Undef vec_free from AIX stdlib.h header which conflicts with vec.h.  */
 diff -Naur gcc-4.9.2/libcpp/fputc-unlocked.h gcc-4.9.2_termux/libcpp/fputc-unlocked.h
 --- ../gcc-4.9.2/libcpp/fputc-unlocked.h	1969-12-31 19:00:00.000000000 -0500
 +++ ./libcpp/fputc-unlocked.h	2024-02-20 21:30:16.454153433 -0500

@@ -116,14 +116,6 @@ diff -Naur gcc-4.9.2/gcc/system.h gcc-4.9.2_termux/gcc/system.h
  # ifdef HAVE_FPUTC_UNLOCKED
  #  undef fputc
  #  define fputc(C, Stream) fputc_unlocked (C, Stream)
-@@ -232,6 +233,7 @@
-    an error about 'using std::malloc'.  */
- #ifdef __cplusplus
- #include <cstdlib>
-+#include <map>
- #endif
- 
- /* Undef vec_free from AIX stdlib.h header which conflicts with vec.h.  */
 diff -Naur gcc-4.9.2/libcpp/fputc-unlocked.h gcc-4.9.2_termux/libcpp/fputc-unlocked.h
 --- ../gcc-4.9.2/libcpp/fputc-unlocked.h	1969-12-31 19:00:00.000000000 -0500
 +++ ./libcpp/fputc-unlocked.h	2024-02-20 21:30:16.454153433 -0500

@@ -1,46 +1,48 @@
 --prefix=/data/data/com.termux/files/usr/local
 
+--target=aarch64-linux-android
 --enable-languages=c,c++
 --with-system-zlib
 --disable-multilib
 --disable-lto
 --disable-nls
---target=aarch64-linux-android
 --with-gmp=/data/data/com.termux/files/usr
 --with-mpfr=/data/data/com.termux/files/usr
 --with-mpc=/data/data/com.termux/files/usr
 # isl
 #--with-isl=/data/data/com.termux/files/usr
 #--disable-isl-version-check
---with-stage1-ldflags="-L/data/data/com.termux/files/usr/aarch64-linux/android/lib"
+--with-stage1-ldflags="-L/data/data/com.termux/files/usr/aarch64-linux-android/lib"
 --with-boot-ldflags="-specs=/data/data/com.termux/files/home/sources/termux-packages/scripts/termux.spec -static-libstdc++ -static-libgcc"
 --disable-tls
 #--enable-host-shared
 --enable-default-pie
 
 CC=clang
-CFLAGS_FOR_BUILD="-O2 -std=c99"
-CFLAGS="-O2 -std=gnu99"
 CXX=clang++
-CXXFLAGS_FOR_BUILD="-O2 -std=c++11 -fbracket-depth=512"
-CXXFLAGS="-O2 -std=gnu++11"
+** CFLAGS="-O2 -std=gnu99"
+** CXXFLAGS="-O2 -std=gnu++11"
+CFLAGS_FOR_BUILD="-O2 -std=gnu99"
+CXXFLAGS_FOR_BUILD="-O2 -std=gnu++11 -fbracket-depth=512"
 --with-arch=armv8-a
 
 # my
 --disable-bootstrap
 --enable-link-mutex
 --with-sysroot=/data/data/com.termux/files
---with-cpp-install-dir=lib
+--with-native-system-header-dir=/usr/include
 --with-local-prefix=/data/data/com.termux/files/usr/local
 --enable-version-specific-runtime-libs
 --enable-__cxa_atexit
 --enable-gnu-indirect-function
+v --with-ld=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin/ld
+v --with-as=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin/as
 
 # todo
 --with-build-time-tools=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin
 CPPFLAGS_FOR_TARGET=-I/data/data/com.termux/files/usr/include/aarch64-linux-android
---with-native-system-header-dir=/usr/include
---program-suffix=-4.9
+v --program-suffix=-4.9
 
 # unneeded/old
 CPP_FOR_TARGET=/data/data/com.termux/files/usr/bin/aarch64-linux-android-cpp
+--with-cpp-install-dir=lib

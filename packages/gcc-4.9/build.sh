@@ -28,8 +28,8 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-build-time-tools=$TERMUX_PREFIX/bin"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" CPPFLAGS=-I$TERMUX_PREFIX/include/aarch64-linux-android"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-native-system-header-dir=/usr/include/aarch64-linux-android"
 
-TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" CC=clang CFLAGS=\"-O2 -std=c99\""
-TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" CXX=clang++ CXXFLAGS=\"-O2 -std=c++11 -fbracket-depth=1024\""
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" CC=clang CFLAGS=\"-O2 -std=gnu99\""
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" CXX=clang++ CXXFLAGS=\"-O2 -std=gnu++11 -fbracket-depth=512\""
 
 if [ "$TERMUX_ARCH" = "arm" ]; then
         TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-arch=armv7-a --with-fpu=neon --with-float=softfp"
