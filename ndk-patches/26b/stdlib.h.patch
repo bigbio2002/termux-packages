@@ -8,8 +8,7 @@
  #include <sys/cdefs.h>
  #include <xlocale.h>
  
-@@ -223,12 +224,8 @@
- 
+@@ -224,11 +225,7 @@
  size_t wcstombs(char* _Nullable __dst, const wchar_t* _Nullable __src, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
  
  
