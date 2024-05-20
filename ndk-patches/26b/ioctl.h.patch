@@ -4,7 +4,7 @@
   * - defining BIONIC_IOCTL_NO_SIGNEDNESS_OVERLOAD, which will make the
   *   overloading go away.
   */
-+#if defined(__GNUC__)
++#if defined(__GNUC__) && !defined(__clang__)
 +#define BIONIC_IOCTL_NO_SIGNEDNESS_OVERLOAD
 +#endif
  #if !defined(BIONIC_IOCTL_NO_SIGNEDNESS_OVERLOAD)

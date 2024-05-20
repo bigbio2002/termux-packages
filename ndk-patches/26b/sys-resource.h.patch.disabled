@@ -4,7 +4,7 @@
  
  __BEGIN_DECLS
  
-+#if defined(__GNUC__)
++#if defined(__GNUC__) && !defined(__clang__)
 +#define _Nullable
 +#define _Nonnull
 +#define _Null_unspecified

@@ -4,7 +4,7 @@
  
  #pragma once
  
-+#if defined(__GNUC__)	/* */
++#if defined(__GNUC__) && !defined(__clang__)	/* */
 +#define __INTRODUCED_IN(api_level)
 +#define __DEPRECATED_IN(api_level)
 +#define __REMOVED_IN(api_level)
