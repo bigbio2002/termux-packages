@@ -1,0 +1,37 @@
+--- a/bfd/elf32-arm.c
++++ b/bfd/elf32-arm.c
+@@ -2142,7 +2142,7 @@
+ 
+ /* The name of the dynamic interpreter.  This is put in the .interp
+    section.  */
+-#define ELF_DYNAMIC_INTERPRETER     "/usr/lib/ld.so.1"
++#define ELF_DYNAMIC_INTERPRETER     "/system/bin/linker"
+ 
+ static const unsigned long tls_trampoline [] =
+ {
+--- a/bfd/elfnn-aarch64.c
++++ b/bfd/elfnn-aarch64.c
+@@ -2022,7 +2022,7 @@
+ 
+ /* The name of the dynamic interpreter.  This is put in the .interp
+    section.  */
+-#define ELF_DYNAMIC_INTERPRETER     "/lib/ld.so.1"
++#define ELF_DYNAMIC_INTERPRETER     "/system/bin/linker64"
+ 
+ #define AARCH64_MAX_FWD_BRANCH_OFFSET \
+   (((1 << 25) - 1) << 2)
+--- a/bfd/elfxx-x86.c
++++ b/bfd/elfxx-x86.c
+@@ -27,8 +27,8 @@
+ /* The name of the dynamic interpreter.  This is put in the .interp
+    section.  */
+ 
+-#define ELF32_DYNAMIC_INTERPRETER "/usr/lib/libc.so.1"
+-#define ELF64_DYNAMIC_INTERPRETER "/lib/ld64.so.1"
+-#define ELFX32_DYNAMIC_INTERPRETER "/lib/ldx32.so.1"
++#define ELF32_DYNAMIC_INTERPRETER "/system/bin/linker"
++#define ELF64_DYNAMIC_INTERPRETER "/system/bin/linker64"
++#define ELFX32_DYNAMIC_INTERPRETER "/system/bin/linkerx32"
+ 
+ bfd_boolean
+ _bfd_x86_elf_mkobject (bfd *abfd)
