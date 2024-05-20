@@ -1,6 +1,6 @@
 --- ../cache/binutils-2.30/gold/options.cc	2018-01-13 13:31:16.000000000 +0000
 +++ ./gold/options.cc	2018-03-11 23:20:26.295331766 +0000
-@@ -1227,8 +1227,8 @@
+@@ -1142,8 +1142,8 @@
  	       || this->user_set_sysroot()
  	       || *TARGET_SYSTEM_ROOT != '\0')
  	{
