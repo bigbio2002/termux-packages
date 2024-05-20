@@ -755,7 +755,7 @@ S["GCJ_FOR_BUILD"]="$(GCJ)"
 S["DLLTOOL_FOR_BUILD"]="$(DLLTOOL)"
 S["CXX_FOR_BUILD"]="$(CXX)"
 S["CXXFLAGS_FOR_BUILD"]="-O2 -std=gnu++11 -fbracket-depth=512"
-S["CFLAGS_FOR_BUILD"]="-O2 -std=gnu99 -fbracket-depth=512"
+S["CFLAGS_FOR_BUILD"]="-O2 -std=gnu99"
 S["CC_FOR_BUILD"]="$(CC)"
 S["AS_FOR_BUILD"]="$(AS)"
 S["AR_FOR_BUILD"]="$(AR)"
@@ -864,8 +864,8 @@ S["TOPLEVEL_CONFIGURE_ARGUMENTS"]="../gcc-4.9.2/configure --prefix=/data/data/co
 "ermux/files --with-build-time-tools=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin --with-local-prefix=/data/data/com.termux/files/"\
 "usr/local --with-native-system-header-dir=/usr/include --with-ld=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin/ld --with-as=/data/"\
 "data/com.termux/files/usr/local/aarch64-linux-android/bin/as --enable-version-specific-runtime-libs CC=clang CXX=clang++ 'CFLAGS_FOR_BUILD=-O2 -std="\
-"gnu99 -fbracket-depth=512' 'CXXFLAGS_FOR_BUILD=-O2 -std=gnu++11 -fbracket-depth=512' CPPFLAGS_FOR_TARGET=-I/data/data/com.termux/files/usr/include/a"\
-"arch64-linux-android target_alias=aarch64-linux-android --enable-languages=c,c++ --no-create --no-recursion"
+"gnu99' 'CXXFLAGS_FOR_BUILD=-O2 -std=gnu++11 -fbracket-depth=512' CPPFLAGS_FOR_TARGET=-I/data/data/com.termux/files/usr/include/aarch64-linux-android"\
+" target_alias=aarch64-linux-android --enable-languages=c,c++ --no-create --no-recursion"
 S["target_alias"]="aarch64-linux-android"
 S["host_alias"]=""
 S["build_alias"]=""

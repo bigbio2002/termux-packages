@@ -4,7 +4,7 @@
  
  /* Utility macros for GCC attributes.  */
  #define UNUSED          __attribute__((unused))
-+#if defined(__GNUC__)
++#if defined(__GNUC__) && !defined(__clang__)
 +# define HIDDEN
 +#else
  #ifdef HAVE_ATTRIBUTE_VISIBILITY
