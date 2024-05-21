@@ -17,5 +17,5 @@ diff -u -r ../gcc-6.1.0/gcc/config/aarch64/aarch64-linux.h ./gcc/config/aarch64/
 +#endif
 +#define BIONIC_DYNAMIC_LINKER RUNTIME_ROOT_PREFIX "/system/bin/linker64"
  
- 
  #define CPP_SPEC "%{pthread:-D_REENTRANT}"
+ 
