@@ -1,0 +1,71 @@
+diff -Naur gcc-5.3.0/libitm/config/aarch64/sjlj.S gcc-5.3.0_my/libitm/config/aarch64/sjlj.S
+--- gcc-5.3.0/libitm/config/aarch64/sjlj.S	2015-01-05 07:33:28.000000000 -0500
++++ gcc-5.3.0_my/libitm/config/aarch64/sjlj.S	2024-06-07 12:04:38.871227909 -0400
+@@ -26,10 +26,19 @@
+ 
+ 	.text
+ 	.align	2
++# if __ELF__
+ 	.global	_ITM_beginTransaction
+ 	.type	_ITM_beginTransaction, %function
+ 
+ _ITM_beginTransaction:
++
++#elif __MACH__
++	.global	__ITM_beginTransaction
++
++__ITM_beginTransaction:
++
++#endif
++
+ 	cfi_startproc
+ 	mov	x1, sp
+ 	stp	x29, x30, [sp, -11*16]!
+@@ -50,7 +59,13 @@
+ 
+ 	/* Invoke GTM_begin_transaction with the struct we just built.  */
+ 	mov	x1, sp
++#if __ELF__
+ 	bl	GTM_begin_transaction
++#elif __MACH__
++	bl	_GTM_begin_transaction
++#else
++#error "unexpected object format"
++#endif
+ 
+ 	/* Return; we don't need to restore any of the call-saved regs.  */
+ 	ldp	x29, x30, [sp], 11*16
+@@ -59,14 +74,23 @@
+ 	cfi_restore(x30)
+ 	ret
+ 	cfi_endproc
++#if __ELF__
+ 	.size	_ITM_beginTransaction, . - _ITM_beginTransaction
++#endif
+ 
+ 	.align	2
++#if __ELF__
+ 	.global	GTM_longjmp
+ 	.hidden	GTM_longjmp
+ 	.type	GTM_longjmp, %function
+ 
+ GTM_longjmp:
++
++#elif __MACH__
++	.private_extern _GTM_longjmp
++
++_GTM_longjmp:
++#endif
+ 	/* The first parameter becomes the return value (x0).
+ 	   The third parameter is ignored for now.  */
+ 	cfi_startproc
+@@ -85,7 +109,9 @@
+ 	mov	sp, x3
+ 	br	x30
+ 	cfi_endproc
++#if __ELF__
+ 	.size	GTM_longjmp, . - GTM_longjmp
++#endif
+ 
+ #ifdef __linux__
+ .section .note.GNU-stack, "", %progbits
