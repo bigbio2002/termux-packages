@@ -1,0 +1,18 @@
+--- a/libitm/common.h
++++ b/libitm/common.h
+@@ -31,11 +31,15 @@
+ 
+ #define UNUSED		__attribute__((unused))
+ #define ALWAYS_INLINE	__attribute__((always_inline))
++#if defined(__GNUC__) && !defined(__clang__)
++# define HIDDEN
++#else
+ #ifdef HAVE_ATTRIBUTE_VISIBILITY
+ # define HIDDEN		__attribute__((visibility("hidden")))
+ #else
+ # define HIDDEN
+ #endif
++#endif
+ 
+ #define likely(X)	__builtin_expect((X) != 0, 1)
+ #define unlikely(X)	__builtin_expect((X), 0)
