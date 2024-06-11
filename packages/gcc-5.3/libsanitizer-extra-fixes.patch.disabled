@@ -1,0 +1,358 @@
+diff -Naur gcc-5.3.0/include/ansidecl.h gcc-5.3.0_my/include/ansidecl.h
+--- gcc-5.3.0/include/ansidecl.h	2015-03-04 12:28:56.000000000 -0500
++++ gcc-5.3.0_my/include/ansidecl.h	2024-06-10 00:57:31.421049771 -0400
+@@ -81,7 +81,7 @@
+ /* inline requires special treatment; it's in C99, and GCC >=2.7 supports
+    it too, but it's not in C89.  */
+ #undef inline
+-#if __STDC_VERSION__ >= 199901L || defined(__cplusplus) || (defined(__SUNPRO_C) && defined(__C99FEATURES__))
++#if (!defined(__cplusplus) && __STDC_VERSION__ >= 199901L) || defined(__cplusplus) || (defined(__SUNPRO_C) && defined(__C99FEATURES__))
+ /* it's a keyword */
+ #else
+ # if GCC_VERSION >= 2007
+@@ -285,6 +285,15 @@
+ # endif /* GNUC >= 4.9 */
+ #endif /* ATTRIBUTE_NO_SANITIZE_UNDEFINED */
+ 
++/* Attribute `warn_unused_result' was valid as of gcc 3.3.  */
++#ifndef ATTRIBUTE_WARN_UNUSED_RESULT
++# if GCC_VERSION >= 3003
++#  define ATTRIBUTE_WARN_UNUSED_RESULT __attribute__ ((__warn_unused_result__))
++# else
++#  define ATTRIBUTE_WARN_UNUSED_RESULT
++# endif
++#endif
++
+ /* We use __extension__ in some places to suppress -pedantic warnings
+    about GCC extensions.  This feature didn't work properly before
+    gcc 2.8.  */
+diff -Naur gcc-5.3.0/libsanitizer/configure gcc-5.3.0_my/libsanitizer/configure
+--- gcc-5.3.0/libsanitizer/configure	2015-12-04 05:47:53.000000000 -0500
++++ gcc-5.3.0_my/libsanitizer/configure	2024-06-10 05:47:15.083547777 -0400
+@@ -9994,7 +9994,7 @@
+ 	if $NM -V 2>&1 | $GREP 'GNU' > /dev/null; then
+ 	  export_symbols_cmds='$NM -Bpg $libobjs $convenience | awk '\''{ if (((\$ 2 == "T") || (\$ 2 == "D") || (\$ 2 == "B") || (\$ 2 == "W")) && (substr(\$ 3,1,1) != ".")) { print \$ 3 } }'\'' | sort -u > $export_symbols'
+ 	else
+-	  export_symbols_cmds='$NM -BCpg $libobjs $convenience | awk '\''{ if (((\$ 2 == "T") || (\$ 2 == "D") || (\$ 2 == "B")) && (substr(\$ 3,1,1) != ".")) { print \$ 3 } }'\'' | sort -u > $export_symbols'
++	  export_symbols_cmds='$NM -BCpg $libobjs $convenience | awk '\''{ if (((\$ 2 == "T") || (\$ 2 == "D") || (\$ 2 == "B") || (\$ 2 == "L")) && (substr(\$ 3,1,1) != ".")) { print \$ 3 } }'\'' | sort -u > $export_symbols'
+ 	fi
+ 	aix_use_runtimelinking=no
+ 
+@@ -14480,7 +14480,7 @@
+     if $NM -V 2>&1 | $GREP 'GNU' > /dev/null; then
+       export_symbols_cmds_CXX='$NM -Bpg $libobjs $convenience | awk '\''{ if (((\$ 2 == "T") || (\$ 2 == "D") || (\$ 2 == "B") || (\$ 2 == "W")) && (substr(\$ 3,1,1) != ".")) { print \$ 3 } }'\'' | sort -u > $export_symbols'
+     else
+-      export_symbols_cmds_CXX='$NM -BCpg $libobjs $convenience | awk '\''{ if (((\$ 2 == "T") || (\$ 2 == "D") || (\$ 2 == "B")) && (substr(\$ 3,1,1) != ".")) { print \$ 3 } }'\'' | sort -u > $export_symbols'
++      export_symbols_cmds_CXX='$NM -BCpg $libobjs $convenience | awk '\''{ if (((\$ 2 == "T") || (\$ 2 == "D") || (\$ 2 == "B") || (\$ 2 == "L")) && (substr(\$ 3,1,1) != ".")) { print \$ 3 } }'\'' | sort -u > $export_symbols'
+     fi
+     ;;
+   pw32*)
+@@ -16320,6 +16320,18 @@
+ #define HAVE_DECL_STRNLEN $ac_have_decl
+ _ACEOF
+ 
++ac_fn_c_check_decl "$LINENO" "basename" "ac_cv_have_decl_basename" "#include <libgen.h>
++"
++if test "x$ac_cv_have_decl_basename" = x""yes; then :
++  ac_have_decl=1
++else
++  ac_have_decl=0
++fi
++
++cat >>confdefs.h <<_ACEOF
++#define HAVE_DECL_BASENAME $ac_have_decl
++_ACEOF
++
+ 
+ # Check for getexecname function.
+ if test -n "${with_target_subdir}"; then
+diff -Naur gcc-5.3.0/libsanitizer/configure.ac gcc-5.3.0_my/libsanitizer/configure.ac
+--- gcc-5.3.0/libsanitizer/configure.ac	2015-05-12 03:02:09.000000000 -0400
++++ gcc-5.3.0_my/libsanitizer/configure.ac	2024-06-10 05:47:07.053546977 -0400
+@@ -298,6 +298,7 @@
+ fi
+ 
+ AC_CHECK_DECLS(strnlen)
++AC_CHECK_DECLS([basename], [], [], [[#include <libgen.h>]])
+ 
+ # Check for getexecname function.
+ if test -n "${with_target_subdir}"; then
+diff -Naur gcc-5.3.0/libsanitizer/sanitizer_common/sanitizer_internal_defs.h gcc-5.3.0_my/libsanitizer/sanitizer_common/sanitizer_internal_defs.h
+--- gcc-5.3.0/libsanitizer/sanitizer_common/sanitizer_internal_defs.h	2014-09-23 13:59:53.000000000 -0400
++++ gcc-5.3.0_my/libsanitizer/sanitizer_common/sanitizer_internal_defs.h	2024-06-10 05:02:18.615820081 -0400
+@@ -13,12 +13,30 @@
+ 
+ #include "sanitizer_platform.h"
+ 
++// GCC does not understand __has_feature.
++#if !defined(__has_feature)
++#define __has_feature(x) 0
++#endif
++
++// Older GCCs do not understand __has_attribute.
++#if !defined(__has_attribute)
++# define __has_attribute(x) 0
++#endif
++
++#if !defined(__has_cpp_attribute)
++#  define __has_cpp_attribute(x) 0
++#endif
++
+ // Only use SANITIZER_*ATTRIBUTE* before the function return type!
+ #if SANITIZER_WINDOWS
++#if SANITIZER_IMPORT_INTERFACE
++# define SANITIZER_INTERFACE_ATTRIBUTE __declspec(dllimport)
++#else
+ # define SANITIZER_INTERFACE_ATTRIBUTE __declspec(dllexport)
++#endif
+ // FIXME find out what we need on Windows, if anything.
+ # define SANITIZER_WEAK_ATTRIBUTE
+-#elif defined(SANITIZER_GO)
++#elif SANITIZER_GO
+ # define SANITIZER_INTERFACE_ATTRIBUTE
+ # define SANITIZER_WEAK_ATTRIBUTE
+ #else
+@@ -26,25 +44,50 @@
+ # define SANITIZER_WEAK_ATTRIBUTE  __attribute__((weak))
+ #endif
+ 
+-#if SANITIZER_LINUX && !defined(SANITIZER_GO)
++// SANITIZER_SUPPORTS_WEAK_HOOKS means that we support real weak functions that
++// will evaluate to a null pointer when not defined.
++#ifndef SANITIZER_SUPPORTS_WEAK_HOOKS
++#if (SANITIZER_LINUX || SANITIZER_SOLARIS) && !SANITIZER_GO
++# define SANITIZER_SUPPORTS_WEAK_HOOKS 1
++// Before Xcode 4.5, the Darwin linker doesn't reliably support undefined
++// weak symbols.  Mac OS X 10.9/Darwin 13 is the first release only supported
++// by Xcode >= 4.5.
++#elif SANITIZER_APPLE && \
++    __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1090 && !SANITIZER_GO
+ # define SANITIZER_SUPPORTS_WEAK_HOOKS 1
+ #else
+ # define SANITIZER_SUPPORTS_WEAK_HOOKS 0
+ #endif
++#endif // SANITIZER_SUPPORTS_WEAK_HOOKS
++// For some weak hooks that will be called very often and we want to avoid the
++// overhead of executing the default implementation when it is not necessary,
++// we can use the flag SANITIZER_SUPPORTS_WEAK_HOOKS to only define the default
++// implementation for platforms that doesn't support weak symbols. For example:
++//
++//   #if !SANITIZER_SUPPORT_WEAK_HOOKS
++//     SANITIZER_INTERFACE_WEAK_DEF(bool, compare_hook, int a, int b) {
++//       return a > b;
++//     }
++//   #endif
++//
++// And then use it as: if (compare_hook) compare_hook(a, b);
++//----------------------------------------------------------------------------//
++
+ 
+ // We can use .preinit_array section on Linux to call sanitizer initialization
+ // functions very early in the process startup (unless PIC macro is defined).
+ // FIXME: do we have anything like this on Mac?
+-#if SANITIZER_LINUX && !SANITIZER_ANDROID && !defined(PIC)
++#ifndef SANITIZER_CAN_USE_PREINIT_ARRAY
++#if (SANITIZER_LINUX || SANITIZER_FUCHSIA || SANITIZER_NETBSD) && !SANITIZER_ANDROID && !defined(PIC)
++# define SANITIZER_CAN_USE_PREINIT_ARRAY 1
++// Before Solaris 11.4, .preinit_array is fully supported only with GNU ld.
++// FIXME: Check for those conditions.
++#elif SANITIZER_SOLARIS && !defined(PIC)
+ # define SANITIZER_CAN_USE_PREINIT_ARRAY 1
+ #else
+ # define SANITIZER_CAN_USE_PREINIT_ARRAY 0
+ #endif
+-
+-// GCC does not understand __has_feature
+-#if !defined(__has_feature)
+-# define __has_feature(x) 0
+-#endif
++#endif  // SANITIZER_CAN_USE_PREINIT_ARRAY
+ 
+ // For portability reasons we do not include stddef.h, stdint.h or any other
+ // system header, but we do need some basic types that are not defined
+diff -Naur gcc-5.3.0/libsanitizer/sanitizer_common/sanitizer_platform.h gcc-5.3.0_my/libsanitizer/sanitizer_common/sanitizer_platform.h
+--- gcc-5.3.0/libsanitizer/sanitizer_common/sanitizer_platform.h	2015-05-12 03:02:09.000000000 -0400
++++ gcc-5.3.0_my/libsanitizer/sanitizer_common/sanitizer_platform.h	2024-06-10 02:33:02.711620724 -0400
+@@ -11,9 +11,17 @@
+ #ifndef SANITIZER_PLATFORM_H
+ #define SANITIZER_PLATFORM_H
+ 
+-#if !defined(__linux__) && !defined(__FreeBSD__) && \
+-  !defined(__APPLE__) && !defined(_WIN32)
+-# error "This operating system is not supported"
++#if !defined(__linux__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && \
++    !defined(__APPLE__) && !defined(_WIN32) && !defined(__Fuchsia__) &&     \
++    !(defined(__sun__) && defined(__svr4__))
++#  error "This operating system is not supported"
++#endif
++
++// Get __GLIBC__ on a glibc platform. Exclude Android: features.h includes C
++// function declarations into a .S file which doesn't compile.
++// https://crbug.com/1162741
++#if __has_include(<features.h>) && !defined(__ANDROID__)
++#  include <features.h>
+ #endif
+ 
+ #if defined(__linux__)
+@@ -22,23 +30,80 @@
+ # define SANITIZER_LINUX   0
+ #endif
+ 
++#if defined(__GLIBC__)
++#  define SANITIZER_GLIBC 1
++#else
++#  define SANITIZER_GLIBC 0
++#endif
++
+ #if defined(__FreeBSD__)
+ # define SANITIZER_FREEBSD 1
+ #else
+ # define SANITIZER_FREEBSD 0
+ #endif
+ 
+-#if defined(__APPLE__)
+-# define SANITIZER_MAC     1
+-# include <TargetConditionals.h>
+-# if TARGET_OS_IPHONE
+-#  define SANITIZER_IOS    1
+-# else
+-#  define SANITIZER_IOS    0
+-# endif
++#if defined(__NetBSD__)
++#  define SANITIZER_NETBSD 1
++#else
++#  define SANITIZER_NETBSD 0
++#endif
++
++#if defined(__sun__) && defined(__svr4__)
++#  define SANITIZER_SOLARIS 1
+ #else
+-# define SANITIZER_MAC     0
+-# define SANITIZER_IOS     0
++#  define SANITIZER_SOLARIS 0
++#endif
++
++// - SANITIZER_APPLE: all Apple code
++//   - TARGET_OS_OSX: macOS
++//   - SANITIZER_IOS: devices (iOS and iOS-like)
++//     - SANITIZER_WATCHOS
++//     - SANITIZER_TVOS
++//   - SANITIZER_IOSSIM: simulators (iOS and iOS-like)
++//   - SANITIZER_DRIVERKIT
++#if defined(__APPLE__)
++#  define SANITIZER_APPLE 1
++#  define SANITIZER_MAC 1
++#  include <TargetConditionals.h>
++#  if TARGET_OS_OSX
++#    define SANITIZER_OSX 1
++#  else
++#    define SANITIZER_OSX 0
++#  endif
++#  if TARGET_OS_IPHONE
++#    define SANITIZER_IOS 1
++#  else
++#    define SANITIZER_IOS 0
++#  endif
++#  if TARGET_OS_WATCH
++#    define SANITIZER_WATCHOS 1
++#  else
++#    define SANITIZER_WATCHOS 0
++#  endif
++#  if TARGET_OS_TV
++#    define SANITIZER_TVOS 1
++#  else
++#    define SANITIZER_TVOS 0
++#  endif
++#  if TARGET_OS_SIMULATOR
++#    define SANITIZER_IOSSIM 1
++#  else
++#    define SANITIZER_IOSSIM 0
++#  endif
++#  if defined(TARGET_OS_DRIVERKIT) && TARGET_OS_DRIVERKIT
++#    define SANITIZER_DRIVERKIT 1
++#  else
++#    define SANITIZER_DRIVERKIT 0
++#  endif
++#else
++#  define SANITIZER_APPLE 0
++#  define SANITIZER_MAC 0
++#  define SANITIZER_OSX 0
++#  define SANITIZER_IOS 0
++#  define SANITIZER_WATCHOS 0
++#  define SANITIZER_TVOS 0
++#  define SANITIZER_IOSSIM 0
++#  define SANITIZER_DRIVERKIT 0
+ #endif
+ 
+ #if defined(_WIN32)
+@@ -47,13 +112,33 @@
+ # define SANITIZER_WINDOWS 0
+ #endif
+ 
++#if defined(_WIN64)
++#  define SANITIZER_WINDOWS64 1
++#else
++#  define SANITIZER_WINDOWS64 0
++#endif
++
+ #if defined(__ANDROID__)
+ # define SANITIZER_ANDROID 1
+ #else
+ # define SANITIZER_ANDROID 0
+ #endif
+ 
+-#define SANITIZER_POSIX (SANITIZER_FREEBSD || SANITIZER_LINUX || SANITIZER_MAC)
++#if defined(__Fuchsia__)
++#  define SANITIZER_FUCHSIA 1
++#else
++#  define SANITIZER_FUCHSIA 0
++#endif
++
++// Assume linux that is not glibc or android is musl libc.
++#if SANITIZER_LINUX && !SANITIZER_GLIBC && !SANITIZER_ANDROID
++#  define SANITIZER_MUSL 1
++#else
++#  define SANITIZER_MUSL 0
++#endif
++
++#define SANITIZER_POSIX (SANITIZER_FREEBSD || SANITIZER_LINUX || \
++	SANITIZER_MAC || SANITIZER_NETBSD || SANITIZER_SOLARIS)
+ 
+ #if __LP64__ || defined(_WIN64)
+ #  define SANITIZER_WORDSIZE 64
+@@ -73,6 +158,18 @@
+ # define SANITIZER_X32 0
+ #endif
+ 
++#if defined(__x86_64__) || defined(_M_X64)
++#  define SANITIZER_X64 1
++#else
++#  define SANITIZER_X64 0
++#endif
++
++#if defined(__i386__) || defined(_M_IX86)
++#  define SANITIZER_I386 1
++#else
++#  define SANITIZER_I386 0
++#endif
++
+ // By default we allow to use SizeClassAllocator64 on 64-bit platform.
+ // But in some cases (e.g. AArch64's 39-bit address space) SizeClassAllocator64
+ // does not work well and we need to fallback to SizeClassAllocator32.
+diff -Naur gcc-5.3.0/libsanitizer/sanitizer_common/sanitizer_symbolizer_libbacktrace.cc gcc-5.3.0_my/libsanitizer/sanitizer_common/sanitizer_symbolizer_libbacktrace.cc
+--- gcc-5.3.0/libsanitizer/sanitizer_common/sanitizer_symbolizer_libbacktrace.cc	2014-12-16 06:35:34.000000000 -0500
++++ gcc-5.3.0_my/libsanitizer/sanitizer_common/sanitizer_symbolizer_libbacktrace.cc	2024-06-10 00:44:47.770973696 -0400
+@@ -10,11 +10,11 @@
+ // Libbacktrace implementation of symbolizer parts.
+ //===----------------------------------------------------------------------===//
+ 
+-#include "sanitizer_platform.h"
++#include "sanitizer_symbolizer_libbacktrace.h"
+ 
+ #include "sanitizer_internal_defs.h"
++#include "sanitizer_platform.h"
+ #include "sanitizer_symbolizer.h"
+-#include "sanitizer_symbolizer_libbacktrace.h"
+ 
+ #if SANITIZER_LIBBACKTRACE
+ # include "backtrace-supported.h"

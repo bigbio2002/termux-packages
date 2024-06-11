@@ -25,7 +25,7 @@ diff --git a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc b/
 index 06a605ff4670..d823a12190c0 100644
 --- a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc
 +++ b/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc
-@@ -1130,12 +1130,9 @@ CHECK_SIZE_AND_OFFSET(ipc_perm, uid);
+@@ -1066,12 +1066,9 @@ CHECK_SIZE_AND_OFFSET(ipc_perm, uid);
  #ifndef __GLIBC_PREREQ
  #define __GLIBC_PREREQ(x, y) 0
  #endif
@@ -45,7 +45,7 @@ diff --git a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.h b/l
 index 73af92af1e8f..6a673a7c9959 100644
 --- a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.h
 +++ b/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.h
-@@ -211,20 +211,13 @@ namespace __sanitizer {
+@@ -182,20 +182,13 @@ namespace __sanitizer {
      unsigned long __unused1;
      unsigned long __unused2;
  #elif defined(__sparc__)
