@@ -4,7 +4,7 @@
   */
  #define __BIONIC__ 1
  
-+#if defined(__GNUC__) && !defined(__clang__)
++#if !defined(__clang__)
 +#define _Nullable
 +#define _Nonnull
 +#define _Null_unspecified
