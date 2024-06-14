@@ -11,4 +11,5 @@
 
 *link_gcc_c_sequence:
 + %{!static:%{!static-pie:-rpath=/data/data/com.termux/files/usr/lib}}
+# example:
 #%{!static:--eh-frame-hdr} -m %(link_emulation) %{shared:-shared}   %{!shared:     %{!static:       %{rdynamic:-export-dynamic}       -dynamic-linker %(dynamic_linker)}       %{static:-static}} -rpath /usr/local/lib64
