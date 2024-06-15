@@ -1,0 +1,10 @@
+--- ./usr/include/sys/cdefs.h.orig	2021-08-16 11:52:08.128876161 +0200
++++ ./usr/include/sys/cdefs.h	2021-08-16 11:52:08.555542676 +0200
+@@ -419,4 +419,7 @@
+ #define __unsafe_check_mul_overflow(x, y) ((__SIZE_TYPE__)-1 / (x) < (y))
+ #endif
+ 
++#define __TERMUX__ 1
++#define __TERMUX_PREFIX__ "/data/data/com.termux/files/usr"
++
+ #endif /* !_SYS_CDEFS_H_ */

@@ -1,0 +1,27 @@
+
+--- ./usr/include/android/versioning.orig.h	2024-03-31 04:36:42.791286584 -0400
++++ ./usr/include/android/versioning.h	2024-03-31 04:35:30.314612697 -0400
+@@ -17,6 +17,17 @@
+ #ifndef ANDROID_VERSIONING_H
+ #define ANDROID_VERSIONING_H
+ 
++#if !defined(__clang__)	/* */
++#define __INTRODUCED_IN(api_level)
++#define __DEPRECATED_IN(api_level)
++#define __REMOVED_IN(api_level)
++#define __INTRODUCED_IN_32(api_level)
++#define __INTRODUCED_IN_64(api_level)
++#define __INTRODUCED_IN_ARM(api_level)
++#define __INTRODUCED_IN_X86(api_level)
++#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
++#define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level)
++#else
+ #define __INTRODUCED_IN(api_level) __attribute__((annotate("introduced_in=" #api_level)))
+ #define __INTRODUCED_IN_FUTURE __attribute__((annotate("introduced_in_future")))
+ #define __DEPRECATED_IN(api_level) __attribute__((annotate("deprecated_in=" #api_level)))
+@@ -29,4 +40,5 @@
+ 
+ #endif  // defined(__BIONIC_VERSIONER)
+ 
++#endif  // !defined(__clang__)
+ #endif /* ANDROID_VERSIONING_H */

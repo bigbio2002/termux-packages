@@ -1,0 +1,12 @@
+--- ./usr/include/bits/ioctl.h.orig
++++ ./usr/include/bits/ioctl.h
+@@ -51,6 +51,9 @@
+  * FIXME: __has_extension is more or less a clang version check. Remove it when
+  * we don't need to support old clang code.
+  */
++#if !defined(__clang__)
++#define BIONIC_IOCTL_NO_SIGNEDNESS_OVERLOAD
++#endif
+ #if defined(__clang__) && __has_extension(overloadable_unmarked) && \
+   !defined(BIONIC_IOCTL_NO_SIGNEDNESS_OVERLOAD)
+ /* enable_if(1) just exists to break overloading ties. */
