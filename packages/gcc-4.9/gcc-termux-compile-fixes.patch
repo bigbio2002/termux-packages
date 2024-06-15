@@ -371,18 +371,6 @@ diff -Naur gcc-4.9.2/gcc/loop-iv.c gcc-4.9.2_curr/gcc/loop-iv.c
  	     nmax);
    return nmax;
  }
-diff -Naur gcc-4.9.2/gcc/output.h gcc-4.9.2_curr/gcc/output.h
---- ../gcc-4.9.2/gcc/output.h	2014-01-20 15:13:10.000000000 -0500
-+++ ./gcc/output.h	2024-03-02 19:16:53.272077771 -0500
-@@ -117,7 +117,7 @@
- 
- /* Output a string of assembler code, substituting numbers, strings
-    and fixed syntactic prefixes.  */
--#if GCC_VERSION >= 3004
-+#if GCC_VERSION >= 3004 && 0
- #define ATTRIBUTE_ASM_FPRINTF(m, n) __attribute__ ((__format__ (__asm_fprintf__, m, n))) ATTRIBUTE_NONNULL(m)
- #else
- #define ATTRIBUTE_ASM_FPRINTF(m, n) ATTRIBUTE_NONNULL(m)
 diff -Naur gcc-4.9.2/gcc/profile.c gcc-4.9.2_curr/gcc/profile.c
 --- ../gcc-4.9.2/gcc/profile.c	2014-02-01 03:40:31.000000000 -0500
 +++ ./gcc/profile.c	2024-03-04 07:17:34.928799547 -0500
@@ -395,18 +383,6 @@ diff -Naur gcc-4.9.2/gcc/profile.c gcc-4.9.2_curr/gcc/profile.c
  			   e->src->index, e->dest->index, e->count);
  		  dump_bb (dump_file, e->src, 0, TDF_DETAILS);
  		  dump_bb (dump_file, e->dest, 0, TDF_DETAILS);
-diff -Naur gcc-4.9.2/gcc/reload1.c gcc-4.9.2_curr/gcc/reload1.c
---- ../gcc-4.9.2/gcc/reload1.c	2014-02-26 16:57:40.000000000 -0500
-+++ ./gcc/reload1.c	2024-03-04 11:58:50.127405590 -0500
-@@ -441,7 +441,7 @@
- 
-   while (memory_address_p (QImode, tem))
-     {
--      spill_indirect_levels++;
-+      spill_indirect_levels += 1;
-       tem = gen_rtx_MEM (Pmode, tem);
-     }
- 
 diff -Naur gcc-4.9.2/gcc/stor-layout.c gcc-4.9.2_curr/gcc/stor-layout.c
 --- ../gcc-4.9.2/gcc/stor-layout.c	2014-10-15 06:27:26.000000000 -0400
 +++ ./gcc/stor-layout.c	2024-03-04 12:29:32.380922449 -0500
@@ -419,35 +395,6 @@ diff -Naur gcc-4.9.2/gcc/stor-layout.c gcc-4.9.2_curr/gcc/stor-layout.c
    fnname = get_file_function_name (buf);
    fndecl = build_decl (input_location, FUNCTION_DECL, fnname, fntype);
    for (t = param_decl_list; t; t = DECL_CHAIN (t))
-diff -Naur gcc-4.9.2/gcc/system.h gcc-4.9.2_curr/gcc/system.h
---- ../gcc-4.9.2/gcc/system.h	2024-03-05 10:17:37.794807888 -0500
-+++ ./gcc/system.h	2024-03-01 13:05:09.393215274 -0500
-@@ -399,16 +399,20 @@
- #endif
- 
- /* 1 if we have C99 designated initializers.  */
--#if !defined(HAVE_DESIGNATED_INITIALIZERS)
-+#if !defined(HAVE_DESIGNATED_INITIALIZERS) && !defined(__cplusplus)
- #define HAVE_DESIGNATED_INITIALIZERS \
--  (((GCC_VERSION >= 2007) || (__STDC_VERSION__ >= 199901L)) \
--   && !defined(__cplusplus))
-+  (((GCC_VERSION >= 2007) || (__STDC_VERSION__ >= 199901L))
- #endif
- 
- #if !defined(HAVE_DESIGNATED_UNION_INITIALIZERS)
--#define HAVE_DESIGNATED_UNION_INITIALIZERS \
-+# if !defined(__cplusplus)
-+# define HAVE_DESIGNATED_UNION_INITIALIZERS \
-+  (((GCC_VERSION >= 2007) || (__STDC_VERSION__ >= 199901L))
-+# else
-+# define HAVE_DESIGNATED_UNION_INITIALIZERS \
-   (((GCC_VERSION >= 2007) || (__STDC_VERSION__ >= 199901L)) \
--   && (!defined(__cplusplus) || (GCC_VERSION >= 4007)))
-+   && (GCC_VERSION >= 4007))
-+# endif
- #endif
- 
- #if HAVE_SYS_STAT_H
 diff -Naur gcc-4.9.2/gcc/toplev.c gcc-4.9.2_curr/gcc/toplev.c
 --- ../gcc-4.9.2/gcc/toplev.c	2014-10-16 09:49:11.000000000 -0400
 +++ ./gcc/toplev.c	2024-03-04 12:32:43.340941473 -0500
@@ -599,3 +546,27 @@ diff -Naur gcc-4.9.2/gcc/value-prof.c gcc-4.9.2_curr/gcc/value-prof.c
      }
  
    return true;
+diff -Naur gcc-4.9.2/gcc/reload1.c gcc-4.9.2_curr/gcc/reload1.c
+--- ../gcc-4.9.2/gcc/reload1.c	2014-02-26 16:57:40.000000000 -0500
++++ ./gcc/reload1.c	2024-03-04 11:58:50.127405590 -0500
+@@ -441,7 +441,7 @@
+ 
+   while (memory_address_p (QImode, tem))
+     {
+-      spill_indirect_levels++;
++      spill_indirect_levels += 1;
+       tem = gen_rtx_MEM (Pmode, tem);
+     }
+ 
+diff -Naur gcc-4.9.2/gcc/output.h gcc-4.9.2_curr/gcc/output.h
+--- ../gcc-4.9.2/gcc/output.h	2014-01-20 15:13:10.000000000 -0500
++++ ./gcc/output.h	2024-03-02 19:16:53.272077771 -0500
+@@ -117,7 +117,7 @@
+ 
+ /* Output a string of assembler code, substituting numbers, strings
+    and fixed syntactic prefixes.  */
+-#if GCC_VERSION >= 3004
++#if GCC_VERSION >= 3004 && 0
+ #define ATTRIBUTE_ASM_FPRINTF(m, n) __attribute__ ((__format__ (__asm_fprintf__, m, n))) ATTRIBUTE_NONNULL(m)
+ #else
+ #define ATTRIBUTE_ASM_FPRINTF(m, n) ATTRIBUTE_NONNULL(m)

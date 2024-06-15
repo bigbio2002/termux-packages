@@ -27,7 +27,7 @@ CXXFLAGS_FOR_BUILD="-O2 -std=gnu++11 -fbracket-depth=512"
 --with-arch=armv8-a
 
 # my
---with-host-libstdcxx="-static-libgcc -Wl,-Bstatic,-lstdc++,-Bdynamic -lm"
+#--with-host-libstdcxx="-static-libgcc -Wl,-Bstatic,-lstdc++,-Bdynamic -lm"
 --disable-sjlj-exceptions
 --enable-bionic-libs
 --enable-libatomic-ifuncs=no
