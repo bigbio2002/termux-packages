@@ -8,9 +8,9 @@
  #include <sys/cdefs.h>
  #include <xlocale.h>
  
-@@ -211,17 +212,7 @@
+@@ -210,17 +211,7 @@
  
- size_t wcstombs(char* __dst, const wchar_t* __src, size_t __n)
+ size_t wcstombs(char* __dst, const wchar_t* __src, size_t __n);
  
 -#if __ANDROID_API__ >= __ANDROID_API_L__
 -size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);

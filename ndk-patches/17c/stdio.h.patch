@@ -10,16 +10,16 @@
  #include <bits/seek_constants.h>
  
  #if __ANDROID_API__ < __ANDROID_API_N__
-@@ -168,7 +171,7 @@
+@@ -165,7 +168,7 @@
      __printflike(2, 0) __warnattr_strict("vsprintf is often misused; please use vsnprintf");
  char* tmpnam(char* __s)
-     __warnattr("tmpnam is unsafe, use mkstemp or tmpfile instead");
+     __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");
 -#define P_tmpdir "/tmp/" /* deprecated */
 +#define P_tmpdir "/data/data/com.termux/files/usr/tmp/" /* deprecated */
  char* tempnam(const char* __dir, const char* __prefix)
      __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");
  
-@@ -244,8 +247,6 @@
+@@ -241,8 +244,6 @@
  FILE* freopen64(const char* __path, const char* __mode, FILE* __fp) __INTRODUCED_IN(24);
  #endif /* __ANDROID_API__ >= 24 */
  
@@ -28,7 +28,7 @@
  #if __ANDROID_API__ >= 24
  FILE* tmpfile64(void) __INTRODUCED_IN(24);
  #endif /* __ANDROID_API__ >= 24 */
-@@ -261,10 +262,15 @@
+@@ -256,10 +257,15 @@
  
  #define L_ctermid 1024 /* size for ctermid() */
  
@@ -47,7 +47,7 @@
  
  FILE* fdopen(int __fd, const char* __mode);
  int fileno(FILE* __fp);
-@@ -331,6 +337,30 @@
+@@ -328,6 +334,30 @@
  #include <bits/fortify/stdio.h>
  #endif
  

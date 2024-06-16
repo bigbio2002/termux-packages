@@ -21,7 +21,7 @@
  #define __DEPRECATED_IN(api_level) __attribute__((annotate("deprecated_in=" #api_level)))
 @@ -29,4 +40,5 @@
  
- #endif  // defined(__BIONIC_VERSIONER)
+ #define __VERSIONER_NO_GUARD __attribute__((annotate("versioner_no_guard")))
  
-+#endif  // !defined(__clang__)
++#endif	// !defined(__clang__)
  #endif /* ANDROID_VERSIONING_H */

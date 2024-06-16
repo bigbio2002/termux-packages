@@ -1,6 +1,6 @@
 --- ./usr/include/pwd.h.orig
 +++ ./usr/include/pwd.h
-@@ -89,13 +89,60 @@
+@@ -89,7 +89,6 @@
  struct passwd* getpwent(void) __INTRODUCED_IN(26);
  
  void setpwent(void) __INTRODUCED_IN(26);
@@ -8,8 +8,9 @@
  #endif /* __ANDROID_API__ >= 26 */
  
  
- int getpwnam_r(const char* __name, struct passwd* __pwd, char* __buf, size_t __n, struct passwd** __result);
- int getpwuid_r(uid_t __uid, struct passwd* __pwd, char* __buf, size_t __n, struct passwd** __result);
+@@ -96,6 +95,54 @@
+ int getpwnam_r(const char* __name, struct passwd* __pwd, char* __buf, size_t __n, struct passwd** __result) __INTRODUCED_IN(12);
+ int getpwuid_r(uid_t __uid, struct passwd* __pwd, char* __buf, size_t __n, struct passwd** __result) __INTRODUCED_IN(12);
  
 +int access(const char* __path, int __mode);
 +

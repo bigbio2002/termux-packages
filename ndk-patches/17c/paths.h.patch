@@ -4,18 +4,18 @@
  #include <sys/cdefs.h>
  
  #ifndef _PATH_BSHELL
--#define _PATH_BSHELL	"/system/bin/sh"
-+#define _PATH_BSHELL	"/data/data/com.termux/files/usr/bin/sh"
+-#define	_PATH_BSHELL	"/system/bin/sh"
++#define	_PATH_BSHELL	"/data/data/com.termux/files/usr/bin/sh"
  #endif
- #define _PATH_CONSOLE	"/dev/console"
--#define _PATH_DEFPATH	"/sbin:/system/sbin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
-+#define _PATH_DEFPATH	"/data/data/com.termux/files/usr/bin"
- #define _PATH_DEV	"/dev/"
- #define _PATH_DEVNULL	"/dev/null"
- #define _PATH_KLOG	"/proc/kmsg"
-@@ -45,5 +45,11 @@
- #define _PATH_MOUNTED	"/proc/mounts"
- #define _PATH_TTY	"/dev/tty"
+ #define	_PATH_CONSOLE	"/dev/console"
+-#define	_PATH_DEFPATH	"/sbin:/system/sbin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
++#define	_PATH_DEFPATH	"/data/data/com.termux/files/usr/bin"
+ #define	_PATH_DEV	"/dev/"
+ #define	_PATH_DEVNULL	"/dev/null"
+ #define	_PATH_KLOG	"/proc/kmsg"
+@@ -45,4 +45,10 @@
+ #define	_PATH_MOUNTED	"/proc/mounts"
+ #define	_PATH_TTY	"/dev/tty"
  
 +#define        _PATH_STDPATH   _PATH_DEFPATH
 +#define        _PATH_TMP       "/data/data/com.termux/files/usr/tmp/"

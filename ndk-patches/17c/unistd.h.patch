@@ -1,7 +1,7 @@
 --- ./usr/include/unistd.h.orig	2021-08-16 11:52:08.095542840 +0200
 +++ ./usr/include/unistd.h	2021-08-16 11:52:08.565542673 +0200
-@@ -429,6 +429,74 @@
- #undef _UNISTD_H_
+@@ -302,6 +302,74 @@
+ #include <bits/fortify/unistd.h>
  #endif
  
 +#if !defined GETPASS_H && !defined getpass && !defined HAVE_GETPASS && !defined HAS_GETPASS && !defined NO_INLINE_GETPASS
@@ -74,4 +74,4 @@
 +
  __END_DECLS
  
- #include <android/legacy_unistd_inlines.h>
+ #endif
