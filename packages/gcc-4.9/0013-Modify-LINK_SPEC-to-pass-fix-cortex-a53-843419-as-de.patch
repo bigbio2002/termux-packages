@@ -1,0 +1,33 @@
+diff --git gcc-4.9/gcc/config/aarch64/aarch64.c gcc-4.9/gcc/config/aarch64/aarch64.c
+index 2ff6c7c..0efb7e4 100644
+--- gcc-4.9/gcc/config/aarch64/aarch64.c
++++ gcc-4.9/gcc/config/aarch64/aarch64.c
+@@ -5267,6 +5267,15 @@ aarch64_override_options (void)
+ #endif
+     }
+ 
++  if (aarch64_fix_a53_err843419 == 2)
++    {
++#ifdef TARGET_FIX_ERR_A53_843419_DEFAULT
++      aarch64_fix_a53_err843419 = 1;
++#else
++      aarch64_fix_a53_err843419 = 0;
++#endif
++    }
++
+   aarch64_override_options_after_change ();
+ }
+ 
+diff --git gcc-4.9/gcc/config/aarch64/aarch64.opt gcc-4.9/gcc/config/aarch64/aarch64.opt
+index fc0307e..ca27f50 100644
+--- gcc-4.9/gcc/config/aarch64/aarch64.opt
++++ gcc-4.9/gcc/config/aarch64/aarch64.opt
+@@ -72,7 +72,7 @@ mfix-cortex-a53-835769
+ Workaround for ARM Cortex-A53 Erratum number 835769
+ 
+ mfix-cortex-a53-843419
+-Target Report
++Target Report Var(aarch64_fix_a53_err843419) Init(2)
+ Workaround for ARM Cortex-A53 Erratum number 843419
+ 
+ mlittle-endian

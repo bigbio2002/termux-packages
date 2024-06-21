@@ -200,7 +200,7 @@ diff -Naur gcc-4.9.2/gcc/gengtype-lex.c gcc-4.9.2_curr/gcc/gengtype-lex.c
 +	char *yy_cp, *yy_bp;
 +	int yy_act;
      
- #line 65 "/d/gcc-4.9.2/gcc-4.9.2/gcc/gengtype-lex.l"
+ #line 65 "/d/gcc-4.9.3/gcc-4.9.3/gcc/gengtype-lex.l"
  
 @@ -1466,7 +1466,7 @@
  yy_match:
@@ -422,7 +422,7 @@ diff -Naur gcc-4.9.2/gcc/tree-browser.c gcc-4.9.2_curr/gcc/tree-browser.c
 diff -Naur gcc-4.9.2/gcc/tree-ssa-reassoc.c gcc-4.9.2_curr/gcc/tree-ssa-reassoc.c
 --- ../gcc-4.9.2/gcc/tree-ssa-reassoc.c	2014-10-17 06:53:36.000000000 -0400
 +++ ./gcc/tree-ssa-reassoc.c	2024-03-04 13:44:24.648036633 -0500
-@@ -4208,7 +4208,7 @@
+@@ -4211,7 +4211,7 @@
  		      if (elt < vec_len - 1)
  			fputs (" * ", dump_file);
  		    }
@@ -431,7 +431,7 @@ diff -Naur gcc-4.9.2/gcc/tree-ssa-reassoc.c gcc-4.9.2_curr/gcc/tree-ssa-reassoc.
  			   power);
  		}
  	    }
-@@ -4242,7 +4242,7 @@
+@@ -4245,7 +4245,7 @@
  		  if (elt < vec_len - 1)
  		    fputs (" * ", dump_file);
  		}
@@ -546,27 +546,3 @@ diff -Naur gcc-4.9.2/gcc/value-prof.c gcc-4.9.2_curr/gcc/value-prof.c
      }
  
    return true;
-diff -Naur gcc-4.9.2/gcc/reload1.c gcc-4.9.2_curr/gcc/reload1.c
---- ../gcc-4.9.2/gcc/reload1.c	2014-02-26 16:57:40.000000000 -0500
-+++ ./gcc/reload1.c	2024-03-04 11:58:50.127405590 -0500
-@@ -441,7 +441,7 @@
- 
-   while (memory_address_p (QImode, tem))
-     {
--      spill_indirect_levels++;
-+      spill_indirect_levels += 1;
-       tem = gen_rtx_MEM (Pmode, tem);
-     }
- 
-diff -Naur gcc-4.9.2/gcc/output.h gcc-4.9.2_curr/gcc/output.h
---- ../gcc-4.9.2/gcc/output.h	2014-01-20 15:13:10.000000000 -0500
-+++ ./gcc/output.h	2024-03-02 19:16:53.272077771 -0500
-@@ -117,7 +117,7 @@
- 
- /* Output a string of assembler code, substituting numbers, strings
-    and fixed syntactic prefixes.  */
--#if GCC_VERSION >= 3004
-+#if GCC_VERSION >= 3004 && 0
- #define ATTRIBUTE_ASM_FPRINTF(m, n) __attribute__ ((__format__ (__asm_fprintf__, m, n))) ATTRIBUTE_NONNULL(m)
- #else
- #define ATTRIBUTE_ASM_FPRINTF(m, n) ATTRIBUTE_NONNULL(m)

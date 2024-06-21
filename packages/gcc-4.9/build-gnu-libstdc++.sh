@@ -18,10 +18,13 @@
 #  libstdc++ binaries from their sources. It requires an NDK installation
 #  that contains valid plaforms files and toolchain binaries.
 #
+
 # include common function and variable definitions
 . $NDK_BUILDTOOLS_PATH/prebuilt-common.sh
+
 STL_DIR=sources/cxx-stl
 GNUSTL_DIR=gnu-libstdc++
+
 PROGRAM_PARAMETERS="<src-dir>"
 PROGRAM_DESCRIPTION=\
 "Rebuild the prebuilt GNU libsupc++ / libstdc++ binaries for the Android NDK.
@@ -72,15 +75,18 @@ register_var_option "--with-libsupport" WITH_LIBSUPPORT "Build with -landroid_su
 register_jobs_option
 register_try64_option
 extract_parameters "$@"
+
 # set compiler version to any even earlier than default
 EXPLICIT_COMPILER_VERSION=1
 if [ -z "$GCC_VERSION_LIST" ]; then
     EXPLICIT_COMPILER_VERSION=
     GCC_VERSION_LIST=$DEFAULT_GCC_VERSION_LIST
 fi
+
 SRCDIR=$(echo $PARAMETERS | sed 1q)
 check_toolchain_src_dir "$SRCDIR"
 ABIS=$(commas_to_spaces $ABIS)
+
 # Handle NDK_DIR
 if [ -z "$NDK_DIR" ] ; then
     NDK_DIR=$ANDROID_NDK_ROOT
@@ -91,15 +97,19 @@ else
         exit 1
     fi
 fi
+
 if [ -z "$OPTION_BUILD_DIR" ]; then
     BUILD_DIR=$NDK_TMPDIR/build-gnustl
 else
     BUILD_DIR=$OPTION_BUILD_DIR
 fi
+
 HOST_TAG_LIST="$HOST_TAG $HOST_TAG32"
+
 rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 fail_panic "Could not create build directory: $BUILD_DIR"
+
 # $1: ABI name
 # $2: Build directory
 # $3: "static" or "shared"
@@ -116,8 +126,10 @@ build_gnustl_for_abi ()
     local DSTDIR=$NDK_DIR/$GNUSTL_SUBDIR/libs/$ABI/$THUMB
     local PREBUILT_NDK=$ANDROID_BUILD_TOP/prebuilts/ndk/current
     local SRC OBJ OBJECTS CFLAGS CXXFLAGS CPPFLAGS
+
     prepare_target_build $ABI $PLATFORM $NDK_DIR
     fail_panic "Could not setup target build."
+
     INSTALLDIR=$BUILDDIR/install-$ABI-$GCC_VERSION/$THUMB
     BUILDDIR=$BUILDDIR/$LIBTYPE-${ABI}${THUMB}-$GCC_VERSION
     mkdir -p $DSTDIR
@@ -128,6 +140,7 @@ build_gnustl_for_abi ()
             break;
         fi
     done
+
     GNUSTL_SRCDIR=$SRCDIR/gcc/gcc-$GCC_VERSION/libstdc++-v3
 
     # Sanity check
@@ -136,10 +149,12 @@ build_gnustl_for_abi ()
         echo "Can't find: $GNUSTL_SRCDIR"
         exit 1
     fi
+
     if [ ! -f "$GNUSTL_SRCDIR/configure" ]; then
         echo "ERROR: Configure script missing: $GNUSTL_SRCDIR/configure"
         exit 1
     fi
+
     SYSROOT=$PREBUILT_NDK/$(get_default_platform_sysroot_for_arch $ARCH)
     LDIR=$SYSROOT"/usr/"$(get_default_libdir_for_arch $ARCH)
 
@@ -148,17 +163,20 @@ build_gnustl_for_abi ()
 	echo "ERROR: Empty sysroot! you probably need to run gen-platforms.sh before this script."
 	exit 1
     fi
+
     if [ ! -f "$LDIR/libc.so" ]; then
         echo "ERROR: Sysroot misses shared libraries! you probably need to run gen-platforms.sh"
         echo "*without* the --minimal flag before running this script."
         exit 1
     fi
+
     EXTRA_CFLAGS="-ffunction-sections -fdata-sections"
     EXTRA_LDFLAGS=
     if [ -n "$THUMB" ] ; then
         EXTRA_CFLAGS="$EXTRA_CFLAGS -mthumb"
         EXTRA_LDFLAGS="$EXTRA_LDFLAGS -mthumb"
     fi
+
     case $ARCH in
         arm)
             BUILD_HOST=arm-linux-androideabi
@@ -185,18 +203,22 @@ build_gnustl_for_abi ()
             BUILD_HOST=mips64el-linux-android
             ;;
     esac
+
     CFLAGS="-fPIC $CFLAGS --sysroot=$SYSROOT -fexceptions -funwind-tables -D__BIONIC__ -O2 $EXTRA_CFLAGS"
     CXXFLAGS="-fPIC $CXXFLAGS --sysroot=$SYSROOT -fexceptions -frtti -funwind-tables -D__BIONIC__ -O2 $EXTRA_CFLAGS"
     CPPFLAGS="$CPPFLAGS --sysroot=$SYSROOT"
+
     if [ "$WITH_DEBUG_INFO" ]; then
         CFLAGS="$CFLAGS -g"
         CXXFLAGS="$CXXFLAGS -g"
     fi
+
     if [ "$WITH_LIBSUPPORT" ]; then
         CFLAGS="$CFLAGS -I$NDK_DIR/$SUPPORT_SUBDIR/include"
         CXXFLAGS="$CXXFLAGS -I$NDK_DIR/$SUPPORT_SUBDIR/include"
         EXTRA_LDFLAGS="$EXTRA_LDFLAGS -L$NDK_DIR/$SUPPORT_SUBDIR/libs/$ABI -landroid_support"
     fi
+
     export CFLAGS CXXFLAGS CPPFLAGS
     export CC=${BINPREFIX}gcc
     export CXX=${BINPREFIX}g++
@@ -205,8 +227,11 @@ build_gnustl_for_abi ()
     export AR=${BINPREFIX}ar
     export RANLIB=${BINPREFIX}ranlib
     export STRIP=${BINPREFIX}strip
+
     setup_ccache
+
     export LDFLAGS="$EXTRA_LDFLAGS -lc"
+
     case $ABI in
         armeabi-v7a|armeabi-v7a-hard)
             CXXFLAGS=$CXXFLAGS" -march=armv7-a -mfpu=vfpv3-d16"
@@ -223,10 +248,12 @@ build_gnustl_for_abi ()
             CXXFLAGS=$CXXFLAGS" -mfix-cortex-a53-835769"
             ;;
     esac
+
     if [ "$ABI" = "armeabi" -o "$ABI" = "armeabi-v7a" -o "$ABI" = "armeabi-v7a-hard" ]; then
         CFLAGS=$CFLAGS" -minline-thumb1-jumptable"
         CXXFLAGS=$CXXFLAGS" -minline-thumb1-jumptable"
     fi
+
     LIBTYPE_FLAGS=
     if [ $LIBTYPE = "static" ]; then
         # Ensure we disable visibility for the static library to reduce the
@@ -240,11 +267,13 @@ build_gnustl_for_abi ()
         LIBTYPE_FLAGS="--disable-static --enable-shared"
         #LDFLAGS=$LDFLAGS" -lsupc++"
     fi
+
     if [ "$ARCH" = "x86_64" -o "$ARCH" = "mips64" -o "$ARCH" = "mips" ] ; then
         MULTILIB_FLAGS=
     else
         MULTILIB_FLAGS=--disable-multilib
     fi
+
     PROJECT="gnustl_$LIBTYPE gcc-$GCC_VERSION $ABI $THUMB"
     echo "$PROJECT: configuring"
     mkdir -p $BUILDDIR && rm -rf $BUILDDIR/* &&
@@ -262,17 +291,21 @@ build_gnustl_for_abi ()
         --disable-libstdcxx-pch \
         --with-gxx-include-dir=$INSTALLDIR/include/c++/$GCC_VERSION
     fail_panic "Could not configure $PROJECT"
+
     echo "$PROJECT: compiling"
     run make -j$NUM_JOBS
     fail_panic "Could not build $PROJECT"
+
     echo "$PROJECT: installing"
     run make install
     fail_panic "Could not create $ABI $THUMB prebuilts for GNU libsupc++/libstdc++"
 }
+
 HAS_COMMON_HEADERS=
 # $1: ABI
 # $2: Build directory
 # $3: GCC_VERSION
+
 copy_gnustl_libs ()
 {
     local ABI="$1"
@@ -280,20 +313,26 @@ copy_gnustl_libs ()
     local ARCH=$(convert_abi_to_arch $ABI)
     local GCC_VERSION="$3"
     local PREFIX=$(get_default_toolchain_prefix_for_arch $ARCH)
+
     PREFIX=${PREFIX%%-}
+
     local SDIR="$BUILDDIR/install-$ABI-$GCC_VERSION"
     local DDIR="$NDK_DIR/$GNUSTL_SUBDIR"
     local GCC_VERSION_NO_DOT=$(echo $GCC_VERSION|sed 's/\./_/g')
+
     # Copy the common headers only once per gcc version
     if [ -z `var_value HAS_COMMON_HEADERS_$GCC_VERSION_NO_DOT` ]; then
         copy_directory "$SDIR/include/c++/$GCC_VERSION" "$DDIR/include"
         rm -rf "$DDIR/include/$PREFIX"
 	eval HAS_COMMON_HEADERS_$GCC_VERSION_NO_DOT=true
     fi
+
     rm -rf "$DDIR/libs/$ABI" &&
     mkdir -p "$DDIR/libs/$ABI/include"
+
     # Copy the ABI-specific headers
     copy_directory "$SDIR/include/c++/$GCC_VERSION/$PREFIX/bits" "$DDIR/libs/$ABI/include/bits"
+
     case "$ARCH" in
         x86_64)
             copy_directory "$SDIR/include/c++/$GCC_VERSION/$PREFIX/32/bits" "$DDIR/libs/$ABI/include/32/bits"
@@ -309,16 +348,20 @@ copy_gnustl_libs ()
             copy_directory "$SDIR/include/c++/$GCC_VERSION/$PREFIX/mips-r6/bits" "$DDIR/libs/$ABI/include/mips-r6/bits"
             ;;
     esac
+
     LDIR=lib
+
     if [ "$ABI" = "mips32r6" ]; then
         LDIR=libr6
     elif [ "$ARCH" != "${ARCH%%64*}" ]; then
         #Can't call $(get_default_libdir_for_arch $ARCH) which contain hack for arm64
         LDIR=lib64
     fi
+
     # Copy the ABI-specific libraries
     # Note: the shared library name is libgnustl_shared.so due our custom toolchain patch
     copy_file_list "$SDIR/$LDIR" "$DDIR/libs/$ABI" libsupc++.a libgnustl_shared.so
+
     # Note: we need to rename libgnustl_shared.a to libgnustl_static.a
     cp "$SDIR/$LDIR/libgnustl_shared.a" "$DDIR/libs/$ABI/libgnustl_static.a"
     case "$ARCH" in
@@ -351,38 +394,48 @@ copy_gnustl_libs ()
             cp "$SDIR/libr6/libgnustl_shared.a" "$DDIR/libs/$ABI/libr6/libgnustl_static.a"
             ;;
     esac
+
     if [ -d "$SDIR/thumb" ] ; then
         copy_file_list "$SDIR/thumb/$LDIR" "$DDIR/libs/$ABI/thumb" libsupc++.a libgnustl_shared.so
         cp "$SDIR/thumb/$LDIR/libgnustl_shared.a" "$DDIR/libs/$ABI/thumb/libgnustl_static.a"
     fi
 }
+
 GCC_VERSION_LIST=$(commas_to_spaces $GCC_VERSION_LIST)
+
 for ABI in $ABIS; do
     ARCH=$(convert_abi_to_arch $ABI)
     FIRST_GCC_VERSION=$(get_first_gcc_version_for_arch $ARCH)
+
     for VERSION in $GCC_VERSION_LIST; do
         # Only build for this GCC version if it on or after FIRST_GCC_VERSION
         if [ -z "$EXPLICIT_COMPILER_VERSION" ] && ! version_is_at_least "${VERSION%%l}" "$FIRST_GCC_VERSION"; then
             continue
         fi
+
         build_gnustl_for_abi $ABI "$BUILD_DIR" static $VERSION
         build_gnustl_for_abi $ABI "$BUILD_DIR" shared $VERSION
+
         # build thumb version of libraries for 32-bit arm
         if [ "$ABI" != "${ABI%%arm*}" -a "$ABI" = "${ABI%%64*}" ] ; then
             build_gnustl_for_abi $ABI "$BUILD_DIR" static $VERSION thumb
             build_gnustl_for_abi $ABI "$BUILD_DIR" shared $VERSION thumb
         fi
+
         copy_gnustl_libs $ABI "$BUILD_DIR" $VERSION
     done
 done
+
 # If needed, package files into tarballs
 if [ -n "$PACKAGE_DIR" ] ; then
     for VERSION in $GCC_VERSION_LIST; do
         FILES="$GNUSTL_DIR/Android.mk $GNUSTL_DIR/include"
+
         for ABI in $ABIS; do
             if [ ! -d "$NDK_DIR/$GNUSTL_SUBDIR/libs/$ABI" ]; then
                 continue
             fi
+
             case "$ABI" in
                 x86_64)
                     MULTILIB="include/32/bits include/x32/bits
@@ -407,14 +460,17 @@ if [ -n "$PACKAGE_DIR" ] ; then
                     MULTILIB=
                     ;;
             esac
+
             for LIB in include/bits $MULTILIB libsupc++.a libgnustl_static.a libgnustl_shared.so; do
                 FILES="$FILES $GNUSTL_DIR/libs/$ABI/$LIB"
                 THUMB_FILE="$GNUSTL_DIR/libs/$ABI/thumb/$LIB"
+
                 if [ -f "$NDK_DIR/$THUMB_FILE" ] ; then
                     FILES="$FILES $THUMB_FILE"
                 fi
             done
         done
+
         make_repo_prop "$NDK_DIR/$STL_DIR/$GNUSTL_DIR"
         FILES="$FILES $GNUSTL_DIR/repo.prop"
         cp "$ANDROID_BUILD_TOP/toolchain/gcc/gcc-4.9/COPYING" \
@@ -426,10 +482,12 @@ if [ -n "$PACKAGE_DIR" ] ; then
         fail_panic "Could not package GNU libstdc++ binaries!"
     done
 fi
+
 if [ -z "$OPTION_BUILD_DIR" ]; then
     log "Cleaning up..."
     rm -rf $BUILD_DIR
 else
     log "Don't forget to cleanup: $BUILD_DIR"
 fi
+
 log "Done!"

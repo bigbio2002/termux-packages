@@ -1,0 +1,42 @@
+diff -Naur gcc-4.9.2/gcc/config/aarch64/aarch64-linux-android.h gcc-4.9.2_bak/gcc/config/aarch64/aarch64-linux-android.h
+--- gcc-4.9.2/gcc/config/aarch64/aarch64-linux-android.h	2024-06-20 03:03:46.803662262 -0400
++++ gcc-4.9.2_bak/gcc/config/aarch64/aarch64-linux-android.h	2024-05-18 14:16:48.943332584 -0400
+@@ -56,8 +56,8 @@
+ #define ENDFILE_SPEC \
+   LINUX_OR_ANDROID_LD (GNU_USER_TARGET_ENDFILE_SPEC, ANDROID_ENDFILE_SPEC)
+ 
+-#ifdef IN_LIBGCC2
++/*#ifdef IN_LIBGCC2
+ #define LIBGCC2_UNWIND_ATTRIBUTE __attribute__((visibility("default")))
+-#endif
++#endif*/
+ 
+ #endif  /* GCC_AARCH64_LINUX_ANDROID_H */
+diff -Naur gcc-4.9.2/gcc/config/aarch64/aarch64-linux.h gcc-4.9.2_bak/gcc/config/aarch64/aarch64-linux.h
+--- gcc-4.9.2/gcc/config/aarch64/aarch64-linux.h	2024-06-20 03:03:46.816995597 -0400
++++ gcc-4.9.2_bak/gcc/config/aarch64/aarch64-linux.h	2024-05-18 14:18:16.626674653 -0400
+@@ -30,14 +30,22 @@
+ #endif
+ #define BIONIC_DYNAMIC_LINKER RUNTIME_ROOT_PREFIX "/system/bin/linker64"
+ 
++#undef	ASAN_CC1_SPEC
++#define ASAN_CC1_SPEC "%{%:sanitize(address):-funwind-tables}"
++
++#undef	CC1_SPEC
++#define CC1_SPEC GNU_USER_TARGET_CC1_SPEC ASAN_CC1_SPEC
++
+ #define CPP_SPEC "%{pthread:-D_REENTRANT}"
+ 
+ #define LINUX_TARGET_LINK_SPEC  "%{h*}		\
+    %{static:-Bstatic}				\
+    %{shared:-shared}				\
+    %{symbolic:-Bsymbolic}			\
+-   %{rdynamic:-export-dynamic}			\
+-   -dynamic-linker " GNU_USER_DYNAMIC_LINKER "	\
++   %{!static:%{!static-pie:			\
++    %{rdynamic:-export-dynamic}			\
++    %{!shared:-dynamic-linker " GNU_USER_DYNAMIC_LINKER "}}} \
++   %{static-pie:-Bstatic -pie --no-dynamic-linker -z text} \
+    -X						\
+    %{mbig-endian:-EB} %{mlittle-endian:-EL}     \
+    -maarch64linux%{mbig-endian:b}"
