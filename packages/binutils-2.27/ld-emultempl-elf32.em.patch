@@ -13,5 +13,5 @@ diff -u -r ../binutils-2.26/ld/emultempl/elf32.em ./ld/emultempl/elf32.em
      link_info.flags_1 |= (bfd_vma) DF_1_PIE;
 +#endif
  
-   if (bfd_link_executable (&link_info)
-       && link_info.nointerp)
+   after_parse_default ();
+ }

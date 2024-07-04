@@ -22,7 +22,7 @@
    (((1 << 25) - 1) << 2)
 --- a/bfd/elfxx-x86.c
 +++ b/bfd/elfxx-x86.c
-@@ -27,8 +27,8 @@
+@@ -27,9 +27,9 @@
  /* The name of the dynamic interpreter.  This is put in the .interp
     section.  */
  

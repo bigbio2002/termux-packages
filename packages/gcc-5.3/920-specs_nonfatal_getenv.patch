@@ -1,5 +1,5 @@
---- gcc/gcc.c
-+++ gcc/gcc.c
+--- a/gcc/gcc.c
++++ b/gcc/gcc.c
 @@ -8805,8 +8805,10 @@ getenv_spec_function (int argc, const ch
  
    value = getenv (argv[0]);

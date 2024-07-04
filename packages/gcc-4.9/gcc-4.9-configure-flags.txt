@@ -22,9 +22,8 @@ CXX=clang++
 ** CFLAGS="-O2 -std=gnu99"
 ** CXXFLAGS="-O2 -std=gnu++11"
 CFLAGS_FOR_BUILD="-O2 -std=gnu99"
-CFLAGS_FOR_TARGET=-fexceptions
 CXXFLAGS_FOR_BUILD="-O2 -std=gnu++11 -fbracket-depth=512"
-CXXFLAGS_FOR_TARGET=-frtti
+LDFLAGS_FOR_TARGET=-Wl,-rpath,/data/data/com.termux/files/usr/lib
 --with-arch=armv8-a
 
 # my
@@ -46,7 +45,7 @@ v --with-as=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin/as
 --enable-fix-cortex-a53-843419
 
 # todo
-#--with-stage1-ldflags="-L/data/data/com.termux/files/usr/aarch64-linux-android/lib"
+--with-stage1-ldflags="-L/data/data/com.termux/files/usr/aarch64-linux-android/lib"
 --with-build-time-tools=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin
 CPPFLAGS_FOR_TARGET=-I/data/data/com.termux/files/usr/include/aarch64-linux-android
 #--disable-shared
@@ -60,3 +59,5 @@ v --program-suffix=-4.9
 CPP_FOR_TARGET=/data/data/com.termux/files/usr/bin/aarch64-linux-android-cpp
 --with-cpp-install-dir=lib
 --enable-bionic-libs
+CFLAGS_FOR_TARGET=-fexceptions
+CXXFLAGS_FOR_TARGET=-frtti
