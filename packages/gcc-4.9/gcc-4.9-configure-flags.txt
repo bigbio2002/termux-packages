@@ -23,41 +23,41 @@ CXX=clang++
 ** CXXFLAGS="-O2 -std=gnu++11"
 CFLAGS_FOR_BUILD="-O2 -std=gnu99"
 CXXFLAGS_FOR_BUILD="-O2 -std=gnu++11 -fbracket-depth=512"
-LDFLAGS_FOR_TARGET=-Wl,-rpath,/data/data/com.termux/files/usr/lib
+#CFLAGS_FOR_TARGET=-fexceptions
+#CXXFLAGS_FOR_TARGET="-fexceptions -frtti"
+v LDFLAGS_FOR_TARGET=-Wl,-rpath,/data/data/com.termux/files/usr/lib
 --with-arch=armv8-a
 
 # my
 #--with-host-libstdcxx="-static-libgcc -Wl,-Bstatic,-lstdc++,-Bdynamic -lm"
 #--enable-multiarch
---disable-sjlj-exceptions
+v --disable-sjlj-exceptions
 --enable-libatomic-ifuncs=no
 --enable-initfini-array
 --disable-bootstrap
 --enable-link-mutex
 --with-sysroot=/data/data/com.termux/files
 --with-local-prefix=/data/data/com.termux/files/usr/local
---enable-__cxa_atexit
+v --enable-__cxa_atexit
 --enable-gnu-indirect-function
-v --with-ld=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin/ld
-v --with-as=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin/as
---enable-threads
+--with-ld=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin/ld
+--with-as=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin/as
+v --enable-threads
 --enable-fix-cortex-a53-835769
 --enable-fix-cortex-a53-843419
 
 # todo
---with-stage1-ldflags="-L/data/data/com.termux/files/usr/aarch64-linux-android/lib"
 --with-build-time-tools=/data/data/com.termux/files/usr/local/aarch64-linux-android/bin
 CPPFLAGS_FOR_TARGET=-I/data/data/com.termux/files/usr/include/aarch64-linux-android
-#--disable-shared
-#--enable-shared=libstdc++
 v --program-suffix=-4.9
 
 # unneeded/old
+--with-stage1-ldflags="-L/data/data/com.termux/files/usr/aarch64-linux-android/lib"
 --with-build-sysroot=/data/data/com.termux/files/home/downloads/ndk-sysroots/sysroot
 --enable-version-specific-runtime-libs
 --with-native-system-header-dir=/usr/include
 CPP_FOR_TARGET=/data/data/com.termux/files/usr/bin/aarch64-linux-android-cpp
 --with-cpp-install-dir=lib
 --enable-bionic-libs
-CFLAGS_FOR_TARGET=-fexceptions
-CXXFLAGS_FOR_TARGET=-frtti
+#--disable-shared
+#--enable-shared=libstdc++

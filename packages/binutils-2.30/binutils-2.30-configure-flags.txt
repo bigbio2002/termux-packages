@@ -1,0 +1,31 @@
+--prefix=/data/data/com.termux/files/usr/local
+
+--target=aarch64-linux-android
+--bindir=/data/data/com.termux/files/usr/local/libexec/binutils
+
+--with-gmp=/data/data/com.termux/files/usr
+--with-mpc=/data/data/com.termux/files/usr
+--with-mpfr=/data/data/com.termux/files/usr
+
+--disable-nls
+--with-system-zlib
+--enable-plugins
+--enable-gold
+--enable-new-dtags
+--enable-relro
+--enable-lto
+--enable-64-bit-bfd
+--enable-deterministic-archives
+--with-sysroot=/data/data/com.termux/files
+--enable-initfini-array
+--enable-default-hash-style=both
+--enable-eh-frame-hdr-for-static
+
+--with-lib-path=
+	/data/data/com.termux/files/usr/local/lib:
+	/data/data/com.termux/files/usr/lib:
+	/system/lib64:
+	/data/data/com.termux/files/usr/aarch64-linux-android/lib
+
+CC=clang
+CXX=clang++

@@ -7,12 +7,9 @@
 + %{!fpie: %{!fPIE: %{!fpic: %{!fPIC: %{!fno-pic:-fPIE}}}}}
 
 *link:
-+ %{!nopie: %{!static: %{!shared: %{!nostdlib: %{!nostartfiles: %{!fno-PIE: %{!fno-pie: -pie}}}}}}}
++ %{!nopie: %{!static: %{!shared: %{!nostdlib: %{!nostartfiles: %{!fno-PIE: %{!fno-pie: -pie}}}}}}} %{!static:%{!static-pie:-rpath=/data/data/com.termux/files/usr/lib}}
 
 #*link_gcc_c_sequence:
 #+ %{!static:%{!static-pie:-rpath=/data/data/com.termux/files/usr/lib}}
 # example:
 #%{!static:--eh-frame-hdr} -m %(link_emulation) %{shared:-shared}   %{!shared:     %{!static:       %{rdynamic:-export-dynamic}       -dynamic-linker %(dynamic_linker)}       %{static:-static}} -rpath /usr/local/lib64
-#
-# from r/gcc
-#--with-specs='%{!static:%x{-rpath=/home/someuser/local/gcc-9/lib64} %x{-enable-new-dtags}}'
