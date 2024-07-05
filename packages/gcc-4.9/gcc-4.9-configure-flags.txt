@@ -25,7 +25,7 @@ CFLAGS_FOR_BUILD="-O2 -std=gnu99"
 CXXFLAGS_FOR_BUILD="-O2 -std=gnu++11 -fbracket-depth=512"
 #CFLAGS_FOR_TARGET=-fexceptions
 #CXXFLAGS_FOR_TARGET="-fexceptions -frtti"
-v LDFLAGS_FOR_TARGET=-Wl,-rpath,/data/data/com.termux/files/usr/lib
+LDFLAGS_FOR_TARGET=-Wl,-rpath,/data/data/com.termux/files/usr/lib
 --with-arch=armv8-a
 
 # my
