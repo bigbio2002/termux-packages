@@ -5,13 +5,13 @@ diff -Naur gcc-5.3.0/libcpp/system.h gcc-5.3.0_my/libcpp/system.h
     ??? C99 designated initializers are not supported by most C++
     compilers, including G++.  -- gdr, 2005-05-18  */
  #if !defined(HAVE_DESIGNATED_INITIALIZERS)
-+#if !defined(__cplusplus)
++#ifdef __cplusplus
++#define HAVE_DESIGNATED_INITIALIZERS 0
++#else
  #define HAVE_DESIGNATED_INITIALIZERS \
 -  (!defined(__cplusplus) \
 -   && ((GCC_VERSION >= 2007) || (__STDC_VERSION__ >= 199901L)))
 +   ((GCC_VERSION >= 2007) || (__STDC_VERSION__ >= 199901L))
-+#else
-+#define HAVE_DESIGNATED_INITIALIZERS 0
 +#endif
  #endif
  
@@ -19,30 +19,28 @@ diff -Naur gcc-5.3.0/libcpp/system.h gcc-5.3.0_my/libcpp/system.h
 diff -Naur gcc-4.9.2/gcc/system.h gcc-4.9.2_curr/gcc/system.h
 --- ../gcc-4.9.2/gcc/system.h	2024-03-05 10:17:37.794807888 -0500
 +++ ./gcc/system.h	2024-03-01 13:05:09.393215274 -0500
-@@ -543,15 +543,23 @@
+@@ -400,15 +400,21 @@
  
  /* 1 if we have C99 designated initializers.  */
  #if !defined(HAVE_DESIGNATED_INITIALIZERS)
-+#if !defined(__cplusplus)
++#ifdef __cplusplus
++#define HAVE_DESIGNATED_INITIALIZERS 0
++#else
  #define HAVE_DESIGNATED_INITIALIZERS \
 -  (((GCC_VERSION >= 2007) || (__STDC_VERSION__ >= 199901L)) \
 -   && !defined(__cplusplus))
 +  ((GCC_VERSION >= 2007) || (__STDC_VERSION__ >= 199901L))
-+#else
-+#define HAVE_DESIGNATED_INITIALIZERS 0
 +#endif
  #endif
  
  #if !defined(HAVE_DESIGNATED_UNION_INITIALIZERS)
-+#if !defined(__cplusplus)
++#ifdef __cplusplus
++#define HAVE_DESIGNATED_UNION_INITIALIZERS (GCC_VERSION >= 4007)
++#else
  #define HAVE_DESIGNATED_UNION_INITIALIZERS \
 -  (((GCC_VERSION >= 2007) || (__STDC_VERSION__ >= 199901L)) \
 -   && (!defined(__cplusplus) || (GCC_VERSION >= 4007)))
 +  ((GCC_VERSION >= 2007) || (__STDC_VERSION__ >= 199901L))
-+#else
-+#define HAVE_DESIGNATED_UNION_INITIALIZERS \
-+  (((GCC_VERSION >= 2007) || (__STDC_VERSION__ >= 199901L)) \
-+   && (GCC_VERSION >= 4007))
 +#endif
  #endif
  
