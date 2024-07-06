@@ -1,0 +1,1135 @@
+diff -Naur gcc-5.3.0/gcc/bitmap.c gcc-5.3.0_my/gcc/bitmap.c
+--- gcc-5.3.0/gcc/bitmap.c	2015-01-05 07:33:28.000000000 -0500
++++ gcc-5.3.0_my/gcc/bitmap.c	2024-05-21 20:47:07.086894431 -0400
+@@ -2170,8 +2170,8 @@
+       sprintf (s, "%s:%i (%s)", s1, d->line, d->function);
+       s[41] = 0;
+       fprintf (stderr,
+-	       "%-41s %9u %15"PRId64" %15"PRId64" %15"PRId64
+-	       " %10"PRId64" %10"PRId64"\n",
++	       "%-41s %9u %15" PRId64 " %15" PRId64 " %15" PRId64
++	       " %10" PRId64 " %10" PRId64 "\n",
+ 	       s, d->created,
+ 	       d->allocated, d->peak, d->current,
+ 	       d->nsearches, d->search_iter);
+@@ -2204,7 +2204,7 @@
+   bitmap_desc_hash->traverse <bitmap_output_info *, print_statistics> (&info);
+   fprintf (stderr, "---------------------------------------------------------------------------------\n");
+   fprintf (stderr,
+-	   "%-41s %9"PRId64" %15"PRId64"\n",
++	   "%-41s %9" PRId64 " %15" PRId64 "\n",
+ 	   "Total", info.count, info.size);
+   fprintf (stderr, "---------------------------------------------------------------------------------\n");
+ }
+diff -Naur gcc-5.3.0/gcc/c/c-aux-info.c gcc-5.3.0_my/gcc/c/c-aux-info.c
+--- gcc-5.3.0/gcc/c/c-aux-info.c	2015-01-09 15:18:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/c/c-aux-info.c	2024-05-21 23:26:05.962797634 -0400
+@@ -319,7 +319,7 @@
+ 	  else
+ 	    {
+ 	      char buff[23];
+-	      sprintf (buff, "["HOST_WIDE_INT_PRINT_DEC"]",
++	      sprintf (buff, "[" HOST_WIDE_INT_PRINT_DEC "]",
+ 		       int_size_in_bytes (t)
+ 		       / int_size_in_bytes (TREE_TYPE (t)));
+ 	      ret_val = gen_type (concat (ret_val, buff, NULL),
+diff -Naur gcc-5.3.0/gcc/cfg.c gcc-5.3.0_my/gcc/cfg.c
+--- gcc-5.3.0/gcc/cfg.c	2015-01-09 15:18:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/cfg.c	2024-05-22 00:18:32.495822325 -0400
+@@ -508,7 +508,7 @@
+   if (e->count && do_details)
+     {
+       fputs (" count:", file);
+-      fprintf (file, "%"PRId64, e->count);
++      fprintf (file, "%" PRId64, e->count);
+     }
+ 
+   if (e->flags && do_details)
+@@ -756,7 +756,7 @@
+       if (flags & TDF_DETAILS)
+ 	{
+ 	  struct function *fun = DECL_STRUCT_FUNCTION (current_function_decl);
+-	  fprintf (outf, ", count " "%"PRId64,
++	  fprintf (outf, ", count " "%" PRId64,
+ 		   (int64_t) bb->count);
+ 	  fprintf (outf, ", freq %i", bb->frequency);
+ 	  if (maybe_hot_bb_p (fun, bb))
+diff -Naur gcc-5.3.0/gcc/cfghooks.c gcc-5.3.0_my/gcc/cfghooks.c
+--- gcc-5.3.0/gcc/cfghooks.c	2015-02-10 09:49:07.000000000 -0500
++++ gcc-5.3.0_my/gcc/cfghooks.c	2024-05-22 00:28:23.932547911 -0400
+@@ -330,7 +330,7 @@
+     internal_error ("%s does not support dump_bb_for_graph",
+ 		    cfg_hooks->name);
+   if (bb->count)
+-    pp_printf (pp, "COUNT:" "%"PRId64, bb->count);
++    pp_printf (pp, "COUNT:" "%" PRId64, bb->count);
+   pp_printf (pp, " FREQ:%i |", bb->frequency);
+   pp_write_text_to_stream (pp);
+   if (!(dump_flags & TDF_SLIM))
+diff -Naur gcc-5.3.0/gcc/cgraph.c gcc-5.3.0_my/gcc/cgraph.c
+--- gcc-5.3.0/gcc/cgraph.c	2015-06-17 03:42:39.000000000 -0400
++++ gcc-5.3.0_my/gcc/cgraph.c	2024-05-21 20:48:23.276902021 -0400
+@@ -1326,7 +1326,7 @@
+ 	  if (dump_file)
+ 	    fprintf (dump_file,
+ 		     "Expanding speculative call of %s/%i -> %s/%i count:"
+-		     "%"PRId64"\n",
++		     "%" PRId64 "\n",
+ 		     xstrdup_for_dump (e->caller->name ()),
+ 		     e->caller->order,
+ 		     xstrdup_for_dump (e->callee->name ()),
+@@ -1958,7 +1958,7 @@
+   if (indirect_inlining_edge)
+     fprintf (f, "(indirect_inlining) ");
+   if (count)
+-    fprintf (f, "(%"PRId64"x) ", (int64_t)count);
++    fprintf (f, "(%" PRId64 "x) ", (int64_t)count);
+   if (frequency)
+     fprintf (f, "(%.2f per call) ", frequency / (double)CGRAPH_FREQ_BASE);
+   if (can_throw_external)
+@@ -1994,7 +1994,7 @@
+   fprintf (f, "  First run: %i\n", tp_first_run);
+   fprintf (f, "  Function flags:");
+   if (count)
+-    fprintf (f, " executed %"PRId64"x",
++    fprintf (f, " executed %" PRId64 "x",
+ 	     (int64_t)count);
+   if (origin)
+     fprintf (f, " nested in: %s", origin->asm_name ());
+diff -Naur gcc-5.3.0/gcc/config/aarch64/aarch64.md gcc-5.3.0_my/gcc/config/aarch64/aarch64.md
+--- gcc-5.3.0/gcc/config/aarch64/aarch64.md	2015-10-28 09:32:17.000000000 -0400
++++ gcc-5.3.0_my/gcc/config/aarch64/aarch64.md	2024-05-21 23:41:26.752267266 -0400
+@@ -531,7 +531,7 @@
+ 	char buf[64];
+ 	uint64_t val = ((uint64_t ) 1)
+ 			<< (GET_MODE_SIZE (<MODE>mode) * BITS_PER_UNIT - 1);
+-	sprintf (buf, "tst\t%%<w>0, %"PRId64, val);
++	sprintf (buf, "tst\t%%<w>0, %" PRId64, val);
+ 	output_asm_insn (buf, operands);
+ 	return "<bcond>\t%l1";
+       }
+diff -Naur gcc-5.3.0/gcc/config/elfos.h gcc-5.3.0_my/gcc/config/elfos.h
+--- gcc-5.3.0/gcc/config/elfos.h	2015-01-05 07:33:28.000000000 -0500
++++ gcc-5.3.0_my/gcc/config/elfos.h	2024-05-21 20:38:25.403509127 -0400
+@@ -99,7 +99,7 @@
+ 
+ #undef  ASM_OUTPUT_SKIP
+ #define ASM_OUTPUT_SKIP(FILE, SIZE) \
+-   fprintf ((FILE), "%s"HOST_WIDE_INT_PRINT_UNSIGNED"\n",\
++   fprintf ((FILE), "%s" HOST_WIDE_INT_PRINT_UNSIGNED "\n",\
+ 	    SKIP_ASM_OP, (SIZE))
+ 
+ /* This is how to store into the string LABEL
+@@ -167,7 +167,7 @@
+     {									\
+       fprintf ((FILE), "%s", COMMON_ASM_OP);				\
+       assemble_name ((FILE), (NAME));					\
+-      fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED",%u\n",		\
++      fprintf ((FILE), "," HOST_WIDE_INT_PRINT_UNSIGNED ",%u\n",		\
+ 	       (SIZE), (ALIGN) / BITS_PER_UNIT);			\
+     }									\
+   while (0)
+diff -Naur gcc-5.3.0/gcc/cp/cfns.h gcc-5.3.0_my/gcc/cp/cfns.h
+--- gcc-5.3.0/gcc/cp/cfns.h	2024-06-07 12:56:33.021538142 -0400
++++ gcc-5.3.0_my/gcc/cp/cfns.h	2024-05-23 14:45:21.757078861 -0400
+@@ -89,7 +89,7 @@
+       400, 400, 400, 400, 400, 400, 400, 400, 400, 400,
+       400, 400, 400, 400, 400, 400, 400
+     };
+-  register int hval = len;
++  int hval = len;
+ 
+   switch (hval)
+     {
+@@ -333,15 +333,15 @@
+ 
+   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
+     {
+-      register int key = hash (str, len);
++      int key = hash (str, len);
+ 
+       if (key <= MAX_HASH_VALUE && key >= 0)
+         {
+-          register int index = lookup[key];
++          int index = lookup[key];
+ 
+           if (index >= 0)
+             {
+-              register const char *s = wordlist[index];
++              const char *s = wordlist[index];
+ 
+               if (*str == *s && !strcmp (str + 1, s + 1))
+                 return s;
+diff -Naur gcc-5.3.0/gcc/cppbuiltin.c gcc-5.3.0_my/gcc/cppbuiltin.c
+--- gcc-5.3.0/gcc/cppbuiltin.c	2015-01-09 15:18:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/cppbuiltin.c	2024-05-21 20:38:25.406842461 -0400
+@@ -143,7 +143,7 @@
+ define_builtin_macros_for_type_sizes (cpp_reader *pfile)
+ {
+ #define define_type_sizeof(NAME, TYPE)                             \
+-    cpp_define_formatted (pfile, NAME"="HOST_WIDE_INT_PRINT_DEC,   \
++    cpp_define_formatted (pfile, NAME "=" HOST_WIDE_INT_PRINT_DEC,   \
+                           tree_to_uhwi (TYPE_SIZE_UNIT (TYPE)))
+ 
+   define_type_sizeof ("__SIZEOF_INT__", integer_type_node);
+diff -Naur gcc-5.3.0/gcc/dwarf2cfi.c gcc-5.3.0_my/gcc/dwarf2cfi.c
+--- gcc-5.3.0/gcc/dwarf2cfi.c	2015-01-15 08:28:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/dwarf2cfi.c	2024-05-21 20:38:25.410175795 -0400
+@@ -3258,7 +3258,7 @@
+     case DW_CFA_offset_extended:
+     case DW_CFA_offset_extended_sf:
+       r = DWARF2_FRAME_REG_OUT (cfi->dw_cfi_oprnd1.dw_cfi_reg_num, 1);
+-      fprintf (f, "\t.cfi_offset %lu, "HOST_WIDE_INT_PRINT_DEC"\n",
++      fprintf (f, "\t.cfi_offset %lu, " HOST_WIDE_INT_PRINT_DEC "\n",
+ 	       r, cfi->dw_cfi_oprnd2.dw_cfi_offset);
+       break;
+ 
+@@ -3281,7 +3281,7 @@
+     case DW_CFA_def_cfa:
+     case DW_CFA_def_cfa_sf:
+       r = DWARF2_FRAME_REG_OUT (cfi->dw_cfi_oprnd1.dw_cfi_reg_num, 1);
+-      fprintf (f, "\t.cfi_def_cfa %lu, "HOST_WIDE_INT_PRINT_DEC"\n",
++      fprintf (f, "\t.cfi_def_cfa %lu, " HOST_WIDE_INT_PRINT_DEC "\n",
+ 	       r, cfi->dw_cfi_oprnd2.dw_cfi_offset);
+       break;
+ 
+@@ -3316,13 +3316,13 @@
+ 	  fprintf (f, "\t.cfi_escape %#x,", DW_CFA_GNU_args_size);
+ 	  dw2_asm_output_data_uleb128_raw (cfi->dw_cfi_oprnd1.dw_cfi_offset);
+ 	  if (flag_debug_asm)
+-	    fprintf (f, "\t%s args_size "HOST_WIDE_INT_PRINT_DEC,
++	    fprintf (f, "\t%s args_size " HOST_WIDE_INT_PRINT_DEC,
+ 		     ASM_COMMENT_START, cfi->dw_cfi_oprnd1.dw_cfi_offset);
+ 	  fputc ('\n', f);
+ 	}
+       else
+ 	{
+-	  fprintf (f, "\t.cfi_GNU_args_size "HOST_WIDE_INT_PRINT_DEC "\n",
++	  fprintf (f, "\t.cfi_GNU_args_size " HOST_WIDE_INT_PRINT_DEC "\n",
+ 		   cfi->dw_cfi_oprnd1.dw_cfi_offset);
+ 	}
+       break;
+diff -Naur gcc-5.3.0/gcc/dwarf2out.c gcc-5.3.0_my/gcc/dwarf2out.c
+--- gcc-5.3.0/gcc/dwarf2out.c	2015-11-09 13:27:43.000000000 -0500
++++ gcc-5.3.0_my/gcc/dwarf2out.c	2024-05-21 20:50:20.873580402 -0400
+@@ -5450,8 +5450,8 @@
+       fprintf (outfile, HOST_WIDE_INT_PRINT_UNSIGNED, val->v.val_unsigned);
+       break;
+     case dw_val_class_const_double:
+-      fprintf (outfile, "constant ("HOST_WIDE_INT_PRINT_DEC","\
+-			HOST_WIDE_INT_PRINT_UNSIGNED")",
++      fprintf (outfile, "constant (" HOST_WIDE_INT_PRINT_DEC ","\
++			HOST_WIDE_INT_PRINT_UNSIGNED ")",
+ 	       val->v.val_double.high,
+ 	       val->v.val_double.low);
+       break;
+diff -Naur gcc-5.3.0/gcc/final.c gcc-5.3.0_my/gcc/final.c
+--- gcc-5.3.0/gcc/final.c	2015-01-15 08:28:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/final.c	2024-05-22 00:31:34.762566921 -0400
+@@ -1989,7 +1989,7 @@
+       if (bb->frequency)
+         fprintf (file, " freq:%d", bb->frequency);
+       if (bb->count)
+-        fprintf (file, " count:%"PRId64,
++        fprintf (file, " count:%" PRId64,
+                  bb->count);
+       fprintf (file, " seq:%d", (*bb_seqn)++);
+       fprintf (file, "\n%s PRED:", ASM_COMMENT_START);
+diff -Naur gcc-5.3.0/gcc/gcov-dump.c gcc-5.3.0_my/gcc/gcov-dump.c
+--- gcc-5.3.0/gcc/gcov-dump.c	2015-01-05 07:05:46.000000000 -0500
++++ gcc-5.3.0_my/gcc/gcov-dump.c	2024-05-22 04:18:55.063925754 -0400
+@@ -448,7 +448,7 @@
+ 
+ 	  count = gcov_read_counter ();
+ 	  printf (" ");
+-	  printf ("%"PRId64, count);
++	  printf ("%" PRId64, count);
+ 	}
+     }
+ }
+@@ -471,11 +471,11 @@
+       printf ("\t\tcounts=%u, runs=%u",
+ 	      summary.ctrs[ix].num, summary.ctrs[ix].runs);
+ 
+-      printf (", sum_all=%"PRId64,
++      printf (", sum_all=%" PRId64,
+ 	      (int64_t)summary.ctrs[ix].sum_all);
+-      printf (", run_max=%"PRId64,
++      printf (", run_max=%" PRId64,
+ 	      (int64_t)summary.ctrs[ix].run_max);
+-      printf (", sum_max=%"PRId64,
++      printf (", sum_max=%" PRId64,
+ 	      (int64_t)summary.ctrs[ix].sum_max);
+       if (ix != GCOV_COUNTER_ARCS)
+         continue;
+@@ -490,8 +490,8 @@
+           printf ("\n");
+           print_prefix (filename, 0, 0);
+           printf ("\t\t%d: num counts=%u, min counter="
+-              "%"PRId64 ", cum_counter="
+-              "%"PRId64,
++              "%" PRId64 ", cum_counter="
++              "%" PRId64,
+ 	      h_ix, histo_bucket->num_counters,
+               (int64_t)histo_bucket->min_value,
+               (int64_t)histo_bucket->cum_value);
+@@ -526,7 +526,7 @@
+       printf ("\n");
+       print_prefix (filename, 0, 0);
+       printf ("\t\t%u.%02u%%: num counts=%u, min counter="
+-               "%"PRId64,
++               "%" PRId64,
+                pct / 100, pct - (pct / 100 * 100),
+                ws_info->num_counters,
+                (int64_t)ws_info->min_counter);
+diff -Naur gcc-5.3.0/gcc/gcov.c gcc-5.3.0_my/gcc/gcov.c
+--- gcc-5.3.0/gcc/gcov.c	2015-04-11 08:08:26.000000000 -0400
++++ gcc-5.3.0_my/gcc/gcov.c	2024-05-22 04:38:39.590710422 -0400
+@@ -1846,7 +1846,7 @@
+ 	}
+     }
+   else
+-    sprintf (buffer, "%"PRId64, (int64_t)top);
++    sprintf (buffer, "%" PRId64, (int64_t)top);
+ 
+   return buffer;
+ }
+diff -Naur gcc-5.3.0/gcc/gengtype-lex.c gcc-5.3.0_my/gcc/gengtype-lex.c
+--- gcc-5.3.0/gcc/gengtype-lex.c	2015-12-04 05:51:41.000000000 -0500
++++ gcc-5.3.0_my/gcc/gengtype-lex.c	2024-05-21 20:38:25.433509130 -0400
+@@ -1420,9 +1420,9 @@
+  */
+ YY_DECL
+ {
+-	register yy_state_type yy_current_state;
+-	register char *yy_cp, *yy_bp;
+-	register int yy_act;
++	yy_state_type yy_current_state;
++	char *yy_cp, *yy_bp;
++	int yy_act;
+     
+ #line 66 "/space/rguenther/gcc-5.3.0/gcc-5.3.0/gcc/gengtype-lex.l"
+ 
+@@ -1480,7 +1480,7 @@
+ yy_match:
+ 		do
+ 			{
+-			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
++			YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
+ 			if ( yy_accept[yy_current_state] )
+ 				{
+ 				(yy_last_accepting_state) = yy_current_state;
+@@ -2059,9 +2059,9 @@
+  */
+ static int yy_get_next_buffer (void)
+ {
+-    	register char *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
+-	register char *source = (yytext_ptr);
+-	register int number_to_move, i;
++    	char *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
++	char *source = (yytext_ptr);
++	int number_to_move, i;
+ 	int ret_val;
+ 
+ 	if ( (yy_c_buf_p) > &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[(yy_n_chars) + 1] )
+@@ -2193,15 +2193,15 @@
+ 
+     static yy_state_type yy_get_previous_state (void)
+ {
+-	register yy_state_type yy_current_state;
+-	register char *yy_cp;
++	yy_state_type yy_current_state;
++	char *yy_cp;
+     
+ 	yy_current_state = (yy_start);
+ 	yy_current_state += YY_AT_BOL();
+ 
+ 	for ( yy_cp = (yytext_ptr) + YY_MORE_ADJ; yy_cp < (yy_c_buf_p); ++yy_cp )
+ 		{
+-		register YY_CHAR yy_c = (*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : 1);
++		YY_CHAR yy_c = (*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : 1);
+ 		if ( yy_accept[yy_current_state] )
+ 			{
+ 			(yy_last_accepting_state) = yy_current_state;
+@@ -2226,10 +2226,10 @@
+  */
+     static yy_state_type yy_try_NUL_trans  (yy_state_type yy_current_state )
+ {
+-	register int yy_is_jam;
+-    	register char *yy_cp = (yy_c_buf_p);
++	int yy_is_jam;
++    	char *yy_cp = (yy_c_buf_p);
+ 
+-	register YY_CHAR yy_c = 1;
++	YY_CHAR yy_c = 1;
+ 	if ( yy_accept[yy_current_state] )
+ 		{
+ 		(yy_last_accepting_state) = yy_current_state;
+@@ -2836,7 +2836,7 @@
+ #ifndef yytext_ptr
+ static void yy_flex_strncpy (char* s1, yyconst char * s2, int n )
+ {
+-	register int i;
++	int i;
+ 	for ( i = 0; i < n; ++i )
+ 		s1[i] = s2[i];
+ }
+@@ -2845,7 +2845,7 @@
+ #ifdef YY_NEED_STRLEN
+ static int yy_flex_strlen (yyconst char * s )
+ {
+-	register int n;
++	int n;
+ 	for ( n = 0; s[n]; ++n )
+ 		;
+ 
+diff -Naur gcc-5.3.0/gcc/ipa-cp.c gcc-5.3.0_my/gcc/ipa-cp.c
+--- gcc-5.3.0/gcc/ipa-cp.c	2015-04-06 11:58:37.000000000 -0400
++++ gcc-5.3.0_my/gcc/ipa-cp.c	2024-05-22 00:55:15.656041803 -0400
+@@ -2193,7 +2193,7 @@
+       if (dump_file && (dump_flags & TDF_DETAILS))
+ 	fprintf (dump_file, "     good_cloning_opportunity_p (time: %i, "
+ 		 "size: %i, count_sum: " HOST_WIDE_INT_PRINT_DEC
+-		 "%s%s) -> evaluation: " "%"PRId64
++		 "%s%s) -> evaluation: " "%" PRId64
+ 		 ", threshold: %i\n",
+ 		 time_benefit, size_cost, (HOST_WIDE_INT) count_sum,
+ 		 info->node_within_scc ? ", scc" : "",
+@@ -2211,7 +2211,7 @@
+       if (dump_file && (dump_flags & TDF_DETAILS))
+ 	fprintf (dump_file, "     good_cloning_opportunity_p (time: %i, "
+ 		 "size: %i, freq_sum: %i%s%s) -> evaluation: "
+-		 "%"PRId64 ", threshold: %i\n",
++		 "%" PRId64 ", threshold: %i\n",
+ 		 time_benefit, size_cost, freq_sum,
+ 		 info->node_within_scc ? ", scc" : "",
+ 		 info->node_calling_single_call ? ", single_call" : "",
+diff -Naur gcc-5.3.0/gcc/ipa-inline.c gcc-5.3.0_my/gcc/ipa-inline.c
+--- gcc-5.3.0/gcc/ipa-inline.c	2015-05-17 13:43:04.000000000 -0400
++++ gcc-5.3.0_my/gcc/ipa-inline.c	2024-05-21 20:56:44.056951908 -0400
+@@ -1191,8 +1191,8 @@
+       if (dump)
+ 	{
+ 	  fprintf (dump_file,
+-		   "      %f: guessed profile. frequency %f, count %"PRId64
+-		   " caller count %"PRId64
++		   "      %f: guessed profile. frequency %f, count %" PRId64
++		   " caller count %" PRId64
+ 		   " time w/o inlining %f, time w inlining %f"
+ 		   " overall growth %i (current) %i (original)"
+ 		   " %i (compensated)\n",
+@@ -1974,7 +1974,7 @@
+ 		   badness.to_double (),
+ 		   edge->frequency / (double)CGRAPH_FREQ_BASE);
+ 	  if (edge->count)
+-	    fprintf (dump_file," Called %"PRId64"x\n",
++	    fprintf (dump_file," Called %" PRId64 "x\n",
+ 		     edge->count);
+ 	  if (dump_flags & TDF_DETAILS)
+ 	    edge_badness (edge, true);
+@@ -2261,8 +2261,8 @@
+ 	sum_weighted += time * node->count;
+       }
+   fprintf (dump_file, "Overall time estimate: "
+-	   "%"PRId64" weighted by profile: "
+-	   "%"PRId64"\n", sum, sum_weighted);
++	   "%" PRId64 " weighted by profile: "
++	   "%" PRId64 "\n", sum, sum_weighted);
+ }
+ 
+ /* Output some useful stats about inlining.  */
+@@ -2340,31 +2340,31 @@
+   if (max_count)
+     {
+       fprintf (dump_file,
+-	       "Inlined %"PRId64 " + speculative "
+-	       "%"PRId64 " + speculative polymorphic "
+-	       "%"PRId64 " + previously indirect "
+-	       "%"PRId64 " + virtual "
+-	       "%"PRId64 " + virtual and previously indirect "
+-	       "%"PRId64 "\n" "Not inlined "
+-	       "%"PRId64 " + previously indirect "
+-	       "%"PRId64 " + virtual "
+-	       "%"PRId64 " + virtual and previously indirect "
+-	       "%"PRId64 " + stil indirect "
+-	       "%"PRId64 " + still indirect polymorphic "
+-	       "%"PRId64 "\n", inlined_cnt,
++	       "Inlined %" PRId64 " + speculative "
++	       "%" PRId64 " + speculative polymorphic "
++	       "%" PRId64 " + previously indirect "
++	       "%" PRId64 " + virtual "
++	       "%" PRId64 " + virtual and previously indirect "
++	       "%" PRId64 "\n" "Not inlined "
++	       "%" PRId64 " + previously indirect "
++	       "%" PRId64 " + virtual "
++	       "%" PRId64 " + virtual and previously indirect "
++	       "%" PRId64 " + stil indirect "
++	       "%" PRId64 " + still indirect polymorphic "
++	       "%" PRId64 "\n", inlined_cnt,
+ 	       inlined_speculative, inlined_speculative_ply,
+ 	       inlined_indir_cnt, inlined_virt_cnt, inlined_virt_indir_cnt,
+ 	       noninlined_cnt, noninlined_indir_cnt, noninlined_virt_cnt,
+ 	       noninlined_virt_indir_cnt, indirect_cnt, indirect_poly_cnt);
+       fprintf (dump_file,
+-	       "Removed speculations %"PRId64 "\n",
++	       "Removed speculations %" PRId64 "\n",
+ 	       spec_rem);
+     }
+   dump_overall_stats ();
+   fprintf (dump_file, "\nWhy inlining failed?\n");
+   for (i = 0; i < CIF_N_REASONS; i++)
+     if (reason[i][2])
+-      fprintf (dump_file, "%-50s: %8i calls, %8i freq, %"PRId64" count\n",
++      fprintf (dump_file, "%-50s: %8i calls, %8i freq, %" PRId64 " count\n",
+ 	       cgraph_inline_failed_string ((cgraph_inline_failed_t) i),
+ 	       (int) reason[i][2], (int) reason[i][1], reason[i][0]);
+ }
+diff -Naur gcc-5.3.0/gcc/ipa-polymorphic-call.c gcc-5.3.0_my/gcc/ipa-polymorphic-call.c
+--- gcc-5.3.0/gcc/ipa-polymorphic-call.c	2015-11-18 10:23:48.000000000 -0500
++++ gcc-5.3.0_my/gcc/ipa-polymorphic-call.c	2024-05-22 00:50:30.909346770 -0400
+@@ -661,7 +661,7 @@
+ 	    fprintf (f, " (or a derived type)");
+ 	  if (maybe_in_construction)
+ 	    fprintf (f, " (maybe in construction)");
+-	  fprintf (f, " offset "HOST_WIDE_INT_PRINT_DEC,
++	  fprintf (f, " offset " HOST_WIDE_INT_PRINT_DEC,
+ 		   offset);
+ 	}
+       if (speculative_outer_type)
+@@ -672,7 +672,7 @@
+ 	  print_generic_expr (f, speculative_outer_type, TDF_SLIM);
+ 	  if (speculative_maybe_derived_type)
+ 	    fprintf (f, " (or a derived type)");
+-	  fprintf (f, " at offset "HOST_WIDE_INT_PRINT_DEC,
++	  fprintf (f, " at offset " HOST_WIDE_INT_PRINT_DEC,
+ 		   speculative_offset);
+ 	}
+     }
+diff -Naur gcc-5.3.0/gcc/ipa-profile.c gcc-5.3.0_my/gcc/ipa-profile.c
+--- gcc-5.3.0/gcc/ipa-profile.c	2015-02-17 16:57:53.000000000 -0500
++++ gcc-5.3.0_my/gcc/ipa-profile.c	2024-05-21 20:57:49.883625133 -0400
+@@ -186,7 +186,7 @@
+     {
+       cumulated_time += histogram[i]->count * histogram[i]->time;
+       cumulated_size += histogram[i]->size;
+-      fprintf (file, "  %"PRId64": time:%i (%2.2f) size:%i (%2.2f)\n",
++      fprintf (file, "  %" PRId64 ": time:%i (%2.2f) size:%i (%2.2f)\n",
+ 	       (int64_t) histogram[i]->count,
+ 	       histogram[i]->time,
+ 	       cumulated_time * 100.0 / overall_time,
+@@ -542,7 +542,7 @@
+ 	{
+ 	  gcov_type min, cumulated_time = 0, cumulated_size = 0;
+ 
+-	  fprintf (dump_file, "Overall time: %"PRId64"\n",
++	  fprintf (dump_file, "Overall time: %" PRId64 "\n",
+ 		   (int64_t)overall_time);
+ 	  min = get_hot_bb_threshold ();
+           for (i = 0; i < (int)histogram.length () && histogram[i]->count >= min;
+@@ -551,7 +551,7 @@
+ 	      cumulated_time += histogram[i]->count * histogram[i]->time;
+ 	      cumulated_size += histogram[i]->size;
+ 	    }
+-	  fprintf (dump_file, "GCOV min count: %"PRId64
++	  fprintf (dump_file, "GCOV min count: %" PRId64
+ 		   " Time:%3.2f%% Size:%3.2f%%\n", 
+ 		   (int64_t)min,
+ 		   cumulated_time * 100.0 / overall_time,
+@@ -577,7 +577,7 @@
+ 	      cumulated_time += histogram[i]->count * histogram[i]->time;
+ 	      cumulated_size += histogram[i]->size;
+ 	    }
+-	  fprintf (dump_file, "Determined min count: %"PRId64
++	  fprintf (dump_file, "Determined min count: %" PRId64
+ 		   " Time:%3.2f%% Size:%3.2f%%\n", 
+ 		   (int64_t)threshold,
+ 		   cumulated_time * 100.0 / overall_time,
+diff -Naur gcc-5.3.0/gcc/ipa-prop.c gcc-5.3.0_my/gcc/ipa-prop.c
+--- gcc-5.3.0/gcc/ipa-prop.c	2015-07-23 12:14:00.000000000 -0400
++++ gcc-5.3.0_my/gcc/ipa-prop.c	2024-05-21 20:59:22.623634371 -0400
+@@ -300,7 +300,7 @@
+       else if (type == IPA_JF_ANCESTOR)
+ 	{
+ 	  fprintf (f, "ANCESTOR: ");
+-	  fprintf (f, "%d, offset "HOST_WIDE_INT_PRINT_DEC,
++	  fprintf (f, "%d, offset " HOST_WIDE_INT_PRINT_DEC,
+ 		   jump_func->value.ancestor.formal_id,
+ 		   jump_func->value.ancestor.offset);
+ 	  if (jump_func->value.ancestor.agg_preserved)
+diff -Naur gcc-5.3.0/gcc/ira-color.c gcc-5.3.0_my/gcc/ira-color.c
+--- gcc-5.3.0/gcc/ira-color.c	2015-09-30 12:39:44.000000000 -0400
++++ gcc-5.3.0_my/gcc/ira-color.c	2024-05-22 01:03:10.522755775 -0400
+@@ -548,7 +548,7 @@
+ 	fprintf (f, " ");
+       fprintf (f, "%d:(", node->preorder_num);
+       print_hard_reg_set (f, node->hard_regs->set, false);
+-      fprintf (f, ")@%"PRId64"\n", node->hard_regs->cost);
++      fprintf (f, ")@%" PRId64 "\n", node->hard_regs->cost);
+       print_hard_regs_subforest (f, node->first, level + 1);
+     }
+ }
+diff -Naur gcc-5.3.0/gcc/ira.c gcc-5.3.0_my/gcc/ira.c
+--- gcc-5.3.0/gcc/ira.c	2015-11-11 09:56:17.000000000 -0500
++++ gcc-5.3.0_my/gcc/ira.c	2024-05-22 00:58:43.759395867 -0400
+@@ -2508,12 +2508,12 @@
+   if (internal_flag_ira_verbose > 0 && ira_dump_file != NULL)
+     {
+       fprintf (ira_dump_file,
+-	       "+++Costs: overall %"PRId64
+-	       ", reg %"PRId64
+-	       ", mem %"PRId64
+-	       ", ld %"PRId64
+-	       ", st %"PRId64
+-	       ", move %"PRId64,
++	       "+++Costs: overall %" PRId64
++	       ", reg %" PRId64
++	       ", mem %" PRId64
++	       ", ld %" PRId64
++	       ", st %" PRId64
++	       ", move %" PRId64,
+ 	       ira_overall_cost, ira_reg_cost, ira_mem_cost,
+ 	       ira_load_cost, ira_store_cost, ira_shuffle_cost);
+       fprintf (ira_dump_file, "\n+++       move loops %d, new jumps %d\n",
+@@ -5446,7 +5446,7 @@
+ 
+   if (internal_flag_ira_verbose > 0 && ira_dump_file != NULL
+       && overall_cost_before != ira_overall_cost)
+-    fprintf (ira_dump_file, "+++Overall after reload %"PRId64 "\n",
++    fprintf (ira_dump_file, "+++Overall after reload %" PRId64 "\n",
+ 	     ira_overall_cost);
+ 
+   flag_ira_share_spill_slots = saved_flag_ira_share_spill_slots;
+diff -Naur gcc-5.3.0/gcc/loop-doloop.c gcc-5.3.0_my/gcc/loop-doloop.c
+--- gcc-5.3.0/gcc/loop-doloop.c	2015-01-15 08:28:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/loop-doloop.c	2024-05-22 01:16:24.326168187 -0400
+@@ -446,7 +446,7 @@
+     {
+       fprintf (dump_file, "Doloop: Inserting doloop pattern (");
+       if (desc->const_iter)
+-	fprintf (dump_file, "%"PRId64, desc->niter);
++	fprintf (dump_file, "%" PRId64, desc->niter);
+       else
+ 	fputs ("runtime", dump_file);
+       fputs (" iterations).\n", dump_file);
+diff -Naur gcc-5.3.0/gcc/loop-iv.c gcc-5.3.0_my/gcc/loop-iv.c
+--- gcc-5.3.0/gcc/loop-iv.c	2015-01-20 03:29:09.000000000 -0500
++++ gcc-5.3.0_my/gcc/loop-iv.c	2024-05-21 21:00:24.830307235 -0400
+@@ -2357,7 +2357,7 @@
+   if (andmax)
+     nmax = MIN (nmax, andmax);
+   if (dump_file)
+-    fprintf (dump_file, ";; Determined upper bound %"PRId64".\n",
++    fprintf (dump_file, ";; Determined upper bound %" PRId64 ".\n",
+ 	     nmax);
+   return nmax;
+ }
+diff -Naur gcc-5.3.0/gcc/mcf.c gcc-5.3.0_my/gcc/mcf.c
+--- gcc-5.3.0/gcc/mcf.c	2015-01-05 07:33:28.000000000 -0500
++++ gcc-5.3.0_my/gcc/mcf.c	2024-05-22 03:53:01.977104370 -0400
+@@ -214,12 +214,12 @@
+ 
+   if (fedge->type)
+     {
+-      fprintf (file, "flow/capacity=%"PRId64 "/",
++      fprintf (file, "flow/capacity=%" PRId64 "/",
+ 	       fedge->flow);
+       if (fedge->max_capacity == CAP_INFINITY)
+ 	fputs ("+oo,", file);
+       else
+-	fprintf (file, "%"PRId64 ",", fedge->max_capacity);
++	fprintf (file, "%" PRId64 ",", fedge->max_capacity);
+     }
+ 
+   if (fedge->is_rflow_valid)
+@@ -227,10 +227,10 @@
+       if (fedge->rflow == CAP_INFINITY)
+ 	fputs (" rflow=+oo.", file);
+       else
+-	fprintf (file, " rflow=%"PRId64 ",", fedge->rflow);
++	fprintf (file, " rflow=%" PRId64 ",", fedge->rflow);
+     }
+ 
+-  fprintf (file, " cost=%"PRId64 ".", fedge->cost);
++  fprintf (file, " cost=%" PRId64 ".", fedge->cost);
+ 
+   fprintf (file, "\t(%d->%d)", fedge->src, fedge->dest);
+ 
+@@ -637,9 +637,9 @@
+   if (dump_file)
+     {
+       fprintf (dump_file, "\nAdjust supply and demand:\n");
+-      fprintf (dump_file, "supply_value=%"PRId64 "\n",
++      fprintf (dump_file, "supply_value=%" PRId64 "\n",
+ 	       supply_value);
+-      fprintf (dump_file, "demand_value=%"PRId64 "\n",
++      fprintf (dump_file, "demand_value=%" PRId64 "\n",
+ 	       demand_value);
+     }
+ 
+@@ -909,10 +909,10 @@
+     {
+       fprintf (dump_file, "%d", cycle[k]);
+       fprintf (dump_file,
+-	       ": (%"PRId64 ", %"PRId64
++	       ": (%" PRId64 ", %" PRId64
+ 	       ")\n", sum_cost, cycle_flow);
+       fprintf (dump_file,
+-	       "Augment cycle with %"PRId64 "\n",
++	       "Augment cycle with %" PRId64 "\n",
+ 	       cycle_flow);
+     }
+ 
+@@ -1104,10 +1104,10 @@
+ 	      fprintf (dump_file, "<-");
+ 	    }
+ 	  fprintf (dump_file,
+-		   "ENTRY  (path_capacity=%"PRId64 ")\n",
++		   "ENTRY  (path_capacity=%" PRId64 ")\n",
+ 		   increment);
+ 	  fprintf (dump_file,
+-		   "Network flow is %"PRId64 ".\n",
++		   "Network flow is %" PRId64 ".\n",
+ 		   max_flow);
+ 	}
+     }
+@@ -1144,7 +1144,7 @@
+       /* Fixup BB.  */
+       if (dump_file)
+         fprintf (dump_file,
+-                 "BB%d: %"PRId64 "", bb->index, bb->count);
++                 "BB%d: %" PRId64 "", bb->index, bb->count);
+ 
+       pfedge = find_fixup_edge (fixup_graph, i, i + 1);
+       if (pfedge->flow)
+@@ -1152,7 +1152,7 @@
+           bb->count += pfedge->flow;
+ 	  if (dump_file)
+ 	    {
+-	      fprintf (dump_file, " + %"PRId64 "(",
++	      fprintf (dump_file, " + %" PRId64 "(",
+ 	               pfedge->flow);
+ 	      print_edge (dump_file, fixup_graph, i, i + 1);
+ 	      fprintf (dump_file, ")");
+@@ -1167,7 +1167,7 @@
+           bb->count -= pfedge_n->flow;
+ 	  if (dump_file)
+ 	    {
+-	      fprintf (dump_file, " - %"PRId64 "(",
++	      fprintf (dump_file, " - %" PRId64 "(",
+ 		       pfedge_n->flow);
+ 	      print_edge (dump_file, fixup_graph, i + 1,
+ 			  pfedge->norm_vertex_index);
+@@ -1175,7 +1175,7 @@
+ 	    }
+         }
+       if (dump_file)
+-        fprintf (dump_file, " = %"PRId64 "\n", bb->count);
++        fprintf (dump_file, " = %" PRId64 "\n", bb->count);
+ 
+       /* Fixup edge.  */
+       FOR_EACH_EDGE (e, ei, bb->succs)
+@@ -1186,7 +1186,7 @@
+ 
+           j = 2 * e->dest->index;
+           if (dump_file)
+-	    fprintf (dump_file, "%d->%d: %"PRId64 "",
++	    fprintf (dump_file, "%d->%d: %" PRId64 "",
+ 		     bb->index, e->dest->index, e->count);
+ 
+           pfedge = find_fixup_edge (fixup_graph, i + 1, j);
+@@ -1199,7 +1199,7 @@
+ 	          e->count += pfedge->flow;
+ 	          if (dump_file)
+ 		    {
+-		      fprintf (dump_file, " + %"PRId64 "(",
++		      fprintf (dump_file, " + %" PRId64 "(",
+ 			       pfedge->flow);
+ 		      print_edge (dump_file, fixup_graph, i + 1, j);
+ 		      fprintf (dump_file, ")");
+@@ -1214,7 +1214,7 @@
+ 	          e->count -= pfedge_n->flow;
+ 	          if (dump_file)
+ 		    {
+-		      fprintf (dump_file, " - %"PRId64 "(",
++		      fprintf (dump_file, " - %" PRId64 "(",
+ 			       pfedge_n->flow);
+ 		      print_edge (dump_file, fixup_graph, j,
+ 			          pfedge->norm_vertex_index);
+@@ -1234,7 +1234,7 @@
+ 	      if (dump_file)
+ 	        {
+ 	          fprintf (dump_file, "(self edge)");
+-	          fprintf (dump_file, " + %"PRId64 "(",
++	          fprintf (dump_file, " + %" PRId64 "(",
+ 		           pfedge_n->flow);
+ 	          print_edge (dump_file, fixup_graph, i + 1,
+ 			      pfedge->norm_vertex_index);
+@@ -1245,7 +1245,7 @@
+           if (bb->count)
+ 	    e->probability = REG_BR_PROB_BASE * e->count / bb->count;
+           if (dump_file)
+-	    fprintf (dump_file, " = %"PRId64 "\t(%.1f%%)\n",
++	    fprintf (dump_file, " = %" PRId64 "\t(%.1f%%)\n",
+ 		     e->count, e->probability * 100.0 / REG_BR_PROB_BASE);
+         }
+     }
+@@ -1298,14 +1298,14 @@
+                || (bb->count != sum_edge_counts (bb->succs)))
+             {
+               fprintf (dump_file,
+-                       "BB%d(%"PRId64 ")  **INVALID**: ",
++                       "BB%d(%" PRId64 ")  **INVALID**: ",
+                        bb->index, bb->count);
+               fprintf (stderr,
+-                       "******** BB%d(%"PRId64
++                       "******** BB%d(%" PRId64
+                        ")  **INVALID**: \n", bb->index, bb->count);
+-              fprintf (dump_file, "in_edges=%"PRId64 " ",
++              fprintf (dump_file, "in_edges=%" PRId64 " ",
+                        sum_edge_counts (bb->preds));
+-              fprintf (dump_file, "out_edges=%"PRId64 "\n",
++              fprintf (dump_file, "out_edges=%" PRId64 "\n",
+                        sum_edge_counts (bb->succs));
+             }
+          }
+diff -Naur gcc-5.3.0/gcc/modulo-sched.c gcc-5.3.0_my/gcc/modulo-sched.c
+--- gcc-5.3.0/gcc/modulo-sched.c	2015-01-15 08:28:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/modulo-sched.c	2024-05-22 03:53:33.360440830 -0400
+@@ -1482,15 +1482,15 @@
+ 	      if (profile_info && flag_branch_probabilities)
+ 	    	{
+ 	      	  fprintf (dump_file, "SMS loop-count ");
+-	      	  fprintf (dump_file, "%"PRId64,
++	      	  fprintf (dump_file, "%" PRId64,
+ 	             	   (int64_t) bb->count);
+ 	      	  fprintf (dump_file, "\n");
+                   fprintf (dump_file, "SMS trip-count ");
+-                  fprintf (dump_file, "%"PRId64,
++                  fprintf (dump_file, "%" PRId64,
+                            (int64_t) trip_count);
+                   fprintf (dump_file, "\n");
+ 	      	  fprintf (dump_file, "SMS profile-sum-max ");
+-	      	  fprintf (dump_file, "%"PRId64,
++	      	  fprintf (dump_file, "%" PRId64,
+ 	          	   (int64_t) profile_info->sum_max);
+ 	      	  fprintf (dump_file, "\n");
+ 	    	}
+@@ -1604,11 +1604,11 @@
+ 	  if (profile_info && flag_branch_probabilities)
+ 	    {
+ 	      fprintf (dump_file, "SMS loop-count ");
+-	      fprintf (dump_file, "%"PRId64,
++	      fprintf (dump_file, "%" PRId64,
+ 	               (int64_t) bb->count);
+ 	      fprintf (dump_file, "\n");
+ 	      fprintf (dump_file, "SMS profile-sum-max ");
+-	      fprintf (dump_file, "%"PRId64,
++	      fprintf (dump_file, "%" PRId64,
+ 	               (int64_t) profile_info->sum_max);
+ 	      fprintf (dump_file, "\n");
+ 	    }
+@@ -1635,7 +1635,7 @@
+       if (dump_file && count_init)
+         {
+           fprintf (dump_file, "SMS const-doloop ");
+-          fprintf (dump_file, "%"PRId64,
++          fprintf (dump_file, "%" PRId64,
+ 		     loop_count);
+           fprintf (dump_file, "\n");
+         }
+@@ -1696,9 +1696,9 @@
+ 		  fprintf (dump_file, "SMS failed... \n");
+ 		  fprintf (dump_file, "SMS sched-failed (stage-count=%d,"
+ 			   " loop-count=", stage_count);
+-		  fprintf (dump_file, "%"PRId64, loop_count);
++		  fprintf (dump_file, "%" PRId64, loop_count);
+ 		  fprintf (dump_file, ", trip-count=");
+-		  fprintf (dump_file, "%"PRId64, trip_count);
++		  fprintf (dump_file, "%" PRId64, trip_count);
+ 		  fprintf (dump_file, ")\n");
+ 		}
+ 	      break;
+diff -Naur gcc-5.3.0/gcc/predict.c gcc-5.3.0_my/gcc/predict.c
+--- gcc-5.3.0/gcc/predict.c	2015-01-29 02:43:14.000000000 -0500
++++ gcc-5.3.0_my/gcc/predict.c	2024-05-22 03:54:52.390448703 -0400
+@@ -714,10 +714,10 @@
+ 
+   if (bb->count)
+     {
+-      fprintf (file, "  exec %"PRId64, bb->count);
++      fprintf (file, "  exec %" PRId64, bb->count);
+       if (e)
+ 	{
+-	  fprintf (file, " hit %"PRId64, e->count);
++	  fprintf (file, " hit %" PRId64, e->count);
+ 	  fprintf (file, " (%.1f%%)", e->count * 100.0 / bb->count);
+ 	}
+     }
+diff -Naur gcc-5.3.0/gcc/profile.c gcc-5.3.0_my/gcc/profile.c
+--- gcc-5.3.0/gcc/profile.c	2015-01-15 08:28:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/profile.c	2024-05-21 21:02:09.600317672 -0400
+@@ -276,7 +276,7 @@
+           ws_info = &gcov_working_sets[ws_ix];
+           /* Print out the percentage using int arithmatic to avoid float.  */
+           fprintf (dump_file, "\t\t%u.%02u%%: num counts=%u, min counter="
+-                   "%"PRId64 "\n",
++                   "%" PRId64 "\n",
+                    pct / 100, pct - (pct / 100 * 100),
+                    ws_info->num_counters,
+                    (int64_t)ws_info->min_counter);
+@@ -357,7 +357,7 @@
+ 	      if (dump_file)
+ 		{
+ 		  fprintf (dump_file,
+-		  	   "Edge %i->%i is inconsistent, count%"PRId64,
++		  	   "Edge %i->%i is inconsistent, count%" PRId64,
+ 			   e->src->index, e->dest->index, e->count);
+ 		  dump_bb (dump_file, e->src, 0, TDF_DETAILS);
+ 		  dump_bb (dump_file, e->dest, 0, TDF_DETAILS);
+@@ -406,7 +406,7 @@
+ 	  if (dump_file)
+ 	    {
+ 	      fprintf (dump_file, "BB %i count is negative "
+-		       "%"PRId64,
++		       "%" PRId64,
+ 		       bb->index,
+ 		       bb->count);
+ 	      dump_bb (dump_file, bb, 0, TDF_DETAILS);
+@@ -418,7 +418,7 @@
+ 	  if (dump_file)
+ 	    {
+ 	      fprintf (dump_file, "BB %i count does not match sum of incoming edges "
+-		       "%"PRId64" should be %"PRId64,
++		       "%" PRId64 " should be %" PRId64,
+ 		       bb->index,
+ 		       bb->count,
+ 		       sum_edge_counts (bb->preds));
+@@ -433,7 +433,7 @@
+ 	  if (dump_file)
+ 	    {
+ 	      fprintf (dump_file, "BB %i count does not match sum of outgoing edges "
+-		       "%"PRId64" should be %"PRId64,
++		       "%" PRId64 " should be %" PRId64,
+ 		       bb->index,
+ 		       bb->count,
+ 		       sum_edge_counts (bb->succs));
+@@ -510,7 +510,7 @@
+ 	      {
+ 		fprintf (dump_file, "\nRead edge from %i to %i, count:",
+ 			 bb->index, e->dest->index);
+-		fprintf (dump_file, "%"PRId64,
++		fprintf (dump_file, "%" PRId64,
+ 			 (int64_t) e->count);
+ 	      }
+ 	  }
+diff -Naur gcc-5.3.0/gcc/stor-layout.c gcc-5.3.0_my/gcc/stor-layout.c
+--- gcc-5.3.0/gcc/stor-layout.c	2015-08-17 11:44:35.000000000 -0400
++++ gcc-5.3.0_my/gcc/stor-layout.c	2024-05-21 20:38:25.476842468 -0400
+@@ -262,7 +262,7 @@
+   fntype = build_function_type (return_type, param_type_list);
+ 
+   /* Build the function declaration.  */
+-  sprintf (buf, "SZ"HOST_WIDE_INT_PRINT_UNSIGNED, fnno++);
++  sprintf (buf, "SZ" HOST_WIDE_INT_PRINT_UNSIGNED, fnno++);
+   fnname = get_file_function_name (buf);
+   fndecl = build_decl (input_location, FUNCTION_DECL, fnname, fntype);
+   for (t = param_decl_list; t; t = DECL_CHAIN (t))
+diff -Naur gcc-5.3.0/gcc/toplev.c gcc-5.3.0_my/gcc/toplev.c
+--- gcc-5.3.0/gcc/toplev.c	2015-07-10 08:33:28.000000000 -0400
++++ gcc-5.3.0_my/gcc/toplev.c	2024-05-21 20:38:25.483509135 -0400
+@@ -1122,7 +1122,7 @@
+ 	}
+ 
+       fprintf (stack_usage_file,
+-	       "%s:%d:%d:%s\t"HOST_WIDE_INT_PRINT_DEC"\t%s\n",
++	       "%s:%d:%d:%s\t" HOST_WIDE_INT_PRINT_DEC "\t%s\n",
+ 	       lbasename (loc.file),
+ 	       loc.line,
+ 	       loc.column,
+diff -Naur gcc-5.3.0/gcc/tree-browser.c gcc-5.3.0_my/gcc/tree-browser.c
+--- gcc-5.3.0/gcc/tree-browser.c	2015-01-09 15:18:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/tree-browser.c	2024-05-21 20:38:25.486842469 -0400
+@@ -940,7 +940,7 @@
+ 
+       while (--copy > 0)
+         {
+-          register int c = getc (stream);
++          int c = getc (stream);
+           if (c == EOF)
+             goto lose;
+           else if ((*p++ = c) == '\n')
+diff -Naur gcc-5.3.0/gcc/tree-ssa-reassoc.c gcc-5.3.0_my/gcc/tree-ssa-reassoc.c
+--- gcc-5.3.0/gcc/tree-ssa-reassoc.c	2015-11-18 05:31:51.000000000 -0500
++++ gcc-5.3.0_my/gcc/tree-ssa-reassoc.c	2024-05-21 20:38:25.490175803 -0400
+@@ -4551,7 +4551,7 @@
+ 		      if (elt < vec_len - 1)
+ 			fputs (" * ", dump_file);
+ 		    }
+-		  fprintf (dump_file, ")^"HOST_WIDE_INT_PRINT_DEC"\n",
++		  fprintf (dump_file, ")^" HOST_WIDE_INT_PRINT_DEC "\n",
+ 			   power);
+ 		}
+ 	    }
+@@ -4585,7 +4585,7 @@
+ 		  if (elt < vec_len - 1)
+ 		    fputs (" * ", dump_file);
+ 		}
+-	      fprintf (dump_file, ")^"HOST_WIDE_INT_PRINT_DEC"\n", power);
++	      fprintf (dump_file, ")^" HOST_WIDE_INT_PRINT_DEC "\n", power);
+ 	    }
+ 
+ 	  reassociate_stats.pows_created++;
+diff -Naur gcc-5.3.0/gcc/value-prof.c gcc-5.3.0_my/gcc/value-prof.c
+--- gcc-5.3.0/gcc/value-prof.c	2015-03-06 11:12:43.000000000 -0500
++++ gcc-5.3.0_my/gcc/value-prof.c	2024-05-21 21:03:31.736992521 -0400
+@@ -296,10 +296,10 @@
+ 	   unsigned int i;
+ 	   fprintf (dump_file, " [");
+            for (i = 0; i < hist->hdata.intvl.steps; i++)
+-	     fprintf (dump_file, " %d:%"PRId64,
++	     fprintf (dump_file, " %d:%" PRId64,
+ 		      hist->hdata.intvl.int_start + i,
+ 		      (int64_t) hist->hvalue.counters[i]);
+-	   fprintf (dump_file, " ] outside range:%"PRId64,
++	   fprintf (dump_file, " ] outside range:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[i]);
+ 	}
+       fprintf (dump_file, ".\n");
+@@ -309,8 +309,8 @@
+       fprintf (dump_file, "Pow2 counter ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "pow2:%"PRId64
+-		    " nonpow2:%"PRId64,
++	   fprintf (dump_file, "pow2:%" PRId64
++		    " nonpow2:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0],
+ 		    (int64_t) hist->hvalue.counters[1]);
+ 	}
+@@ -321,9 +321,9 @@
+       fprintf (dump_file, "Single value ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "value:%"PRId64
+-		    " match:%"PRId64
+-		    " wrong:%"PRId64,
++	   fprintf (dump_file, "value:%" PRId64
++		    " match:%" PRId64
++		    " wrong:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0],
+ 		    (int64_t) hist->hvalue.counters[1],
+ 		    (int64_t) hist->hvalue.counters[2]);
+@@ -335,8 +335,8 @@
+       fprintf (dump_file, "Average value ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "sum:%"PRId64
+-		    " times:%"PRId64,
++	   fprintf (dump_file, "sum:%" PRId64
++		    " times:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0],
+ 		    (int64_t) hist->hvalue.counters[1]);
+ 	}
+@@ -347,7 +347,7 @@
+       fprintf (dump_file, "IOR value ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "ior:%"PRId64,
++	   fprintf (dump_file, "ior:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0]);
+ 	}
+       fprintf (dump_file, ".\n");
+@@ -357,9 +357,9 @@
+       fprintf (dump_file, "Constant delta ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "value:%"PRId64
+-		    " match:%"PRId64
+-		    " wrong:%"PRId64,
++	   fprintf (dump_file, "value:%" PRId64
++		    " match:%" PRId64
++		    " wrong:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0],
+ 		    (int64_t) hist->hvalue.counters[1],
+ 		    (int64_t) hist->hvalue.counters[2]);
+@@ -370,9 +370,9 @@
+       fprintf (dump_file, "Indirect call ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "value:%"PRId64
+-		    " match:%"PRId64
+-		    " all:%"PRId64,
++	   fprintf (dump_file, "value:%" PRId64
++		    " match:%" PRId64
++		    " all:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0],
+ 		    (int64_t) hist->hvalue.counters[1],
+ 		    (int64_t) hist->hvalue.counters[2]);
+@@ -383,7 +383,7 @@
+       fprintf (dump_file, "Time profile ");
+       if (hist->hvalue.counters)
+       {
+-        fprintf (dump_file, "time:%"PRId64,
++        fprintf (dump_file, "time:%" PRId64,
+                  (int64_t) hist->hvalue.counters[0]);
+       }
+       fprintf (dump_file, ".\n");
+@@ -394,10 +394,10 @@
+ 	{
+            int i;
+ 
+-           fprintf (dump_file, "accu:%"PRId64, hist->hvalue.counters[0]);
++           fprintf (dump_file, "accu:%" PRId64, hist->hvalue.counters[0]);
+            for (i = 1; i < (GCOV_ICALL_TOPN_VAL << 2); i += 2)
+              {
+-               fprintf (dump_file, " target:%"PRId64 " value:%"PRId64,
++               fprintf (dump_file, " target:%" PRId64 " value:%" PRId64,
+                        (int64_t) hist->hvalue.counters[i],
+                        (int64_t) hist->hvalue.counters[i+1]);
+              }
+@@ -1666,8 +1666,8 @@
+       print_generic_expr (dump_file, direct_call->decl, TDF_SLIM);
+       fprintf (dump_file, " transformation on insn postponned to ipa-profile");
+       print_gimple_stmt (dump_file, stmt, 0, TDF_SLIM);
+-      fprintf (dump_file, "hist->count %"PRId64
+-	       " hist->all %"PRId64"\n", count, all);
++      fprintf (dump_file, "hist->count %" PRId64
++	       " hist->all %" PRId64 "\n", count, all);
+     }
+ 
+   return true;
+diff -Naur gcc-5.3.0/gcc/wide-int-print.cc gcc-5.3.0_my/gcc/wide-int-print.cc
+--- gcc-5.3.0/gcc/wide-int-print.cc	2015-01-05 07:33:28.000000000 -0500
++++ gcc-5.3.0_my/gcc/wide-int-print.cc	2024-05-22 04:13:08.183891198 -0400
+@@ -127,7 +127,7 @@
+ 
+ 	}
+       else
+-	buf += sprintf (buf, "0x"HOST_WIDE_INT_PRINT_HEX_PURE, wi.elt (--i));
++	buf += sprintf (buf, "0x" HOST_WIDE_INT_PRINT_HEX_PURE, wi.elt (--i));
+ 
+       while (--i >= 0)
+ 	buf += sprintf (buf, HOST_WIDE_INT_PRINT_PADDED_HEX, wi.elt (i));
+diff -Naur gcc-5.3.0/libgcc/libgcov-util.c gcc-5.3.0_my/libgcc/libgcov-util.c
+--- gcc-5.3.0/libgcc/libgcov-util.c	2015-02-27 08:19:38.000000000 -0500
++++ gcc-5.3.0_my/libgcc/libgcov-util.c	2024-05-22 04:38:20.050708476 -0400
+@@ -879,7 +879,7 @@
+ 
+   scale_factor = (float)max_val / curr_max_val;
+   if (verbose)
+-    fnotice (stdout, "max_val is %"PRId64"\n", curr_max_val);
++    fnotice (stdout, "max_val is %" PRId64 "\n", curr_max_val);
+ 
+   return gcov_profile_scale (profile, scale_factor, 0, 0);
+ }
+@@ -1383,8 +1383,8 @@
+                                             cold_gcda_files[1], both_cold_cnt);
+   printf ("    zero files:  %12u\t%12u\t%12u\n", zero_gcda_files[0],
+                                             zero_gcda_files[1], both_zero_cnt);
+-  printf ("       sum_all:  %12"PRId64"\t%12"PRId64"\n", p1_sum_all, p2_sum_all);
+-  printf ("       run_max:  %12"PRId64"\t%12"PRId64"\n", p1_run_max, p2_run_max);
++  printf ("       sum_all:  %12" PRId64 "\t%12" PRId64 "\n", p1_sum_all, p2_sum_all);
++  printf ("       run_max:  %12" PRId64 "\t%12" PRId64 "\n", p1_run_max, p2_run_max);
+ 
+   return prg_val;
+ }
