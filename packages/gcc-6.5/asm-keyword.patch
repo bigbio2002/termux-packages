@@ -1,0 +1,52 @@
+--- a/libgcc/config/aarch64/sync-cache.orig.c	2024-03-31 04:28:13.421235841 -0400
++++ b/libgcc/config/aarch64/sync-cache.c	2024-03-31 04:00:37.557737548 -0400
+@@ -36,7 +36,7 @@
+   if (! cache_info)
+     /* CTR_EL0 [3:0] contains log2 of icache line size in words.
+        CTR_EL0 [19:16] contains log2 of dcache line size in words.  */
+-    asm volatile ("mrs\t%0, ctr_el0":"=r" (cache_info));
++    __asm__ volatile ("mrs\t%0, ctr_el0":"=r" (cache_info));
+ 
+   icache_lsize = 4 << (cache_info & 0xF);
+   dcache_lsize = 4 << ((cache_info >> 16) & 0xF);
+@@ -51,22 +51,22 @@
+ 			   & ~ (__UINTPTR_TYPE__) (dcache_lsize - 1));
+ 
+   for (; address < (const char *) end; address += dcache_lsize)
+-    asm volatile ("dc\tcvau, %0"
++    __asm__ volatile ("dc\tcvau, %0"
+ 		  :
+ 		  : "r" (address)
+ 		  : "memory");
+ 
+-  asm volatile ("dsb\tish" : : : "memory");
++  __asm__ volatile ("dsb\tish" : : : "memory");
+ 
+   /* Make the start address of the loop cache aligned.  */
+   address = (const char*) ((__UINTPTR_TYPE__) base
+ 			   & ~ (__UINTPTR_TYPE__) (icache_lsize - 1));
+ 
+   for (; address < (const char *) end; address += icache_lsize)
+-    asm volatile ("ic\tivau, %0"
++    __asm__ volatile ("ic\tivau, %0"
+ 		  :
+ 		  : "r" (address)
+ 		  : "memory");
+ 
+-  asm volatile ("dsb\tish; isb" : : : "memory");
++  __asm__ volatile ("dsb\tish; isb" : : : "memory");
+ }
+--- a/gcc/config/aarch64/aarch64-elf.orig.h	2024-03-31 09:26:29.082200943 -0400
++++ b/gcc/config/aarch64/aarch64-elf.h	2024-03-31 13:43:28.943737101 -0400
+@@ -48,9 +48,9 @@
+ 
+ /* Since we use .init_array/.fini_array we don't need the markers at
+    the start and end of the ctors/dtors arrays.  */
+-#define CTOR_LIST_BEGIN asm (CTORS_SECTION_ASM_OP)
++#define CTOR_LIST_BEGIN __asm__ (CTORS_SECTION_ASM_OP)
+ #define CTOR_LIST_END		/* empty */
+-#define DTOR_LIST_BEGIN asm (DTORS_SECTION_ASM_OP)
++#define DTOR_LIST_BEGIN __asm__ (DTORS_SECTION_ASM_OP)
+ #define DTOR_LIST_END		/* empty */
+ 
+ #undef TARGET_ASM_CONSTRUCTOR
