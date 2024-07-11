@@ -1,0 +1,61 @@
+diff -Naur gcc-6.5.0/gcc/cp/cfns.h gcc-6.5.0_my/gcc/cp/cfns.h
+--- gcc-6.5.0/gcc/cp/cfns.h	2016-02-19 17:13:29.000000000 -0500
++++ gcc-6.5.0_my/gcc/cp/cfns.h	2024-07-10 11:02:00.345757628 -0400
+@@ -58,7 +58,7 @@
+ };
+ 
+ inline unsigned int
+-libc_name::hash (register const char *str, register unsigned int len)
++libc_name::hash (const char *str, unsigned int len)
+ {
+   static const unsigned short asso_values[] =
+     {
+@@ -89,7 +89,7 @@
+       400, 400, 400, 400, 400, 400, 400, 400, 400, 400,
+       400, 400, 400, 400, 400, 400, 400
+     };
+-  register int hval = len;
++  int hval = len;
+ 
+   switch (hval)
+     {
+@@ -116,7 +116,7 @@
+ }
+ 
+ const char *
+-libc_name::libc_name_p (register const char *str, register unsigned int len)
++libc_name::libc_name_p (const char *str, unsigned int len)
+ {
+   enum
+     {
+@@ -333,15 +333,15 @@
+ 
+   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
+     {
+-      register int key = hash (str, len);
++      int key = hash (str, len);
+ 
+       if (key <= MAX_HASH_VALUE && key >= 0)
+         {
+-          register int index = lookup[key];
++          int index = lookup[key];
+ 
+           if (index >= 0)
+             {
+-              register const char *s = wordlist[index];
++              const char *s = wordlist[index];
+ 
+               if (*str == *s && !strcmp (str + 1, s + 1))
+                 return s;
+diff -Naur gcc-6.5.0/libgcc/config/sh/linux-unwind.h gcc-6.5.0_my/libgcc/config/sh/linux-unwind.h
+--- gcc-6.5.0/libgcc/config/sh/linux-unwind.h	2017-07-04 06:23:57.000000000 -0400
++++ gcc-6.5.0_my/libgcc/config/sh/linux-unwind.h	2024-07-10 02:33:43.898910300 -0400
+@@ -83,7 +83,7 @@
+ 	siginfo_t *pinfo;
+ 	void *puc;
+ 	siginfo_t info;
+-	struct ucontext uc;
++	ucontext_t uc;
+       } *rt_ = context->cfa;
+       /* The void * cast is necessary to avoid an aliasing warning.
+          The aliasing warning is correct, but should not be a problem
