@@ -19,7 +19,7 @@ diff -Naur gcc-5.3.0/libcpp/system.h gcc-5.3.0_my/libcpp/system.h
 diff -Naur gcc-5.3.0/gcc/system.h gcc-5.3.0_my/gcc/system.h
 --- gcc-5.3.0/gcc/system.h	2024-06-07 15:46:21.766703657 -0400
 +++ gcc-5.3.0_my/gcc/system.h	2024-05-21 23:14:06.452725956 -0400
-@@ -559,15 +559,21 @@
+@@ -558,15 +558,21 @@
  
  /* 1 if we have C99 designated initializers.  */
  #if !defined(HAVE_DESIGNATED_INITIALIZERS)
