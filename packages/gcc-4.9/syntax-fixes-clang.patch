@@ -77,16 +77,7 @@ diff -Naur gcc-4.9.2/gcc/config/elfos.h gcc-4.9.2_curr/gcc/config/elfos.h
 diff -Naur gcc-4.9.2/gcc/cp/cfns.h gcc-4.9.2_curr/gcc/cp/cfns.h
 --- ../gcc-4.9.2/gcc/cp/cfns.h	2014-01-02 17:23:26.000000000 -0500
 +++ ./gcc/cp/cfns.h	2024-03-04 15:43:09.182079704 -0500
-@@ -65,7 +65,7 @@
- #endif
- #endif
- static unsigned int
--hash (register const char *str, register unsigned int len)
-+hash (const char *str, unsigned int len)
- {
-   static const unsigned short asso_values[] =
-     {
-@@ -96,7 +96,7 @@
+@@ -89,7 +89,7 @@
        400, 400, 400, 400, 400, 400, 400, 400, 400, 400,
        400, 400, 400, 400, 400, 400, 400
      };
@@ -95,16 +86,7 @@ diff -Naur gcc-4.9.2/gcc/cp/cfns.h gcc-4.9.2_curr/gcc/cp/cfns.h
  
    switch (hval)
      {
-@@ -129,7 +129,7 @@
- #endif
- #endif
- const char *
--libc_name_p (register const char *str, register unsigned int len)
-+libc_name_p (const char *str, unsigned int len)
- {
-   enum
-     {
-@@ -346,15 +346,15 @@
+@@ -333,15 +333,15 @@
  
    if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
      {
