@@ -1,0 +1,20 @@
+--- a/libstdc++-v3/include/c_global/cstdlib
++++ b/libstdc++-v3/include/c_global/cstdlib
+@@ -77,6 +77,7 @@
+ #include <bits/std_abs.h>
+ 
+ // Get rid of those macros defined in <stdlib.h> in lieu of real functions 
++#undef _GLIBCXX_HAVE_ALIGNED_ALLOC
+ #undef abort
+ #if __cplusplus >= 201703L && defined(_GLIBCXX_HAVE_ALIGNED_ALLOC)
+ # undef aligned_alloc
+--- a/libstdc++-v3/include/c_global/ctime
++++ b/libstdc++-v3/include/c_global/ctime
+@@ -72,6 +72,7 @@
+   using ::strftime;
+ } // namespace
+ 
++#undef _GLIBCXX_HAVE_TIMESPEC_GET
+ #if __cplusplus >= 201703L && defined(_GLIBCXX_HAVE_TIMESPEC_GET)
+ #undef timespec_get
+ namespace std
