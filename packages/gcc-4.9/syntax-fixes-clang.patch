@@ -171,7 +171,7 @@ diff -Naur gcc-4.9.2/gcc/dwarf2out.c gcc-4.9.2_curr/gcc/dwarf2out.c
 diff -Naur gcc-4.9.2/gcc/gengtype-lex.c gcc-4.9.2_curr/gcc/gengtype-lex.c
 --- ../gcc-4.9.2/gcc/gengtype-lex.c	2014-10-30 04:31:06.000000000 -0400
 +++ ./gcc/gengtype-lex.c	2024-03-01 10:22:15.252241570 -0500
-@@ -1406,9 +1406,9 @@
+@@ -1405,9 +1405,9 @@
   */
  YY_DECL
  {
@@ -182,9 +182,9 @@ diff -Naur gcc-4.9.2/gcc/gengtype-lex.c gcc-4.9.2_curr/gcc/gengtype-lex.c
 +	char *yy_cp, *yy_bp;
 +	int yy_act;
      
- #line 65 "/d/gcc-4.9.3/gcc-4.9.3/gcc/gengtype-lex.l"
+ #line 65 "/space/rguenther/gcc-4.9.4/gcc-4.9.4/gcc/gengtype-lex.l"
  
-@@ -1466,7 +1466,7 @@
+@@ -1465,7 +1465,7 @@
  yy_match:
  		do
  			{
@@ -193,7 +193,7 @@ diff -Naur gcc-4.9.2/gcc/gengtype-lex.c gcc-4.9.2_curr/gcc/gengtype-lex.c
  			if ( yy_accept[yy_current_state] )
  				{
  				(yy_last_accepting_state) = yy_current_state;
-@@ -2054,9 +2054,9 @@
+@@ -2053,9 +2053,9 @@
   */
  static int yy_get_next_buffer (void)
  {
@@ -206,7 +206,7 @@ diff -Naur gcc-4.9.2/gcc/gengtype-lex.c gcc-4.9.2_curr/gcc/gengtype-lex.c
  	int ret_val;
  
  	if ( (yy_c_buf_p) > &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[(yy_n_chars) + 1] )
-@@ -2188,15 +2188,15 @@
+@@ -2187,15 +2187,15 @@
  
      static yy_state_type yy_get_previous_state (void)
  {
@@ -225,7 +225,7 @@ diff -Naur gcc-4.9.2/gcc/gengtype-lex.c gcc-4.9.2_curr/gcc/gengtype-lex.c
  		if ( yy_accept[yy_current_state] )
  			{
  			(yy_last_accepting_state) = yy_current_state;
-@@ -2221,10 +2221,10 @@
+@@ -2220,10 +2220,10 @@
   */
      static yy_state_type yy_try_NUL_trans  (yy_state_type yy_current_state )
  {
@@ -239,7 +239,7 @@ diff -Naur gcc-4.9.2/gcc/gengtype-lex.c gcc-4.9.2_curr/gcc/gengtype-lex.c
  	if ( yy_accept[yy_current_state] )
  		{
  		(yy_last_accepting_state) = yy_current_state;
-@@ -2831,7 +2831,7 @@
+@@ -2830,7 +2830,7 @@
  #ifndef yytext_ptr
  static void yy_flex_strncpy (char* s1, yyconst char * s2, int n )
  {
@@ -248,7 +248,7 @@ diff -Naur gcc-4.9.2/gcc/gengtype-lex.c gcc-4.9.2_curr/gcc/gengtype-lex.c
  	for ( i = 0; i < n; ++i )
  		s1[i] = s2[i];
  }
-@@ -2840,7 +2840,7 @@
+@@ -2839,7 +2839,7 @@
  #ifdef YY_NEED_STRLEN
  static int yy_flex_strlen (yyconst char * s )
  {
@@ -404,7 +404,7 @@ diff -Naur gcc-4.9.2/gcc/tree-browser.c gcc-4.9.2_curr/gcc/tree-browser.c
 diff -Naur gcc-4.9.2/gcc/tree-ssa-reassoc.c gcc-4.9.2_curr/gcc/tree-ssa-reassoc.c
 --- ../gcc-4.9.2/gcc/tree-ssa-reassoc.c	2014-10-17 06:53:36.000000000 -0400
 +++ ./gcc/tree-ssa-reassoc.c	2024-03-04 13:44:24.648036633 -0500
-@@ -4211,7 +4211,7 @@
+@@ -4245,7 +4245,7 @@
  		      if (elt < vec_len - 1)
  			fputs (" * ", dump_file);
  		    }
@@ -413,7 +413,7 @@ diff -Naur gcc-4.9.2/gcc/tree-ssa-reassoc.c gcc-4.9.2_curr/gcc/tree-ssa-reassoc.
  			   power);
  		}
  	    }
-@@ -4245,7 +4245,7 @@
+@@ -4279,7 +4279,7 @@
  		  if (elt < vec_len - 1)
  		    fputs (" * ", dump_file);
  		}
@@ -528,3 +528,51 @@ diff -Naur gcc-4.9.2/gcc/value-prof.c gcc-4.9.2_curr/gcc/value-prof.c
      }
  
    return true;
+--- gcc-4.9.4/gcc/defaults.orig.h	2024-07-16 06:17:36.731939306 -0400
++++ gcc-4.9.4/gcc/defaults.h	2024-07-16 04:58:06.798130791 -0400
+@@ -123,7 +123,7 @@
+     {									\
+       fprintf ((FILE), "\t%s\t", TLS_COMMON_ASM_OP);			\
+       assemble_name ((FILE), (NAME));					\
+-      fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED",%u\n",		\
++      fprintf ((FILE), "," HOST_WIDE_INT_PRINT_UNSIGNED ",%u\n",		\
+ 	       (SIZE), DECL_ALIGN (DECL) / BITS_PER_UNIT);		\
+     }									\
+   while (0)
+--- gcc-4.9.4/gcc/cp/cfns.orig.h	2024-07-16 06:16:13.851931049 -0400
++++ gcc-4.9.4/gcc/cp/cfns.h	2024-07-16 06:18:10.518609338 -0400
+@@ -58,7 +58,7 @@
+ };
+ 
+ inline unsigned int
+-libc_name::hash (register const char *str, register unsigned int len)
++libc_name::hash (const char *str, unsigned int len)
+ {
+   static const unsigned short asso_values[] =
+     {
+@@ -116,7 +116,7 @@
+ }
+ 
+ const char *
+-libc_name::libc_name_p (register const char *str, register unsigned int len)
++libc_name::libc_name_p (const char *str, unsigned int len)
+ {
+   enum
+     {
+--- gcc-4.9.4/gcc/gcc.orig.c	2024-07-16 06:24:10.735311890 -0400
++++ gcc-4.9.4/gcc/gcc.c	2024-07-16 06:24:46.051982075 -0400
+@@ -710,12 +710,12 @@
+ #define PLUGIN_COND_CLOSE ""
+ #endif
+ #define LINK_PLUGIN_SPEC \
+-    "%{"PLUGIN_COND": \
++    "%{" PLUGIN_COND ": \
+     -plugin %(linker_plugin_file) \
+     -plugin-opt=%(lto_wrapper) \
+     -plugin-opt=-fresolution=%u.res \
+     %{!nostdlib:%{!nodefaultlibs:%:pass-through-libs(%(link_gcc_c_sequence))}} \
+-    }"PLUGIN_COND_CLOSE
++    }" PLUGIN_COND_CLOSE
+ #else
+ /* The linker used doesn't support -plugin, reject -fuse-linker-plugin.  */
+ #define LINK_PLUGIN_SPEC "%{fuse-linker-plugin:\

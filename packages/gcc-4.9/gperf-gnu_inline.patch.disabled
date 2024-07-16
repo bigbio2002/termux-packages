@@ -128,7 +128,7 @@ index d8e02c95ad6..9a372496ca5 100644
 +};
 +
 +inline unsigned int
-+libc_name::hash (const char *str, unsigned int len)
++libc_name::hash (register const char *str, register unsigned int len)
  {
    static const unsigned short asso_values[] =
      {
@@ -144,7 +144,7 @@ index d8e02c95ad6..9a372496ca5 100644
 -#endif
  const char *
 -libc_name_p (register const char *str, register unsigned int len)
-+libc_name::libc_name_p (const char *str, unsigned int len)
++libc_name::libc_name_p (register const char *str, register unsigned int len)
  {
    enum
      {
