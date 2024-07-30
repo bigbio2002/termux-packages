@@ -1,0 +1,19 @@
+diff -u -r ../binutils-2.26/bfd/hosts/x86-64linux.h ./bfd/hosts/x86-64linux.h
+--- ../binutils-2.26/bfd/hosts/x86-64linux.h	2015-11-13 03:27:40.000000000 -0500
++++ ./bfd/hosts/x86-64linux.h	2016-06-16 17:27:10.497607224 -0400
+@@ -33,6 +33,15 @@
+ #include <sys/procfs.h>
+ #include <stdint.h>
+ 
++#ifdef __ANDROID__
++struct elf_siginfo {
++	int si_signo;
++	int si_code;
++	int si_errno;
++};
++#define ELF_PRARGSZ (80)
++#endif
++
+ /* Unsigned 64-bit integer aligned to 8 bytes.  */
+ typedef uint64_t __attribute__ ((__aligned__ (8))) a8_uint64_t;
+ 
