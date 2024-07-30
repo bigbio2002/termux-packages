@@ -13,7 +13,7 @@
  #if defined(__cplusplus)
  #define __BEGIN_DECLS extern "C" {
  #define __END_DECLS }
-@@ -353,12 +358,20 @@
+@@ -353,12 +358,14 @@
  /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
  #define __RENAME(x) __asm__(#x)
  
@@ -23,19 +23,13 @@
 -#else
 -#define __size_mul_overflow(a, b, result) __builtin_umul_overflow(a, b, result)
 -#endif
-+#if defined __has_builtin
-+# if __has_builtin(__builtin_umul_overflow)
++#if defined __has_builtin || __GNUC__ >= 5
++# if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
 +#  if defined(__LP64__)
 +#   define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
 +#  else
 +#   define __size_mul_overflow(a, b, result) __builtin_umul_overflow(a, b, result)
 +#  endif
-+# endif
-+#elif __GNUC__ >= 5
-+# if defined(__LP64__)
-+#  define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
-+# else
-+#  define __size_mul_overflow(a, b, result) __builtin_umul_overflow(a, b, result)
 +# endif
  #else
  extern __inline__ __always_inline __attribute__((gnu_inline))
