@@ -1,0 +1,18 @@
+diff -u -r ../gcc-4.8.2/libcpp/files.c ./libcpp/files.c
+--- ../gcc-4.8.2/libcpp/files.cc	2013-03-06 17:18:40.000000000 +0100
++++ ./libcpp/files.cc	2014-01-09 00:29:34.940181542 +0100
+@@ -747,11 +747,13 @@
+     cpp_error_at (pfile, CPP_DL_WARNING, loc,
+ 	       "%s is shorter than expected", file->path);
+ 
++  off_t ot = (off_t) &file->st.st_size;
+   file->buffer = _cpp_convert_input (pfile,
+ 				     input_charset,
+ 				     buf, size + 16, total,
+ 				     &file->buffer_start,
+-				     &file->st.st_size);
++				     &ot);
++  file->st.st_size = ot;
+   file->buffer_valid = file->buffer;
+   return file->buffer_valid;
+ }

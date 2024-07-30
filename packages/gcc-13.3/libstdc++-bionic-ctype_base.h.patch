@@ -1,0 +1,51 @@
+--- a/libstdc++-v3/config/os/bionic/ctype_base.orig.h	2024-03-31 22:45:37.761170852 -0400
++++ b/libstdc++-v3/config/os/bionic/ctype_base.h	2024-03-31 15:42:38.765598780 -0400
+@@ -27,6 +27,19 @@
+ //
+ 
+ // Information as gleaned from /usr/include/ctype.h
++// Define macros by ourselves so we do not get into more troubles.
++#define _GLIBCXX_U 0x01
++#define _GLIBCXX_L 0x02
++#define _GLIBCXX_D 0x04
++#define _GLIBCXX_S 0x08
++#define _GLIBCXX_P 0x10
++#define _GLIBCXX_C 0x20
++#define _GLIBCXX_X 0x40
++#define _GLIBCXX_B 0x80
++#define _GLIBCXX_R (_GLIBCXX_P|_GLIBCXX_U|\
++                    _GLIBCXX_L|_GLIBCXX_D|_GLIBCXX_B)
++#define _GLIBCXX_A (_GLIBCXX_L|_GLIBCXX_U)
++#define _GLIBCXX_N _GLIBCXX_D
+ 
+ namespace std _GLIBCXX_VISIBILITY(default)
+ {
+@@ -41,17 +54,17 @@
+     // NB: Offsets into ctype<char>::_M_table force a particular size
+     // on the mask type. Because of this, we don't use an enum.
+     typedef char 		mask;
+-    static const mask upper    	= _U;
+-    static const mask lower 	= _L;
+-    static const mask alpha 	= _U | _L;
+-    static const mask digit 	= _N;
+-    static const mask xdigit 	= _X | _N;
+-    static const mask space 	= _S;
+-    static const mask print 	= _P | _U | _L | _N | _B;
+-    static const mask graph 	= _P | _U | _L | _N;
+-    static const mask cntrl 	= _C;
+-    static const mask punct 	= _P;
+-    static const mask alnum 	= _U | _L | _N;
++    static const mask upper    	= _GLIBCXX_U;
++    static const mask lower 	= _GLIBCXX_L;
++    static const mask alpha 	= _GLIBCXX_A;
++    static const mask digit 	= _GLIBCXX_N;
++    static const mask xdigit 	= _GLIBCXX_X | _GLIBCXX_N;
++    static const mask space 	= _GLIBCXX_S;
++    static const mask print 	= _GLIBCXX_R;
++    static const mask graph 	= _GLIBCXX_P | _GLIBCXX_U | _GLIBCXX_L | _GLIBCXX_N;
++    static const mask cntrl 	= _GLIBCXX_C;
++    static const mask punct 	= _GLIBCXX_P;
++    static const mask alnum 	= _GLIBCXX_A | _GLIBCXX_N;
+ #if __cplusplus >= 201103L
+     static const mask blank 	= space;
+ #endif
