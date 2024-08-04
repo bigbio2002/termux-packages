@@ -1,6 +1,6 @@
 --- a/binutils/Makefile.in
 +++ b/binutils/Makefile.in
-@@ -2014,7 +2014,7 @@
+@@ -1469,7 +1469,7 @@
  	    k=`echo $$j | sed '$(transform)'`; \
  	    if [ "$(bindir)/$$k" != "$(tooldir)/bin/$$j" ]; then \
  	      rm -f $(DESTDIR)$(tooldir)/bin/$$j$(EXEEXT); \
@@ -11,7 +11,7 @@
  	  else true; \
 --- a/gas/Makefile.in
 +++ b/gas/Makefile.in
-@@ -2126,7 +2126,7 @@
+@@ -2612,7 +2612,7 @@
  	n=`echo as | sed '$(transform)'`; \
  	if [ "$(bindir)/$$n$(EXEEXT)" != "$(tooldir)/bin/as$(EXEEXT)" ]; then \
  	  rm -f $(DESTDIR)$(tooldir)/bin/as$(EXEEXT); \
@@ -22,7 +22,7 @@
  	  true ; \
 --- a/ld/Makefile.in
 +++ b/ld/Makefile.in
-@@ -2673,17 +2673,17 @@
+@@ -3461,17 +3461,17 @@
  	n=`echo $(installed_linker) | sed '$(transform)'`; \
  	if test "$(bindir)" != "$(tooldir)/bin"; then \
  	  rm -f $(DESTDIR)$(tooldir)/bin/$(installed_linker)$(EXEEXT); \

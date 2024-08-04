@@ -1,17 +1,17 @@
 --- a/bfd/elf32-arm.c
 +++ b/bfd/elf32-arm.c
-@@ -2306,7 +2306,7 @@
+@@ -2079,7 +2079,7 @@
  
  /* The name of the dynamic interpreter.  This is put in the .interp
     section.  */
 -#define ELF_DYNAMIC_INTERPRETER     "/usr/lib/ld.so.1"
 +#define ELF_DYNAMIC_INTERPRETER     "/system/bin/linker"
  
- /* FDPIC default stack size.  */
- #define DEFAULT_STACK_SIZE 0x8000
+ static const unsigned long tls_trampoline [] =
+ {
 --- a/bfd/elfnn-aarch64.c
 +++ b/bfd/elfnn-aarch64.c
-@@ -2356,7 +2356,7 @@
+@@ -1561,7 +1561,7 @@
  
  /* The name of the dynamic interpreter.  This is put in the .interp
     section.  */
