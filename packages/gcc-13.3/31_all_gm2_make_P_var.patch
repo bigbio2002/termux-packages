@@ -1,0 +1,49 @@
+https://bugs.gentoo.org/904714
+https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=79c73122fab213f218b85b2c579ffe3cf5e98ad0
+
+From 275c516a40b7044895c4920f52ec19c7bceedd54 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Arsen=20Arsenovi=C4=87?= <arsen@aarsen.me>
+Date: Fri, 21 Apr 2023 18:07:29 +0200
+Subject: [PATCH] gcc/m2: Drop references to $(P)
+
+$(P) seems to have been a workaround for some old, proprietary make
+implementations that we no longer support.  It was removed in
+r0-31149-gb8dad04b688e9c.
+
+gcc/m2/ChangeLog:
+
+       * Make-lang.in: Remove references to $(P).
+       * Make-maintainer.in: Ditto.
+
+(cherry picked from commit 79c73122fab213f218b85b2c579ffe3cf5e98ad0)
+--- a/gcc/m2/Make-lang.in
++++ b/gcc/m2/Make-lang.in
+@@ -539,7 +539,7 @@ m2_OBJS = $(GM2_C_OBJS) m2/gm2-gcc/rtegraph.o \
+ cc1gm2$(exeext): m2/stage1/cc1gm2$(exeext) $(m2.prev)
+ 	cp -p $< $@
+ 
+-m2/stage2/cc1gm2$(exeext): m2/stage1/cc1gm2$(exeext) m2/gm2-compiler/m2flex.o $(P) \
++m2/stage2/cc1gm2$(exeext): m2/stage1/cc1gm2$(exeext) m2/gm2-compiler/m2flex.o \
+                             $(GM2_C_OBJS) $(BACKEND) $(LIBDEPS) $(GM2_LIBS) \
+                             m2/gm2-gcc/rtegraph.o $(M2RTE_PLUGIN_SO)
+ 	-test -d $(@D) || $(mkinstalldirs) $(@D)
+@@ -552,7 +552,7 @@ m2/stage2/cc1gm2$(exeext): m2/stage1/cc1gm2$(exeext) m2/gm2-compiler/m2flex.o $(
+ 	@$(call LINK_PROGRESS,$(INDEX.m2),end)
+ 
+ m2/stage1/cc1gm2$(exeext): gm2$(exeext) m2/gm2-compiler-boot/m2flex.o \
+-                            $(P) $(GM2_C_OBJS) $(BACKEND) $(LIBDEPS) \
++                            $(GM2_C_OBJS) $(BACKEND) $(LIBDEPS) \
+                             $(GM2_LIBS_BOOT) $(MC_LIBS) \
+                             m2/gm2-gcc/rtegraph.o $(M2RTE_PLUGIN_SO) \
+                             $(m2.prev)
+--- a/gcc/m2/Make-maintainer.in
++++ b/gcc/m2/Make-maintainer.in
+@@ -852,7 +852,7 @@ GM2_LIBS_PARANOID = m2/gm2-compiler-paranoid/gm2.a \
+ gm2.paranoid: m2/m2obj3/cc1gm2$(exeext) gm2.verifyparanoid
+ 
+ m2/m2obj3/cc1gm2$(exeext): m2/m2obj2/cc1gm2$(exeext) m2/gm2-compiler-paranoid/m2flex.o \
+-                            $(P) $(GM2_C_OBJS) $(BACKEND) $(LIBDEPS) $(GM2_LIBS_PARANOID) \
++                            $(GM2_C_OBJS) $(BACKEND) $(LIBDEPS) $(GM2_LIBS_PARANOID) \
+                             m2/gm2-gcc/rtegraph.o plugin/m2rte$(exeext).so
+ 	-test -d m2/m2obj3 || $(mkinstalldirs) m2/m2obj3
+ 	@$(call LINK_PROGRESS,$(INDEX.m2),start)
