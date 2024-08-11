@@ -3,7 +3,7 @@
 @@ -77,6 +77,7 @@
  #include <bits/std_abs.h>
  
- // Get rid of those macros defined in <stdlib.h> in lieu of real functions 
+ // Get rid of those macros defined in <stdlib.h> in lieu of real functions.
 +#undef _GLIBCXX_HAVE_ALIGNED_ALLOC
  #undef abort
  #if __cplusplus >= 201703L && defined(_GLIBCXX_HAVE_ALIGNED_ALLOC)
