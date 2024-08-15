@@ -1,0 +1,18 @@
+We need to pass NO_PIE_CFLAGS to ALL_* so gcc don't fail when
+we compile it with older gcc and pie.
+
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -1104,10 +1104,10 @@ ALL_CXXFLAGS = $(T_CFLAGS) $(CFLAGS-$@)
+ ALL_CPPFLAGS = $(INCLUDES) $(CPPFLAGS)
+ 
+ # This is the variable to use when using $(COMPILER).
+-ALL_COMPILERFLAGS = $(ALL_CXXFLAGS) $(PICFLAG)
++ALL_COMPILERFLAGS = $(NO_PIE_CFLAGS) $(ALL_CXXFLAGS) $(PICFLAG)
+ 
+ # This is the variable to use when using $(LINKER).
+-ALL_LINKERFLAGS = $(ALL_CXXFLAGS) $(LD_PICFLAG)
++ALL_LINKERFLAGS = $(NO_PIE_CFLAGS) $(ALL_CXXFLAGS) $(LD_PICFLAG)
+ 
+ # Build and host support libraries.
+ 
