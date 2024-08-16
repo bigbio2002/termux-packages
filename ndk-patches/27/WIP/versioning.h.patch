@@ -1,0 +1,25 @@
+--- ./usr/include/android/versioning.orig.h	2024-03-31 04:36:42.791286584 -0400
++++ ./usr/include/android/versioning.h	2024-03-31 04:35:30.314612697 -0400
+@@ -16,6 +16,17 @@
+ 
+ #pragma once
+ 
++#if !defined(__clang__)	/* */
++#define __INTRODUCED_IN(api_level)
++#define __DEPRECATED_IN(api_level)
++#define __REMOVED_IN(api_level)
++#define __INTRODUCED_IN_32(api_level)
++#define __INTRODUCED_IN_64(api_level)
++#define __INTRODUCED_IN_ARM(api_level)
++#define __INTRODUCED_IN_X86(api_level)
++#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
++#define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level)
++#else
+ // The `annotate` attribute always pulls the annotated (inline) function into the object files, thus
+ // we should only annotate headers when we are running versioner.
+ #if defined(__BIONIC_VERSIONER)
+@@ -98,3 +109,4 @@
+ #define __VERSIONER_FORTIFY_INLINE
+ 
+ #endif  // defined(__BIONIC_VERSIONER)
++#endif  // !defined(__clang__)

@@ -1,0 +1,36 @@
+--- ./usr/include/sys/cdefs.h.orig
++++ ./usr/include/sys/cdefs.h
+@@ -42,6 +42,12 @@
+  */
+ #define __BIONIC__ 1
+ 
++#if !defined(__clang__)
++#define _Nullable
++#define _Nonnull
++#define _Null_unspecified
++#endif
++
+ #if defined(__cplusplus)
+ #define __BEGIN_DECLS extern "C" {
+ #define __END_DECLS }
+@@ -353,12 +358,14 @@
+ /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
+ #define __RENAME(x) __asm__(#x)
+ 
+-#if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
+-#if defined(__LP64__)
+-#define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
+-#else
+-#define __size_mul_overflow(a, b, result) __builtin_umul_overflow(a, b, result)
+-#endif
++#if defined __has_builtin || __GNUC__ >= 5
++# if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
++#  if defined(__LP64__)
++#   define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
++#  else
++#   define __size_mul_overflow(a, b, result) __builtin_umul_overflow(a, b, result)
++#  endif
++# endif
+ #else
+ extern __inline__ __always_inline __attribute__((gnu_inline))
+ int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result) {
