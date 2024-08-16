@@ -1,0 +1,15 @@
+--- ./usr/include/sys/cdefs.h.orig
++++ ./usr/include/sys/cdefs.h
+@@ -42,6 +42,12 @@
+  */
+ #define __BIONIC__ 1
+ 
++#if !defined(__clang__)
++#define _Nullable
++#define _Nonnull
++#define _Null_unspecified
++#endif
++
+ #if defined(__cplusplus)
+ #define __BEGIN_DECLS extern "C" {
+ #define __END_DECLS }

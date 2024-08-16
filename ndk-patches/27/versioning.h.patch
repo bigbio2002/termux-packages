@@ -18,8 +18,8 @@
  // The `annotate` attribute always pulls the annotated (inline) function into the object files, thus
  // we should only annotate headers when we are running versioner.
  #if defined(__BIONIC_VERSIONER)
-@@ -98,3 +109,4 @@
- #define __VERSIONER_FORTIFY_INLINE
- 
- #endif  // defined(__BIONIC_VERSIONER)
-+#endif  // !defined(__clang__)
+@@ -82,3 +93,4 @@
+ #undef __BIONIC_AVAILABILITY
+ #define __BIONIC_AVAILABILITY(api_level, ...)
+ #endif // defined(__ANDROID_VENDOR__)
++#endif // !defined(__clang__)
