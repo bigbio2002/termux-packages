@@ -1,0 +1,37 @@
+https://bugs.gentoo.org/930014
+https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=232a86f9640cde6908d0875b8df52c36030c5b5e
+
+From 232a86f9640cde6908d0875b8df52c36030c5b5e Mon Sep 17 00:00:00 2001
+From: Sam James <sam@gentoo.org>
+Date: Tue, 21 May 2024 12:31:47 +0100
+Subject: [PATCH] modula2: Pass --destdir for dir index during install of
+ m2.info.
+
+This patch adds DESTDIR to the infodir when installing m2.info.
+
+gcc/m2/ChangeLog
+
+	* Make-lang.in (m2.install-info): Pass --destdir for dir index.
+
+Signed-off-by: Gaius Mulley <gaiusmod2@gmail.com>
+---
+ gcc/m2/Make-lang.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gcc/m2/Make-lang.in b/gcc/m2/Make-lang.in
+index 0abd8ce1455..da4226123df 100644
+--- a/gcc/m2/Make-lang.in
++++ b/gcc/m2/Make-lang.in
+@@ -425,7 +425,7 @@ m2.install-info: installdirs
+ 	else true; fi
+ 	-if [ -f gm2$(exeext) ] && [ -f $(DESTDIR)$(infodir)/m2.info ]; then \
+ 	  if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+-	    install-info --dir-file=$(infodir)/dir $(DESTDIR)$(infodir)/m2.info; \
++	    install-info --dir-file=$(DESTDIR)$(infodir)/dir $(DESTDIR)$(infodir)/m2.info; \
+ 	  else true; fi; \
+ 	else true; fi
+ 
+-- 
+2.43.5
+
+
