@@ -1,0 +1,44 @@
+--- a/xmlto.in.orig	2024-08-20 12:09:46.833961252 -0400
++++ b/xmlto.in	2024-08-20 12:11:00.260635234 -0400
+@@ -19,11 +19,11 @@
+ # Utilities that we need that aren't everywhere
+ FIND=@FIND@                # This must be GNU find (need -maxdepth)
+ MKTEMP=@MKTEMP@           # See http://www.mktemp.org if missing on your system
+-BASH=@XMLTO_BASH_PATH@    # GNU bash, for running the format scripts
++BASH=@TERMUX_PREFIX@/bin/bash    # GNU bash, for running the format scripts
+ GETOPT=@GETOPT@           # a getopt that supports --longoptions
+-TAIL=@TAIL@               # a tail that supports -n (posix)
+-GREP=@GREP@               # GNU grep, for searching patterns
+-SED=@SED@                 # GNU sed, for modification of patterns
++TAIL=@TERMUX_PREFIX@/bin/tail               # a tail that supports -n (posix)
++GREP=@TERMUX_PREFIX@/bin/grep               # GNU grep, for searching patterns
++SED=@TERMUX_PREFIX@/bin/sed                 # GNU sed, for modification of patterns
+ 
+ version () {
+   echo "xmlto version 0.0.29"
+@@ -139,10 +139,10 @@
+ 
+ XSLTOPTS=
+ SEARCHPATH=
+-PAPERCONF_PATH=@PAPER_CONF@
+-LOCALE_PATH=@LOCALE@
+-XMLLINT_PATH=@XMLLINT@
+-XSLTPROC_PATH=@XSLTPROC@
++PAPERCONF_PATH=@TERMUX_PREFIX@/bin/paperconf
++LOCALE_PATH=@TERMUX_PREFIX@/bin/locale
++XMLLINT_PATH=@TERMUX_PREFIX@/bin/xmllint
++XSLTPROC_PATH=@TERMUX_PREFIX@/bin/xsltproc
+ 
+ # Try to setup papersize using libpaper first ...
+ if type "$PAPERCONF_PATH" >/dev/null 2>&1
+@@ -245,8 +245,8 @@
+ FOP_PATH=@FOP@
+ DBLATEX_PATH=@DBLATEX@
+ 
+-XMLTEX_PATH=@XMLTEX@
+-PDFXMLTEX_PATH=@PDFXMLTEX@
++XMLTEX_PATH=@TERMUX_PREFIX@/bin/xmltex
++PDFXMLTEX_PATH=@TERMUX_PREFIX@/bin/pdfxmltex
+ 
+ #check if we could use fop/dblatex backend as default(if not, use passivetex)
+ if [ x"$USE_BACKEND" = xFOP ] && ! type "$FOP_PATH" >/dev/null 2>&1
