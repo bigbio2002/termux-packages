@@ -25,19 +25,19 @@
  
  AC_ARG_VAR([PAPER_CONF], [Name and path of the `paperconf' (libpaper) program.])
 -AC_PATH_PROG([PAPER_CONF], [paperconf], [paperconf])
-+AC_PATH_PROG([PAPER_CONF], [paperconf], [paperconf], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([PAPER_CONF], [paperconf],, [paperconf], [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([LOCALE], [Name and path of the `locale' program.])
 -AC_PATH_PROG([LOCALE], [locale], [locale])
-+AC_PATH_PROG([LOCALE], [locale], [locale], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([LOCALE], [locale], [locale],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([XMLLINT], [Name and path of the `xmllint' program.])
 -AC_PATH_PROG([XMLLINT], [xmllint], [xmllint])
-+AC_PATH_PROG([XMLLINT], [xmllint], [xmllint], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([XMLLINT], [xmllint], [xmllint],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([XSLTPROC], [Name and path of the `xsltproc' program.])
 -AC_PATH_PROG([XSLTPROC], [xsltproc], [xsltproc])
-+AC_PATH_PROG([XSLTPROC], [xsltproc], [xsltproc], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([XSLTPROC], [xsltproc], [xsltproc],, [@TERMUX_PREFIX@/bin])
  
  dnl
  dnl toolchains
@@ -45,19 +45,19 @@
  
  AC_ARG_VAR([DBLATEX], [Name and path of the `dblatex' utility.])
 -AC_PATH_PROG([DBLATEX], [dblatex], [dblatex])
-+AC_PATH_PROG([DBLATEX], [dblatex], [dblatex], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([DBLATEX], [dblatex], [dblatex],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([FOP], [Name and path of the `fop' utility.])
 -AC_PATH_PROG([FOP], [fop], [fop])
-+AC_PATH_PROG([FOP], [fop], [fop], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([FOP], [fop], [fop],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([XMLTEX], [Name and path of the `xmltex' utility.])
 -AC_PATH_PROG([XMLTEX], [xmltex], [xmltex])
-+AC_PATH_PROG([XMLTEX], [xmltex], [xmltex], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([XMLTEX], [xmltex], [xmltex],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([PDFXMLTEX], [Name and path of the `pdfxmltex' utility.])
 -AC_PATH_PROG([PDFXMLTEX], [pdfxmltex], [pdfxmltex])
-+AC_PATH_PROG([PDFXMLTEX], [pdfxmltex], [pdfxmltex], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([PDFXMLTEX], [pdfxmltex], [pdfxmltex],, [@TERMUX_PREFIX@/bin])
  
  dnl
  dnl default backend
@@ -79,35 +79,35 @@
  
  AC_ARG_VAR([LYNX], [Name and path of the `lynx' browser.])
 -AC_PATH_PROG([LYNX], [lynx], [lynx])
-+AC_PATH_PROG([LYNX], [lynx], [lynx], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([LYNX], [lynx], [lynx],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([LINKS], [Name and path of the `elinks' browser.])
 -AC_PATH_PROG([LINKS], [elinks], [elinks])
-+AC_PATH_PROG([LINKS], [elinks], [elinks], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([LINKS], [elinks], [elinks],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([W3M], [Name and path of the `w3m' browser.])
 -AC_PATH_PROG([W3M], [w3m], [w3m])
-+AC_PATH_PROG([W3M], [w3m], [w3m], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([W3M], [w3m], [w3m],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([TAIL], [Name and path of a tail binary that supports -n.])
 -AC_PATH_PROG([TAIL], [tail], [tail])
-+AC_PATH_PROG([TAIL], [tail], [tail], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([TAIL], [tail], [tail],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([GREP], [Name and path of a GNU grep binary.])
 -AC_PATH_PROG([GREP], [grep], [grep])
-+AC_PATH_PROG([GREP], [grep], [grep], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([GREP], [grep], [grep],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([SED], [Name and path of a GNU sed binary.])
 -AC_PATH_PROG([SED], [sed], [sed])
-+AC_PATH_PROG([SED], [sed], [sed], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([SED], [sed], [sed],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([GCP], [Name and path of a GNU cp binary (need at least -P)])
 -AC_PATH_PROG([GCP], [cp], [cp])
-+AC_PATH_PROG([GCP], [cp], [cp], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([GCP], [cp], [cp],, [@TERMUX_PREFIX@/bin])
  
  AC_ARG_VAR([ZIP], [Name and path of a zip binary (compatible with PKZIP)])
 -AC_PATH_PROG([ZIP], [zip], [zip])
-+AC_PATH_PROG([ZIP], [zip], [zip], [@TERMUX_PREFIX@/bin])
++AC_CHECK_PROG([ZIP], [zip], [zip],, [@TERMUX_PREFIX@/bin])
  
  dnl
  dnl default webrowser
