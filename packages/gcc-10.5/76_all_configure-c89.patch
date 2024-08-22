@@ -1,0 +1,141 @@
+https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=6be2672e4ee41c566a9e072088cccca263bab5f7
+https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=885b6660c17fb91980b5682514ef54668e544b02
+
+From 942a325c81136138c4c199f8ab3e89a1945c3790 Mon Sep 17 00:00:00 2001
+From: Florian Weimer <fweimer@redhat.com>
+Date: Tue, 18 Oct 2022 16:58:48 +0200
+Subject: [PATCH 1/2] libsanitizer: Avoid implicit function declaration in
+ configure test
+
+libsanitizer/
+
+        * configure.ac (sanitizer_supported): Include <unistd.h> for
+        syscall prototype.
+        * configure: Regenerate.
+
+From 9a43d0e406c05d2d7136721443192bb6588c3113 Mon Sep 17 00:00:00 2001
+From: Florian Weimer <fweimer@redhat.com>
+Date: Tue, 18 Oct 2022 16:58:48 +0200
+Subject: [PATCH 2/2] libiberty: Fix C89-isms in configure tests
+
+libiberty/
+
+        * acinclude.m4 (ac_cv_func_strncmp_works): Add missing
+        int return type and parameter list to the definition of main.
+        Include <stdlib.h> and <string.h> for prototypes.
+        (ac_cv_c_stack_direction): Add missing
+        int return type and parameter list to the definitions of
+        main, find_stack_direction.  Include <stdlib.h> for exit
+        prototype.
+        * configure: Regenerate.
+
+--- a/libiberty/aclocal.m4
++++ b/libiberty/aclocal.m4
+@@ -16,6 +16,8 @@ AC_CACHE_CHECK([for working strncmp], ac_cv_func_strncmp_works,
+ [AC_TRY_RUN([
+ /* Test by Jim Wilson and Kaveh Ghazi.
+    Check whether strncmp reads past the end of its string parameters. */
++#include <stdlib.h>
++#include <string.h>
+ #include <sys/types.h>
+ 
+ #ifdef HAVE_FCNTL_H
+@@ -43,7 +45,8 @@ AC_CACHE_CHECK([for working strncmp], ac_cv_func_strncmp_works,
+ 
+ #define MAP_LEN 0x10000
+ 
+-main ()
++int
++main (void)
+ {
+ #if defined(HAVE_MMAP) || defined(HAVE_MMAP_ANYWHERE)
+   char *p;
+@@ -149,7 +152,10 @@ if test $ac_cv_os_cray = yes; then
+ fi
+ 
+ AC_CACHE_CHECK(stack direction for C alloca, ac_cv_c_stack_direction,
+-[AC_TRY_RUN([find_stack_direction ()
++[AC_TRY_RUN([#include <stdlib.h>
++
++int
++find_stack_direction (void)
+ {
+   static char *addr = 0;
+   auto char dummy;
+@@ -161,7 +167,9 @@ AC_CACHE_CHECK(stack direction for C alloca, ac_cv_c_stack_direction,
+   else
+     return (&dummy > addr) ? 1 : -1;
+ }
+-main ()
++
++int
++main (void)
+ {
+   exit (find_stack_direction() < 0);
+ }], 
+--- a/libiberty/configure
++++ b/libiberty/configure
+@@ -6718,7 +6718,10 @@ else
+ else
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+-find_stack_direction ()
++#include <stdlib.h>
++
++int
++find_stack_direction (void)
+ {
+   static char *addr = 0;
+   auto char dummy;
+@@ -6730,7 +6733,9 @@ find_stack_direction ()
+   else
+     return (&dummy > addr) ? 1 : -1;
+ }
+-main ()
++
++int
++main (void)
+ {
+   exit (find_stack_direction() < 0);
+ }
+@@ -7555,6 +7560,8 @@ else
+ 
+ /* Test by Jim Wilson and Kaveh Ghazi.
+    Check whether strncmp reads past the end of its string parameters. */
++#include <stdlib.h>
++#include <string.h>
+ #include <sys/types.h>
+ 
+ #ifdef HAVE_FCNTL_H
+@@ -7582,7 +7589,8 @@ else
+ 
+ #define MAP_LEN 0x10000
+ 
+-main ()
++int
++main (void)
+ {
+ #if defined(HAVE_MMAP) || defined(HAVE_MMAP_ANYWHERE)
+   char *p;
+--- a/libsanitizer/configure
++++ b/libsanitizer/configure
+@@ -16029,6 +16029,7 @@ case "$target" in
+     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ #include <sys/syscall.h>
++#include <unistd.h>
+ int
+ main ()
+ {
+--- a/libsanitizer/configure.ac
++++ b/libsanitizer/configure.ac
+@@ -155,7 +155,8 @@ case "$target" in
+   *-*-linux*)
+     # Some old Linux distributions miss required syscalls.
+     sanitizer_supported=no
+-    AC_TRY_COMPILE([#include <sys/syscall.h>],[
++    AC_TRY_COMPILE([#include <sys/syscall.h>
++#include <unistd.h>],[
+       syscall (__NR_gettid);
+       syscall (__NR_futex);
+       syscall (__NR_exit_group);

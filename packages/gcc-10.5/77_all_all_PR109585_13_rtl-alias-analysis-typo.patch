@@ -1,0 +1,79 @@
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109609
+https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=ef6051b36241bf130bf76af0b775248635dc616e
+
+From ef6051b36241bf130bf76af0b775248635dc616e Mon Sep 17 00:00:00 2001
+From: Richard Biener <rguenther@suse.de>
+Date: Mon, 24 Apr 2023 13:31:07 +0200
+Subject: [PATCH] rtl-optimization/109585 - alias analysis typo
+
+When r10-514-gc6b84edb6110dd2b4fb improved access path analysis
+it introduced a typo that triggers when there's an access to a
+trailing array in the first access path leading to false
+disambiguation.
+
+	PR rtl-optimization/109585
+	* tree-ssa-alias.c (aliasing_component_refs_p): Fix typo.
+
+	* gcc.dg/torture/pr109585.c: New testcase.
+
+(cherry picked from commit 6d4bd27a60447c7505cb4783e675e98a191a8904)
+---
+ gcc/testsuite/gcc.dg/torture/pr109585.c | 33 +++++++++++++++++++++++++
+ gcc/tree-ssa-alias.c                   |  2 +-
+ 2 files changed, 34 insertions(+), 1 deletion(-)
+ create mode 100644 gcc/testsuite/gcc.dg/torture/pr109585.c
+
+diff --git a/gcc/testsuite/gcc.dg/torture/pr109585.c b/gcc/testsuite/gcc.dg/torture/pr109585.c
+new file mode 100644
+index 00000000000..f92de7c1f2e
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/torture/pr109585.c
+@@ -0,0 +1,33 @@
++/* { dg-do run } */
++
++#include <stdlib.h>
++
++struct P {
++    long v;
++    struct P *n;
++};
++
++struct F {
++    long x;
++    struct P fam[];
++};
++
++int __attribute__((noipa))
++f(struct F *f, int i)
++{
++  struct P *p = f->fam;
++  asm("" : "+r"(f): "r"(p));
++  p->v = 0;
++  p->n = 0;
++  return f->fam->n != 0;
++}
++
++int
++main()
++{
++  struct F *m = malloc (sizeof (long) + 2 * sizeof (struct P));
++  m->fam[0].n = &m->fam[1];
++  if (f (m, 0))
++    abort ();
++  return 0;
++}
+diff --git a/gcc/tree-ssa-alias.c b/gcc/tree-ssa-alias.c
+index b1e7a2d5afc..be7b597266f 100644
+--- a/gcc/tree-ssa-alias.c
++++ b/gcc/tree-ssa-alias.c
+@@ -1178,7 +1178,7 @@ aliasing_component_refs_p (tree ref1,
+   /* If we didn't find a common base, try the other way around.  */
+   if (cmp_outer <= 0 
+       || (end_struct_ref1
+-	  && compare_type_sizes (TREE_TYPE (end_struct_ref1), type1) <= 0))
++	  && compare_type_sizes (TREE_TYPE (end_struct_ref1), type2) <= 0))
+     {
+       int res = aliasing_component_refs_walk (ref2, type2, base2,
+ 					      offset2, max_size2,
+-- 
+2.31.1

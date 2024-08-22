@@ -1,0 +1,28 @@
+libgfortran does not respect --disable-werror
+
+https://bugs.gentoo.org/433435
+http://gcc.gnu.org/PR54724
+
+
+--- a/libgfortran/configure.ac
++++ b/libgfortran/configure.ac
+@@ -146,7 +146,7 @@
+ 
+ # Add -Wall -fno-repack-arrays -fno-underscoring if we are using GCC.
+ if test "x$GCC" = "xyes"; then
+-  AM_FCFLAGS="-I . -Wall -Werror -fimplicit-none -fno-repack-arrays -fno-underscoring"
++  AM_FCFLAGS="-I . -Wall -fimplicit-none -fno-repack-arrays -fno-underscoring"
+   ## We like to use C11 and C99 routines when available.  This makes
+   ## sure that
+   ## __STDC_VERSION__ is set such that libc includes make them available.
+--- a/libgfortran/configure
++++ b/libgfortran/configure
+@@ -5981,7 +5981,7 @@
+ 
+ # Add -Wall -fno-repack-arrays -fno-underscoring if we are using GCC.
+ if test "x$GCC" = "xyes"; then
+-  AM_FCFLAGS="-I . -Wall -Werror -fimplicit-none -fno-repack-arrays -fno-underscoring"
++  AM_FCFLAGS="-I . -Wall -fimplicit-none -fno-repack-arrays -fno-underscoring"
+   ## We like to use C11 and C99 routines when available.  This makes
+   ## sure that
+   ## __STDC_VERSION__ is set such that libc includes make them available.
