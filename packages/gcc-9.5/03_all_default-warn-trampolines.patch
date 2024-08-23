@@ -2,7 +2,7 @@ Enable -Wtrampolines by default.
 
 --- a/gcc/common.opt
 +++ b/gcc/common.opt
-@@ -712,7 +712,7 @@ Common Var(warn_system_headers) Warning
+@@ -768,7 +768,7 @@ Common Var(warn_system_headers) Warning
  Do not suppress warnings from system headers.
  
  Wtrampolines

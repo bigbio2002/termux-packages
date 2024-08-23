@@ -12,7 +12,7 @@ Subject: [PATCH] libsanitizer: cherry-pick 9cf13067cb5088626ba7 from upstream
 (cherry picked from commit 2701442d0cf6292f6624443c15813d6d1a3562fe)
 --- a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc
 +++ b/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc
-@@ -72,7 +72,9 @@
+@@ -65,7 +65,9 @@
  #include <sys/vt.h>
  #include <linux/cdrom.h>
  #include <linux/fd.h>
@@ -22,7 +22,7 @@ Subject: [PATCH] libsanitizer: cherry-pick 9cf13067cb5088626ba7 from upstream
  #include <linux/hdreg.h>
  #include <linux/input.h>
  #include <linux/ioctl.h>
-@@ -822,10 +824,10 @@ unsigned struct_ElfW_Phdr_sz = sizeof(Elf_Phdr);
+@@ -846,10 +848,10 @@ unsigned struct_ElfW_Phdr_sz = sizeof(Elf_Phdr);
    unsigned IOCTL_EVIOCGPROP = IOCTL_NOT_PRESENT;
    unsigned IOCTL_EVIOCSKEYCODE_V2 = IOCTL_NOT_PRESENT;
  #endif

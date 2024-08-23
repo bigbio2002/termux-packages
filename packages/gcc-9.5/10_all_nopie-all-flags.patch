@@ -3,7 +3,7 @@ we compile it with older gcc and pie.
 
 --- a/gcc/Makefile.in	2015-06-25 19:18:12.000000000 +0200
 +++ b/gcc/Makefile.in	2016-04-22 00:12:54.029178860 +0200
-@@ -991,10 +991,10 @@ ALL_CXXFLAGS = $(T_CFLAGS) $(CFLAGS-$@)
+@@ -1036,10 +1036,10 @@ ALL_CXXFLAGS = $(T_CFLAGS) $(CFLAGS-$@)
  ALL_CPPFLAGS = $(INCLUDES) $(CPPFLAGS)
  
  # This is the variable to use when using $(COMPILER).
