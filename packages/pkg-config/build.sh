@@ -10,6 +10,8 @@ TERMUX_PKG_DEPENDS="glib"
 TERMUX_PKG_RM_AFTER_INSTALL="bin/*-pkg-config"
 TERMUX_PKG_GROUPS="base-devel"
 
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS="--with-pc-path=@TERMUX_PREFIX@/local/lib/$TERMUX_HOST_PLATFORM/pkgconfig:@TERMUX_PREFIX@/local/lib/pkgconfig:@TERMUX_PREFIX@/local/share/pkgconfig:@TERMUX_PREFIX@/lib/$TERMUX_HOST_PLATFORM/pkgconfig:@TERMUX_PREFIX@/lib/pkgconfig:@TERMUX_PREFIX@/share/pkgconfig"
+
 termux_step_pre_configure() {
 	# Use ln -s instead of ln to avoid attempt at hardlinking on
 	# device
