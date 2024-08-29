@@ -13,6 +13,7 @@ TERMUX_PKG_BUILD_DEPENDS="xorgproto, xorg-util-macros, xtrans"
 TERMUX_PKG_RECOMMENDS="xorg-xauth"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 ac_cv_path_RAWCPP=/usr/bin/cpp
+ac_cv_func_reallocarray=no
 --enable-malloc0returnsnull
 "
 
