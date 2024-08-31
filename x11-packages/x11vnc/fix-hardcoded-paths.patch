@@ -70,7 +70,7 @@ diff -uNr x11vnc-0.9.16/src/cleanup.c x11vnc-0.9.16.mod/src/cleanup.c
 -	    " gdb -x /tmp/gdb.%d -batch -n %s %d;"
 -	    " rm -f /tmp/gdb.%d", pid, pid, program_name, pid, pid);
 +	snprintf(crash_stack_command1, buffer_size, "echo where > @TERMUX_PREFIX@/tmp/gdb.%d;"
-+	    " env PATH=$PATH:@TERMUX_PREFIX@/bin"
++	    " env PATH=$PATH:@TERMUX_PREFIX@/local/bin:@TERMUX_PREFIX@/bin"
 +	    " gdb -x @TERMUX_PREFIX@/tmp/gdb.%d -batch -n %s %d;"
 +	    " rm -f @TERMUX_PREFIX@/tmp/gdb.%d", pid, pid, program_name, pid, pid);
  	snprintf(crash_stack_command2, buffer_size, "pstack %d", program_pid);
@@ -136,7 +136,7 @@ diff -uNr x11vnc-0.9.16/src/gui.c x11vnc-0.9.16.mod/src/gui.c
  
 -static char *extra_path = ":/usr/local/bin:/usr/bin/X11:/usr/sfw/bin"
 -	    ":/usr/X11R6/bin:/usr/openwin/bin:/usr/dt/bin:/opt/sfw/bin";
-+static char *extra_path = ":@TERMUX_PREFIX@/bin";
++static char *extra_path = ":@TERMUX_PREFIX@/local/bin";
  static char *wishes[] = {"wish8.4", "wish", "wish8.3", "wish8.5", "wish8.6", "wish8.7", "wishx", "wish8.0", NULL};
  
  static void run_gui(char *gui_xdisplay, int connect_to_x11vnc, int start_x11vnc,
@@ -204,7 +204,7 @@ diff -uNr x11vnc-0.9.16/src/help.c x11vnc-0.9.16.mod/src/help.c
  "                       A more interesting case is like this:\n"
  "\n"
 -"                            WAIT:cmd=/usr/local/bin/find_display\n"
-+"                            WAIT:cmd=@TERMUX_PREFIX@/bin/find_display\n"
++"                            WAIT:cmd=@TERMUX_PREFIX@/local/bin/find_display\n"
  "\n"
  "                       in which case the command after \"cmd=\" is run to\n"
  "                       dynamically work out the DISPLAY and optionally the\n"
@@ -340,18 +340,20 @@ diff -uNr x11vnc-0.9.16/src/pointer.c x11vnc-0.9.16.mod/src/pointer.c
 diff -uNr x11vnc-0.9.16/src/remote.c x11vnc-0.9.16.mod/src/remote.c
 --- x11vnc-0.9.16/src/remote.c	2019-01-05 15:22:11.000000000 +0200
 +++ x11vnc-0.9.16.mod/src/remote.c	2020-11-13 23:04:48.621783265 +0200
-@@ -437,13 +437,11 @@
+@@ -437,13 +437,13 @@
  			int i;
  			char **use;
  			char *list[] = {
 -				"/usr/local/share/x11vnc/classes",
 -				"/usr/share/x11vnc/classes",
++				"@TERMUX_PREFIX@/local/share/x11vnc/classes",
 +				"@TERMUX_PREFIX@/share/x11vnc/classes",
  				NULL
  			};
  			char *ssllist[] = {
 -				"/usr/local/share/x11vnc/classes/ssl",
 -				"/usr/share/x11vnc/classes/ssl",
++				"@TERMUX_PREFIX@/local/share/x11vnc/classes/ssl",
 +				"@TERMUX_PREFIX@/share/x11vnc/classes/ssl",
  				NULL
  			};
@@ -406,7 +408,7 @@ diff -uNr x11vnc-0.9.16/src/sslcmds.c x11vnc-0.9.16.mod/src/sslcmds.c
  int start_stunnel(int stunnel_port, int x11vnc_port, int hport, int x11vnc_hport) {
  #ifdef SSLCMDS
 -	char extra[] = ":/usr/sbin:/usr/local/sbin:/dist/sbin";
-+	char extra[] = ":@TERMUX_PREFIX@/bin";
++	char extra[] = ":@TERMUX_PREFIX@/bin:@TERMUX_PREFIX@/local/bin";
  	char *path, *p, *exe;
  	char *stunnel_path = NULL;
  	struct stat verify_buf;
@@ -472,7 +474,7 @@ diff -uNr x11vnc-0.9.16/src/sslhelper.c x11vnc-0.9.16.mod/src/sslhelper.c
  	int found_openssl = 0;
 -	char extra[] = ":/usr/bin:/bin:/usr/sbin:/usr/local/bin"
 -	    ":/usr/local/sbin:/usr/sfw/bin";
-+	char extra[] = ":@TERMUX_PREFIX@/bin";
++	char extra[] = ":@TERMUX_PREFIX@/bin:@TERMUX_PREFIX@/local/bin";
  	
  	gp = getenv("PATH");
  	if (! gp) {
@@ -824,7 +826,7 @@ diff -uNr x11vnc-0.9.16/src/ssltools.h x11vnc-0.9.16.mod/src/ssltools.h
  "# Set PATH to have a better chance of finding things:\n"
  "SAVE_PATH=$PATH\n"
 -"PATH=$PATH:/usr/X11R6/bin:/usr/bin/X11:/usr/openwin/bin:/usr/dt/bin:/opt/kde4/bin:/opt/kde3/bin:/opt/gnome/bin:/usr/bin:/bin:/usr/sfw/bin:/usr/local/bin\n"
-+"PATH=$PATH:@TERMUX_PREFIX@/bin\n"
++"PATH=$PATH:@TERMUX_PREFIX@/bin:@TERMUX_PREFIX@/local/bin\n"
  "\n"
  "have_root=\"\"\n"
  "id0=`id`\n"
@@ -1006,7 +1008,7 @@ diff -uNr x11vnc-0.9.16/src/user.c x11vnc-0.9.16.mod/src/user.c
  static void path_lookup(char *prog) {
  	/* see create_display script */
 -	char *create_display_extra = "/usr/X11R6/bin:/usr/bin/X11:/usr/openwin/bin:/usr/dt/bin:/opt/kde4/bin:/opt/kde3/bin:/opt/gnome/bin:/usr/bin:/bin:/usr/sfw/bin:/usr/local/bin";
-+	char *create_display_extra = "@TERMUX_PREFIX@/bin";
++	char *create_display_extra = "@TERMUX_PREFIX@/bin:@TERMUX_PREFIX@/local/bin";
  	char *path, *try, *p;
  	int found = 0, len = strlen(create_display_extra);
  
