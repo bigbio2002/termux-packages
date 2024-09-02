@@ -1,7 +1,7 @@
 diff -u -r /home/builder/lib/android-ndk/sysroot/usr/include/asm-generic/termbits.h ./usr/include/asm-generic/termbits.h
 --- /home/builder/lib/android-ndk/sysroot/usr/include/asm-generic/termbits.h	2018-09-10 17:37:50.000000000 +0000
 +++ ./usr/include/asm-generic/termbits.h	2019-01-16 04:54:01.117253378 +0000
-@@ -144,5 +144,6 @@
+@@ -132,5 +132,6 @@
  #define EXTPROC 0x10000
  #define TCSANOW 0
  #define TCSADRAIN 1

@@ -1,6 +1,6 @@
 --- ./usr/include/linux/fcntl.h
 +++ ./usr/include/linux/fcntl.h
-@@ -55,7 +55,7 @@
+@@ -43,7 +43,7 @@
  #define DN_MULTISHOT 0x80000000
  #define AT_FDCWD - 100
  #define AT_SYMLINK_NOFOLLOW 0x100
