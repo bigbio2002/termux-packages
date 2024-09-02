@@ -1,0 +1,21 @@
+libatomic does not respect --disable-werror
+
+https://bugs.gentoo.org/475350
+--- a/libatomic/configure.ac
++++ b/libatomic/configure.ac
+@@ -236,5 +236,5 @@ save_CFLAGS="$CFLAGS"
+ # Add -Wall -Werror if we are using GCC.
+ if test "x$GCC" = "xyes"; then
+-  XCFLAGS="$XCFLAGS -Wall -Werror"
++  XCFLAGS="$XCFLAGS -Wall"
+ fi
+ 
+--- a/libatomic/configure
++++ b/libatomic/configure
+@@ -15213,5 +15213,5 @@ save_CFLAGS="$CFLAGS"
+ # Add -Wall -Werror if we are using GCC.
+ if test "x$GCC" = "xyes"; then
+-  XCFLAGS="$XCFLAGS -Wall -Werror"
++  XCFLAGS="$XCFLAGS -Wall"
+ fi
+ 
