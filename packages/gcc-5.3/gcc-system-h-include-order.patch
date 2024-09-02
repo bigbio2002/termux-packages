@@ -1,0 +1,42 @@
+--- a/gcc/system.h
++++ b/gcc/system.h
+@@ -202,19 +202,6 @@
+ # include <string>
+ #endif
+ 
+-/* There are an extraordinary number of issues with <ctype.h>.
+-   The last straw is that it varies with the locale.  Use libiberty's
+-   replacement instead.  */
+-#include "safe-ctype.h"
+-
+-#include <sys/types.h>
+-
+-#include <errno.h>
+-
+-#if !defined (errno) && defined (HAVE_DECL_ERRNO) && !HAVE_DECL_ERRNO
+-extern int errno;
+-#endif
+-
+ #ifdef __cplusplus
+ # include <algorithm>
+ # include <cstring>
+@@ -251,6 +238,19 @@
+ #include <map>
+ #endif
+ 
++/* There are an extraordinary number of issues with <ctype.h>.
++   The last straw is that it varies with the locale.  Use libiberty's
++   replacement instead.  */
++#include "safe-ctype.h"
++
++#include <sys/types.h>
++
++#include <errno.h>
++
++#if !defined (errno) && defined (HAVE_DECL_ERRNO) && !HAVE_DECL_ERRNO
++extern int errno;
++#endif
++
+ /* Undef vec_free from AIX stdlib.h header which conflicts with vec.h.  */
+ #undef vec_free
+ 
