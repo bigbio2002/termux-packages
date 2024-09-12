@@ -55,7 +55,7 @@ source "$TERMUX_PREFIX/bin/termux-setup-package-manager" || true
 if [ "$TERMUX_APP_PACKAGE_MANAGER" = "apt" ]; then
 	apt update
 	yes | apt dist-upgrade
-	yes | apt install $PACKAGES
+	apt install $PACKAGES
 elif [ "$TERMUX_APP_PACKAGE_MANAGER" = "pacman" ]; then
 	pacman -Syu $PACKAGES --needed --noconfirm
 else
