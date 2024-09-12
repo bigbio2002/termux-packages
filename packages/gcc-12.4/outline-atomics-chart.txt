@@ -1,0 +1,12 @@
+Before the results were (as expected):
+         |-moutline-atomics | -mno-outline-atomics | <no outline-atomics option
+--------------------------------------------------------------------------------
+LSE      |  inline LSE      | inline LSE            | inline LSE
+no-LSE   |  outline         | inline LDXR/STXR      | inline LDX/STXR
+
+
+with this patch they are:
+         -moutline-atomics  | -mno-outline-atomics | <no outline-atomics option>
+--------------------------------------------------------------------------------
+LSE      |  inline LSE      | inline LSE           | inline LSE
+no-LSE   |  outline         | inline LDXR/STXR     | outline
