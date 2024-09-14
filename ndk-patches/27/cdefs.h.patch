@@ -1,15 +1,191 @@
---- ./usr/include/sys/cdefs.h.orig
-+++ ./usr/include/sys/cdefs.h
-@@ -42,6 +42,12 @@
+--- ./usr/include/sys/cdefs.orig.h	2024-09-13 21:47:46.423683397 -0400
++++ ./usr/include/sys/cdefs.h	2024-09-14 14:28:53.876590326 -0400
+@@ -42,6 +42,16 @@
   */
  #define __BIONIC__ 1
  
-+#if !defined(__clang__)
++#if !__has_attribute(_Nullable)
 +#define _Nullable
++#endif
++#if !__has_attribute(_Nonnull)
 +#define _Nonnull
++#endif
++#if !__has_attribute(_Null_unspecified)
 +#define _Null_unspecified
 +#endif
 +
  #if defined(__cplusplus)
  #define __BEGIN_DECLS extern "C" {
  #define __END_DECLS }
+@@ -94,20 +104,63 @@
+ // downstream in vendor or app code).
+ #define	__inline __inline__
+ 
+-#define __always_inline __attribute__((__always_inline__))
+-#define __attribute_const__ __attribute__((__const__))
+-#define __attribute_pure__ __attribute__((__pure__))
+-#define __dead __attribute__((__noreturn__))
+-#define __noreturn __attribute__((__noreturn__))
++#if __has_attribute(always_inline)
++# define __always_inline __attribute__((__always_inline__))
++#else
++# define __always_inline
++#endif
++#if __has_attribute(const)
++# define __attribute_const__ __attribute__((__const__))
++#else
++# define __attribute_const__
++#endif
++#if __has_attribute(pure)
++# define __attribute_pure__ __attribute__((__pure__))
++#else
++# define __attribute_pure__
++#endif
++#if __has_attribute(noreturn)
++# define __dead __attribute__((__noreturn__))
++# define __noreturn __attribute__((__noreturn__))
++#else
++# define __dead
++# define __noreturn
++#endif
++#if __has_attribute(malloc)
+ #define __mallocfunc  __attribute__((__malloc__))
++#else
++# define __mallocfunc
++#endif
++#if __has_attribute(packed)
+ #define __packed __attribute__((__packed__))
++#else
++# define __packed
++#endif
++#if __has_attribute(returns_twice)
+ #define __returns_twice __attribute__((__returns_twice__))
++#else
++# define __returns_twice
++#endif
++#if __has_attribute(unused)
+ #define __unused __attribute__((__unused__))
++#else
++# define __unused
++#endif
++#if __has_attribute(used)
+ #define __used __attribute__((__used__))
++#else
++# define __used
++#endif
+ 
+-#define __printflike(x, y) __attribute__((__format__(printf, x, y)))
+-#define __scanflike(x, y) __attribute__((__format__(scanf, x, y)))
+-#define __strftimelike(x) __attribute__((__format__(strftime, x, 0)))
++#if __has_attribute(format)
++# define __printflike(x, y) __attribute__((__format__(printf, x, y)))
++# define __scanflike(x, y) __attribute__((__format__(scanf, x, y)))
++# define __strftimelike(x) __attribute__((__format__(strftime, x, 0)))
++#else
++# define __printflike(x, y)
++# define __scanflike(x, y)
++# define __strftimelike(x)
++#endif
+ 
+ /*
+  * GNU C version 2.96 added explicit branch prediction so that
+@@ -140,14 +193,36 @@
+ #define	__predict_true(exp)	__builtin_expect((exp) != 0, 1)
+ #define	__predict_false(exp)	__builtin_expect((exp) != 0, 0)
+ 
+-#define __wur __attribute__((__warn_unused_result__))
++#if __has_attribute(warn_unused_result)
++# define __wur __attribute__((__warn_unused_result__))
++#else
++# define __wur
++#endif
+ 
+-#define __errorattr(msg) __attribute__((__unavailable__(msg)))
+-#define __warnattr(msg) __attribute__((__deprecated__(msg)))
+-#define __warnattr_real(msg) __attribute__((__deprecated__(msg)))
+-#define __enable_if(cond, msg) __attribute__((__enable_if__(cond, msg)))
+-#define __clang_error_if(cond, msg) __attribute__((__diagnose_if__(cond, msg, "error")))
+-#define __clang_warning_if(cond, msg) __attribute__((__diagnose_if__(cond, msg, "warning")))
++#if __has_attribute(unavailable)
++# define __errorattr(msg) __attribute__((__unavailable__(msg)))
++#else
++# define __errorattr(msg)
++#endif
++#if __has_attribute(deprecated)
++# define __warnattr(msg) __attribute__((__deprecated__(msg)))
++# define __warnattr_real(msg) __attribute__((__deprecated__(msg)))
++#else
++# define __warnattr(msg)
++# define __warnattr_real(msg)
++#endif
++#if __has_attribute(enable_if)
++# define __enable_if(cond, msg) __attribute__((__enable_if__(cond, msg)))
++#else
++# define __enable_if(cond, msg)
++#endif
++#if __has_attribute(diagnose_if)
++# define __clang_error_if(cond, msg) __attribute__((__diagnose_if__(cond, msg, "error")))
++# define __clang_warning_if(cond, msg) __attribute__((__diagnose_if__(cond, msg, "warning")))
++#else
++# define __clang_error_if(cond, msg)
++# define __clang_warning_if(cond, msg)
++#endif
+ 
+ #if defined(ANDROID_STRICT)
+ /*
+@@ -249,7 +324,7 @@
+ #define __bosn(s, n) __builtin_object_size((s), (n))
+ #define __bos(s) __bosn((s), __bos_level)
+ 
+-#if defined(__BIONIC_FORTIFY)
++#if defined(__BIONIC_FORTIFY) && __has_attribute(pass_object_size)
+ #  define __bos0(s) __bosn((s), 0)
+ #  define __pass_object_size_n(n) __attribute__((__pass_object_size__(n)))
+ /*
+@@ -263,8 +338,12 @@
+  * them available externally. FORTIFY'ed functions try to be as close to possible as 'invisible';
+  * having stack protectors detracts from that (b/182948263).
+  */
++#  if __has_attribute(no_stack_protector)
+ #  define __BIONIC_FORTIFY_INLINE static __inline __attribute__((__no_stack_protector__)) \
+       __always_inline __VERSIONER_FORTIFY_INLINE
++#  else
++#  define __BIONIC_FORTIFY_INLINE static __inline __always_inline __VERSIONER_FORTIFY_INLINE
++#  endif /* __has_attribute(no_stack_protector) */
+ /*
+  * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
+  * for variadic functions because compilers cannot inline them.
+@@ -303,10 +382,19 @@
+ #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
+ #endif
+ 
+-#define __overloadable __attribute__((__overloadable__))
++#if __has_attribute(overloadable)
++# define __overloadable __attribute__((__overloadable__))
++#else
++# define __overloadable
++#endif
+ 
+-#define __diagnose_as_builtin(...) __attribute__((__diagnose_as_builtin__(__VA_ARGS__)))
++#if __has_attribute(diagnose_as_builtin)
++# define __diagnose_as_builtin(...) __attribute__((__diagnose_as_builtin__(__VA_ARGS__)))
++#else
++# define __diagnose_as_builtin(...)
++#endif
+ 
++#if __has_attribute(visibility)
+ /* Used to tag non-static symbols that are private and never exposed by the shared library. */
+ #define __LIBC_HIDDEN__ __attribute__((__visibility__("hidden")))
+ 
+@@ -320,6 +408,11 @@
+ #define __LIBC32_LEGACY_PUBLIC__ __attribute__((__visibility__("default")))
+ #endif
+ 
++#else
++#define __LIBC_HIDDEN__
++#define __LIBC32_LEGACY_PUBLIC__
++#endif /* __has_attribute(visibility) */
++
+ /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
+ #define __RENAME(x) __asm__(#x)
+ 

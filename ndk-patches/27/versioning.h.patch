@@ -1,25 +1,37 @@
 --- ./usr/include/android/versioning.orig.h	2024-03-31 04:36:42.791286584 -0400
 +++ ./usr/include/android/versioning.h	2024-03-31 04:35:30.314612697 -0400
-@@ -16,6 +16,17 @@
+@@ -18,7 +18,7 @@
  
- #pragma once
- 
-+#if !defined(__clang__)	/* */
-+#define __INTRODUCED_IN(api_level)
-+#define __DEPRECATED_IN(api_level)
-+#define __REMOVED_IN(api_level)
-+#define __INTRODUCED_IN_32(api_level)
-+#define __INTRODUCED_IN_64(api_level)
-+#define __INTRODUCED_IN_ARM(api_level)
-+#define __INTRODUCED_IN_X86(api_level)
-+#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
-+#define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level)
-+#else
  // The `annotate` attribute always pulls the annotated (inline) function into the object files, thus
  // we should only annotate headers when we are running versioner.
- #if defined(__BIONIC_VERSIONER)
-@@ -82,3 +93,4 @@
- #undef __BIONIC_AVAILABILITY
- #define __BIONIC_AVAILABILITY(api_level, ...)
- #endif // defined(__ANDROID_VENDOR__)
-+#endif // !defined(__clang__)
+-#if defined(__BIONIC_VERSIONER)
++#if defined(__BIONIC_VERSIONER) && __has_attribute(annotate)
+ 
+ #define __INTRODUCED_IN(api_level) __attribute__((__annotate__("introduced_in=" #api_level)))
+ #define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __attribute__((__annotate__("introduced_in=" #api_level))) __VERSIONER_NO_GUARD
+@@ -46,13 +46,18 @@
+ // allows libc++ to refer to these functions in inlines without needing to guard them, needed since
+ // libc++ doesn't currently guard these calls. There's no risk to the apps though because using
+ // those APIs will still cause a link error.
+-#if defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
+-#define __BIONIC_AVAILABILITY(__what, ...) __attribute__((__availability__(android,__what __VA_OPT__(,) __VA_ARGS__)))
+-#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN(api_level)
+-#else
+-#define __BIONIC_AVAILABILITY(__what, ...) __attribute__((__availability__(android,strict,__what __VA_OPT__(,) __VA_ARGS__)))
+-#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
+-#endif
++#if __has_attribute(availability)
++# if defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
++#  define __BIONIC_AVAILABILITY(__what, ...) __attribute__((__availability__(android,__what __VA_OPT__(,) __VA_ARGS__)))
++#  define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN(api_level)
++# else
++#  define __BIONIC_AVAILABILITY(__what, ...) __attribute__((__availability__(android,strict,__what __VA_OPT__(,) __VA_ARGS__)))
++#  define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
++# endif /* defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__) */
++#else
++# define __BIONIC_AVAILABILITY(__what, ...)
++# define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
++#endif /* __has_attribute(availability) */
+ 
+ #define __INTRODUCED_IN(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
+ #define __DEPRECATED_IN(api_level, ...) __BIONIC_AVAILABILITY(deprecated=api_level __VA_OPT__(,message=) __VA_ARGS__)
