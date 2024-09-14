@@ -1,0 +1,14 @@
+--- ./usr/include/bits/bionic_multibyte_result.orig.h	2024-09-14 16:38:53.184033954 -0400
++++ ./usr/include/bits/bionic_multibyte_result.h	2024-09-14 16:28:10.230636571 -0400
+@@ -45,7 +45,11 @@
+  * Refer to C23 7.30.1 Restartable multibyte/wide character conversion functions
+  * for more details.
+  */
++#if __STDC_VERSION__ >= 202311L
+ enum : size_t {
++#else
++enum {
++#endif
+   /// @brief An encoding error occurred. The bytes read are not a valid unicode
+   /// character, nor are they a partially valid character.
+   BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE = -1UL,
