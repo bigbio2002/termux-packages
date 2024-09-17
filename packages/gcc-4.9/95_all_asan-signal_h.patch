@@ -1,3 +1,4 @@
+
 Fix error: ‘SIGSEGV’ was not declared in this scope
 
 https://bugs.gentoo.org/629502#c9
@@ -5,8 +6,8 @@ https://patchwork.ozlabs.org/patch/725596/
 
 --- a/libsanitizer/asan/asan_linux.cc
 +++ b/libsanitizer/asan/asan_linux.cc
-@@ -29,6 +29,7 @@
- #include <dlfcn.h>
+@@ -26,6 +26,7 @@
+ #include <sys/types.h>
  #include <fcntl.h>
  #include <pthread.h>
 +#include <signal.h>

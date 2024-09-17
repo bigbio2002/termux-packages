@@ -1,0 +1,23 @@
+https://gcc.gnu.org/PR95648
+--- a/gcc/configure.ac
++++ b/gcc/configure.ac
+@@ -5596,7 +5596,7 @@ fi
+   ;;
+   *)
+     if test x$build = x$host; then
+-      export_sym_check="objdump${exeext} -T"
++      export_sym_check="$ac_cv_prog_OBJDUMP -T"
+     elif test x$host = x$target; then
+       export_sym_check="$gcc_cv_objdump -T"
+     else
+--- a/gcc/configure
++++ b/gcc/configure
+@@ -28071,7 +28071,7 @@ fi
+   ;;
+   *)
+     if test x$build = x$host; then
+-      export_sym_check="objdump${exeext} -T"
++      export_sym_check="$ac_cv_prog_OBJDUMP -T"
+     elif test x$host = x$target; then
+       export_sym_check="$gcc_cv_objdump -T"
+     else
