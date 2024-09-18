@@ -1,7 +1,13 @@
 --- ./usr/include/android/versioning.orig.h	2024-03-31 04:36:42.791286584 -0400
 +++ ./usr/include/android/versioning.h	2024-03-31 04:35:30.314612697 -0400
-@@ -18,7 +18,7 @@
+@@ -16,9 +16,13 @@
  
+ #pragma once
+ 
++#if !defined __has_attribute
++#define __has_attribute(attr) 0
++#endif
++
  // The `annotate` attribute always pulls the annotated (inline) function into the object files, thus
  // we should only annotate headers when we are running versioner.
 -#if defined(__BIONIC_VERSIONER)

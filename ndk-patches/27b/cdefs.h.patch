@@ -4,14 +4,14 @@
   */
  #define __BIONIC__ 1
  
-+#if !__has_attribute(_Nullable)
-+#define _Nullable
++#if !defined __has_attribute
++# define __has_attribute(attr) 0
 +#endif
-+#if !__has_attribute(_Nonnull)
-+#define _Nonnull
-+#endif
-+#if !__has_attribute(_Null_unspecified)
-+#define _Null_unspecified
++
++#if !defined(__clang__)
++# define _Nullable
++# define _Nonnull
++# define _Null_unspecified
 +#endif
 +
  #if defined(__cplusplus)
