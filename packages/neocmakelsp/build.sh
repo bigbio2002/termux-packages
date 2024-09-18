@@ -2,9 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://github.com/Decodetalkers/neocmakelsp
 TERMUX_PKG_DESCRIPTION="a cmake lsp based on tower-lsp and treesitter"
 TERMUX_PKG_LICENSE=MIT
 TERMUX_PKG_MAINTAINER=@termux
-TERMUX_PKG_VERSION="0.8.1"
+TERMUX_PKG_VERSION="0.8.5"
 TERMUX_PKG_SRCURL=https://github.com/Decodetalkers/neocmakelsp/archive/refs/tags/v$TERMUX_PKG_VERSION.tar.gz
-TERMUX_PKG_SHA256=23d2fd6f6bd0152dad9b6bdf9b5d6932d97ccd106bfb47d6d6fee563ea5a7eec
+TERMUX_PKG_SHA256=3f3cb8736468bd0a9e9199b6913ae8b6f323d6ecdab932ba1da16a091a8b0de1
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
