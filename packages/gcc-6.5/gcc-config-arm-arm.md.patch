@@ -8,7 +8,7 @@ diff -u -r ../gcc-6.1.0/gcc/config/arm/arm.md ./gcc/config/arm/arm.md
     (match_operand:SI 3 "" "")			; table label
     (match_operand:SI 4 "" "")]			; Out of range label
 -  "TARGET_32BIT || optimize_size || flag_pic"
-+  "TARGET_32BIT || ((optimize_size || flag_pic) && !inline_thumb1_jump_table)"
++  "((TARGET_32BIT || optimize_size || flag_pic) && !inline_thumb1_jump_table)"
    "
    {
      enum insn_code code;
