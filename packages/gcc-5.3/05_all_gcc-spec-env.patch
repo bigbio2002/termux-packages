@@ -60,7 +60,7 @@
    /* Process DRIVER_SELF_SPECS, adding any new options to the end
       of the command line.  */
  
-@@ -7280,24 +7280,6 @@ main (int argc, char **argv)
+@@ -7238,24 +7280,6 @@ main (int argc, char **argv)
  			      PREFIX_PRIORITY_LAST, 0, 1);
      }
  

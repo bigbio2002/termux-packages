@@ -38,7 +38,7 @@ diff --git a/gcc/doc/extend.texi b/gcc/doc/extend.texi
 index 63fce0f..6a5e2b8 100644
 --- a/gcc/doc/extend.texi
 +++ b/gcc/doc/extend.texi
-@@ -1658,9 +1658,7 @@ variable-length arrays are more elegant.
+@@ -1593,9 +1593,7 @@ variable-length arrays are more elegant.
  There are other differences between these two methods.  Space allocated
  with @code{alloca} exists until the containing @emph{function} returns.
  The space for a variable-length array is deallocated as soon as the array

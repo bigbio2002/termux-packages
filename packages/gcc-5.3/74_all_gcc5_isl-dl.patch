@@ -1,17 +1,6 @@
-dlopen cloog-isl library rather than link to it directly.  This prevents
-cloog upgrades that change the soname from breaking the compiler.
-
-http://pkgs.fedoraproject.org/cgit/gcc.git/tree/gcc5-isl-dl.patch
-
-In FreeBSD dlopen is part of libc so we can't just hardcode -ldl.
-We abuse the existing plugin check logic to pull out that info.
-
-extended by Gentoo to support isl-0.15
-https://bugs.gentoo.org/552278
-
---- gcc/Makefile.in.jj	2012-12-13 17:09:20.000000000 +0100
-+++ gcc/Makefile.in	2012-12-14 11:45:22.585670055 +0100
-@@ -1006,7 +1006,7 @@ BUILD_LIBDEPS= $(BUILD_LIBIBERTY)
+--- a/gcc/Makefile.orig.in	2024-09-19 23:26:26.954543050 -0400
++++ b/gcc/Makefile.in	2024-09-20 00:45:52.981684505 -0400
+@@ -1013,7 +1013,7 @@
  # and the system's installed libraries.
  LIBS = @LIBS@ libcommon.a $(CPPLIB) $(LIBINTL) $(LIBICONV) $(LIBBACKTRACE) \
  	$(LIBIBERTY) $(LIBDECNUMBER) $(HOST_LIBS)
@@ -20,7 +9,7 @@ https://bugs.gentoo.org/552278
  	$(ZLIB)
  # Any system libraries needed just for GNAT.
  SYSLIBS = @GNAT_LIBEXC@
-@@ -2050,6 +2050,15 @@ $(out_object_file): $(out_file)
+@@ -2058,6 +2058,15 @@
  $(common_out_object_file): $(common_out_file)
  	$(COMPILE) $<
  	$(POSTCOMPILE)
@@ -36,9 +25,9 @@ https://bugs.gentoo.org/552278
  #
  # Generate header and source files from the machine description,
  # and compile them.
---- gcc/configure
-+++ gcc/configure
-@@ -604,6 +604,7 @@ PICFLAG
+--- a/gcc/configure_orig	2024-09-20 00:46:39.451689135 -0400
++++ b/gcc/configure	2024-09-20 00:48:31.721700319 -0400
+@@ -604,6 +604,7 @@
  enable_host_shared
  enable_plugin
  pluginlibs
@@ -46,7 +35,7 @@ https://bugs.gentoo.org/552278
  ISLINC
  ISLLIBS
  GMPINC
-@@ -28285,6 +28286,7 @@ $as_echo "unable to check" >&6; }
+@@ -28456,6 +28457,7 @@
       fi
  
       # Check -ldl
@@ -54,7 +43,7 @@ https://bugs.gentoo.org/552278
       saved_LIBS="$LIBS"
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing dlopen" >&5
  $as_echo_n "checking for library containing dlopen... " >&6; }
-@@ -28344,6 +28346,7 @@ fi
+@@ -28515,6 +28517,7 @@
  
       if test x"$ac_cv_search_dlopen" = x"-ldl"; then
         pluginlibs="$pluginlibs -ldl"
@@ -62,9 +51,9 @@ https://bugs.gentoo.org/552278
       fi
       LIBS="$saved_LIBS"
  
---- gcc/graphite-poly.h.jj	2012-12-13 11:31:27.000000000 +0100
-+++ gcc/graphite-poly.h	2012-12-14 13:41:41.970800726 +0100
-@@ -22,6 +22,493 @@ along with GCC; see the file COPYING3.
+--- a/gcc/graphite-poly.orig.h	2024-09-20 00:53:00.028393715 -0400
++++ b/gcc/graphite-poly.h	2024-09-20 01:57:10.600322069 -0400
+@@ -22,6 +22,493 @@
  #ifndef GCC_GRAPHITE_POLY_H
  #define GCC_GRAPHITE_POLY_H
  
@@ -555,12 +544,12 @@ https://bugs.gentoo.org/552278
 +#define isl_val_neg (*isl_pointers__.p_isl_val_neg)
 +#define isl_val_sub (*isl_pointers__.p_isl_val_sub)
 +
- typedef struct poly_dr *poly_dr_p;
- 
- typedef struct poly_bb *poly_bb_p;
---- gcc/graphite.c.jj	2012-12-13 11:31:00.000000000 +0100
-+++ gcc/graphite.c	2012-12-14 13:40:44.155136961 +0100
-@@ -90,6 +90,38 @@ along with GCC; see the file COPYING3.
+ #ifndef HAVE_ISL_OPTIONS_SET_SCHEDULE_SERIALIZE_SCCS
+ # define isl_stat int
+ # define isl_stat_ok 0
+--- a/gcc/graphite.orig.c	2024-09-20 01:58:25.876996234 -0400
++++ b/gcc/graphite.c	2024-09-20 02:00:56.067011196 -0400
+@@ -91,6 +91,38 @@
  #include "graphite-isl-ast-to-gimple.h"
  #include "graphite-sese-to-poly.h"
  
@@ -587,7 +576,7 @@ https://bugs.gentoo.org/552278
 +      union { __typeof (isl_pointers__.p_##x) p; void *q; } u; \
 +      u.q = dlsym (h, #x); \
 +      if (u.q == NULL) \
-+	return false; \
++       return false; \
 +      isl_pointers__.p_##x = u.p; \
 +    } \
 +  while (0)
@@ -599,7 +588,7 @@ https://bugs.gentoo.org/552278
  /* Print global statistics to FILE.  */
  
  static void
-@@ -285,6 +313,15 @@ graphite_transform_loops (void)
+@@ -286,6 +318,15 @@
    if (parallelized_function_p (cfun->decl))
      return;
  

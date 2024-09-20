@@ -24,8 +24,8 @@ https://gcc.gnu.org/PR65689
 
 	* gcc.target/aarch64/c-output-template-4.c: New test.
 
---- gcc/genpreds.c.jj	2015-04-08 18:23:50.643556230 +0200
-+++ gcc/genpreds.c	2015-04-17 17:44:23.097650110 +0200
+--- a/gcc/genpreds.c.jj	2015-04-08 18:23:50.643556230 +0200
++++ b/gcc/genpreds.c	2015-04-17 17:44:23.097650110 +0200
 @@ -640,12 +640,14 @@ struct constraint_data
    const char *regclass;  /* for register constraints */
    rtx exp;               /* for other constraints */
@@ -186,8 +186,8 @@ https://gcc.gnu.org/PR65689
  
        if (constraint_max_namelen > 1)
          {
---- gcc/stmt.c.jj	2015-04-08 18:23:50.660555956 +0200
-+++ gcc/stmt.c	2015-04-17 17:36:50.623044548 +0200
+--- a/gcc/stmt.c.jj	2015-04-08 18:23:50.660555956 +0200
++++ b/gcc/stmt.c	2015-04-17 17:36:50.623044548 +0200
 @@ -342,13 +342,7 @@ parse_output_constraint (const char **co
  	else if (insn_extra_memory_constraint (cn))
  	  *allows_mem = true;
@@ -218,8 +218,8 @@ https://gcc.gnu.org/PR65689
  	break;
        }
  
---- gcc/testsuite/gcc.target/aarch64/c-output-template-4.c.jj	2015-04-17 17:48:27.588654584 +0200
-+++ gcc/testsuite/gcc.target/aarch64/c-output-template-4.c	2015-04-17 17:48:22.149743468 +0200
+--- a/gcc/testsuite/gcc.target/aarch64/c-output-template-4.c.jj	2015-04-17 17:48:27.588654584 +0200
++++ b/gcc/testsuite/gcc.target/aarch64/c-output-template-4.c	2015-04-17 17:48:22.149743468 +0200
 @@ -0,0 +1,10 @@
 +/* { dg-do compile } */
 +/* { dg-options "-O0" } */

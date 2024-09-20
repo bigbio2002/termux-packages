@@ -1133,3 +1133,20 @@ diff -Naur gcc-5.3.0/libgcc/libgcov-util.c gcc-5.3.0_my/libgcc/libgcov-util.c
  
    return prg_val;
  }
+--- a/gcc/gcc.orig.c	2024-09-19 20:37:43.243511914 -0400
++++ b/gcc/gcc.c	2024-09-19 20:35:42.406833209 -0400
+@@ -771,12 +771,12 @@
+ #define PLUGIN_COND_CLOSE ""
+ #endif
+ #define LINK_PLUGIN_SPEC \
+-    "%{"PLUGIN_COND": \
++    "%{" PLUGIN_COND": \
+     -plugin %(linker_plugin_file) \
+     -plugin-opt=%(lto_wrapper) \
+     -plugin-opt=-fresolution=%u.res \
+     %{!nostdlib:%{!nodefaultlibs:%:pass-through-libs(%(link_gcc_c_sequence))}} \
+-    }"PLUGIN_COND_CLOSE
++    }" PLUGIN_COND_CLOSE
+ #else
+ /* The linker used doesn't support -plugin, reject -fuse-linker-plugin.  */
+ #define LINK_PLUGIN_SPEC "%{fuse-linker-plugin:\

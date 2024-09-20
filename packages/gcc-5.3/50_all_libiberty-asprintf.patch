@@ -15,4 +15,4 @@
 +#endif
  
  /* Like asprintf but allocates memory without fail. This works like
-    malloc.  */
+    xmalloc.  */
