@@ -1,6 +1,6 @@
-diff -Naur gcc-5.5.0/gcc/bitmap.c gcc-5.5.0_good/gcc/bitmap.c
---- gcc-5.5.0/gcc/bitmap.c	2015-01-05 07:33:28.000000000 -0500
-+++ gcc-5.5.0_good/gcc/bitmap.c	2024-05-04 23:11:16.677195690 -0400
+diff -Naur gcc-5.3.0/gcc/bitmap.c gcc-5.3.0_my/gcc/bitmap.c
+--- gcc-5.3.0/gcc/bitmap.c	2015-01-05 07:33:28.000000000 -0500
++++ gcc-5.3.0_my/gcc/bitmap.c	2024-05-21 20:47:07.086894431 -0400
 @@ -2170,8 +2170,8 @@
        sprintf (s, "%s:%i (%s)", s1, d->line, d->function);
        s[41] = 0;
@@ -21,9 +21,9 @@ diff -Naur gcc-5.5.0/gcc/bitmap.c gcc-5.5.0_good/gcc/bitmap.c
  	   "Total", info.count, info.size);
    fprintf (stderr, "---------------------------------------------------------------------------------\n");
  }
-diff -Naur gcc-5.5.0/gcc/c/c-aux-info.c gcc-5.5.0_good/gcc/c/c-aux-info.c
---- gcc-5.5.0/gcc/c/c-aux-info.c	2015-01-09 15:18:42.000000000 -0500
-+++ gcc-5.5.0_good/gcc/c/c-aux-info.c	2024-05-04 19:17:44.326917882 -0400
+diff -Naur gcc-5.3.0/gcc/c/c-aux-info.c gcc-5.3.0_my/gcc/c/c-aux-info.c
+--- gcc-5.3.0/gcc/c/c-aux-info.c	2015-01-09 15:18:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/c/c-aux-info.c	2024-05-21 23:26:05.962797634 -0400
 @@ -319,7 +319,7 @@
  	  else
  	    {
@@ -33,9 +33,9 @@ diff -Naur gcc-5.5.0/gcc/c/c-aux-info.c gcc-5.5.0_good/gcc/c/c-aux-info.c
  		       int_size_in_bytes (t)
  		       / int_size_in_bytes (TREE_TYPE (t)));
  	      ret_val = gen_type (concat (ret_val, buff, NULL),
-diff -Naur gcc-5.5.0/gcc/cfg.c gcc-5.5.0_good/gcc/cfg.c
---- gcc-5.5.0/gcc/cfg.c	2015-01-09 15:18:42.000000000 -0500
-+++ gcc-5.5.0_good/gcc/cfg.c	2024-05-04 23:12:58.863872537 -0400
+diff -Naur gcc-5.3.0/gcc/cfg.c gcc-5.3.0_my/gcc/cfg.c
+--- gcc-5.3.0/gcc/cfg.c	2015-01-09 15:18:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/cfg.c	2024-05-22 00:18:32.495822325 -0400
 @@ -508,7 +508,7 @@
    if (e->count && do_details)
      {
@@ -54,9 +54,9 @@ diff -Naur gcc-5.5.0/gcc/cfg.c gcc-5.5.0_good/gcc/cfg.c
  		   (int64_t) bb->count);
  	  fprintf (outf, ", freq %i", bb->frequency);
  	  if (maybe_hot_bb_p (fun, bb))
-diff -Naur gcc-5.5.0/gcc/cfghooks.c gcc-5.5.0_good/gcc/cfghooks.c
---- gcc-5.5.0/gcc/cfghooks.c	2016-02-28 01:43:07.000000000 -0500
-+++ gcc-5.5.0_good/gcc/cfghooks.c	2024-05-04 23:13:40.167209984 -0400
+diff -Naur gcc-5.3.0/gcc/cfghooks.c gcc-5.3.0_my/gcc/cfghooks.c
+--- gcc-5.3.0/gcc/cfghooks.c	2015-02-10 09:49:07.000000000 -0500
++++ gcc-5.3.0_my/gcc/cfghooks.c	2024-05-22 00:28:23.932547911 -0400
 @@ -330,7 +330,7 @@
      internal_error ("%s does not support dump_bb_for_graph",
  		    cfg_hooks->name);
@@ -66,9 +66,9 @@ diff -Naur gcc-5.5.0/gcc/cfghooks.c gcc-5.5.0_good/gcc/cfghooks.c
    pp_printf (pp, " FREQ:%i |", bb->frequency);
    pp_write_text_to_stream (pp);
    if (!(dump_flags & TDF_SLIM))
-diff -Naur gcc-5.5.0/gcc/cgraph.c gcc-5.5.0_good/gcc/cgraph.c
---- gcc-5.5.0/gcc/cgraph.c	2017-05-30 03:26:00.000000000 -0400
-+++ gcc-5.5.0_good/gcc/cgraph.c	2024-05-04 23:16:06.217224534 -0400
+diff -Naur gcc-5.3.0/gcc/cgraph.c gcc-5.3.0_my/gcc/cgraph.c
+--- gcc-5.3.0/gcc/cgraph.c	2015-06-17 03:42:39.000000000 -0400
++++ gcc-5.3.0_my/gcc/cgraph.c	2024-05-21 20:48:23.276902021 -0400
 @@ -1326,7 +1326,7 @@
  	  if (dump_file)
  	    fprintf (dump_file,
@@ -96,9 +96,9 @@ diff -Naur gcc-5.5.0/gcc/cgraph.c gcc-5.5.0_good/gcc/cgraph.c
  	     (int64_t)count);
    if (origin)
      fprintf (f, " nested in: %s", origin->asm_name ());
-diff -Naur gcc-5.5.0/gcc/config/aarch64/aarch64.md gcc-5.5.0_good/gcc/config/aarch64/aarch64.md
---- gcc-5.5.0/gcc/config/aarch64/aarch64.md	2016-08-26 05:37:20.000000000 -0400
-+++ gcc-5.5.0_good/gcc/config/aarch64/aarch64.md	2024-05-04 23:07:41.007174205 -0400
+diff -Naur gcc-5.3.0/gcc/config/aarch64/aarch64.md gcc-5.3.0_my/gcc/config/aarch64/aarch64.md
+--- gcc-5.3.0/gcc/config/aarch64/aarch64.md	2015-10-28 09:32:17.000000000 -0400
++++ gcc-5.3.0_my/gcc/config/aarch64/aarch64.md	2024-05-21 23:41:26.752267266 -0400
 @@ -531,7 +531,7 @@
  	char buf[64];
  	uint64_t val = ((uint64_t ) 1)
@@ -108,9 +108,9 @@ diff -Naur gcc-5.5.0/gcc/config/aarch64/aarch64.md gcc-5.5.0_good/gcc/config/aar
  	output_asm_insn (buf, operands);
  	return "<bcond>\t%l1";
        }
-diff -Naur gcc-5.5.0/gcc/config/elfos.h gcc-5.5.0_good/gcc/config/elfos.h
---- gcc-5.5.0/gcc/config/elfos.h	2015-01-05 07:33:28.000000000 -0500
-+++ gcc-5.5.0_good/gcc/config/elfos.h	2024-05-04 19:15:07.166902226 -0400
+diff -Naur gcc-5.3.0/gcc/config/elfos.h gcc-5.3.0_my/gcc/config/elfos.h
+--- gcc-5.3.0/gcc/config/elfos.h	2015-01-05 07:33:28.000000000 -0500
++++ gcc-5.3.0_my/gcc/config/elfos.h	2024-05-21 20:38:25.403509127 -0400
 @@ -99,7 +99,7 @@
  
  #undef  ASM_OUTPUT_SKIP
@@ -129,9 +129,58 @@ diff -Naur gcc-5.5.0/gcc/config/elfos.h gcc-5.5.0_good/gcc/config/elfos.h
  	       (SIZE), (ALIGN) / BITS_PER_UNIT);			\
      }									\
    while (0)
-diff -Naur gcc-5.5.0/gcc/cppbuiltin.c gcc-5.5.0_good/gcc/cppbuiltin.c
---- gcc-5.5.0/gcc/cppbuiltin.c	2015-01-09 15:18:42.000000000 -0500
-+++ gcc-5.5.0_good/gcc/cppbuiltin.c	2024-05-04 23:17:39.177233795 -0400
+diff -Naur gcc-5.3.0/gcc/cp/cfns.h gcc-5.3.0_my/gcc/cp/cfns.h
+--- gcc-5.3.0/gcc/cp/cfns.h	2024-06-07 12:56:33.021538142 -0400
++++ gcc-5.3.0_my/gcc/cp/cfns.h	2024-05-23 14:45:21.757078861 -0400
+@@ -58,7 +58,7 @@
+ };
+ 
+ inline unsigned int
+-libc_name::hash (register const char *str, register unsigned int len)
++libc_name::hash (const char *str, unsigned int len)
+ {
+   static const unsigned short asso_values[] =
+     {
+@@ -89,7 +89,7 @@
+       400, 400, 400, 400, 400, 400, 400, 400, 400, 400,
+       400, 400, 400, 400, 400, 400, 400
+     };
+-  register int hval = len;
++  int hval = len;
+ 
+   switch (hval)
+     {
+@@ -116,7 +116,7 @@
+ }
+ 
+ const char *
+-libc_name::libc_name_p (register const char *str, register unsigned int len)
++libc_name::libc_name_p (const char *str, unsigned int len)
+ {
+   enum
+     {
+@@ -333,15 +333,15 @@
+ 
+   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
+     {
+-      register int key = hash (str, len);
++      int key = hash (str, len);
+ 
+       if (key <= MAX_HASH_VALUE && key >= 0)
+         {
+-          register int index = lookup[key];
++          int index = lookup[key];
+ 
+           if (index >= 0)
+             {
+-              register const char *s = wordlist[index];
++              const char *s = wordlist[index];
+ 
+               if (*str == *s && !strcmp (str + 1, s + 1))
+                 return s;
+diff -Naur gcc-5.3.0/gcc/cppbuiltin.c gcc-5.3.0_my/gcc/cppbuiltin.c
+--- gcc-5.3.0/gcc/cppbuiltin.c	2015-01-09 15:18:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/cppbuiltin.c	2024-05-21 20:38:25.406842461 -0400
 @@ -143,7 +143,7 @@
  define_builtin_macros_for_type_sizes (cpp_reader *pfile)
  {
@@ -141,9 +190,9 @@ diff -Naur gcc-5.5.0/gcc/cppbuiltin.c gcc-5.5.0_good/gcc/cppbuiltin.c
                            tree_to_uhwi (TYPE_SIZE_UNIT (TYPE)))
  
    define_type_sizeof ("__SIZEOF_INT__", integer_type_node);
-diff -Naur gcc-5.5.0/gcc/dwarf2cfi.c gcc-5.5.0_good/gcc/dwarf2cfi.c
---- gcc-5.5.0/gcc/dwarf2cfi.c	2015-01-15 08:28:42.000000000 -0500
-+++ gcc-5.5.0_good/gcc/dwarf2cfi.c	2024-05-04 23:20:37.040584847 -0400
+diff -Naur gcc-5.3.0/gcc/dwarf2cfi.c gcc-5.3.0_my/gcc/dwarf2cfi.c
+--- gcc-5.3.0/gcc/dwarf2cfi.c	2015-01-15 08:28:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/dwarf2cfi.c	2024-05-21 20:38:25.410175795 -0400
 @@ -3258,7 +3258,7 @@
      case DW_CFA_offset_extended:
      case DW_CFA_offset_extended_sf:
@@ -162,15 +211,6 @@ diff -Naur gcc-5.5.0/gcc/dwarf2cfi.c gcc-5.5.0_good/gcc/dwarf2cfi.c
  	       r, cfi->dw_cfi_oprnd2.dw_cfi_offset);
        break;
  
-@@ -3299,7 +3299,7 @@
-     case DW_CFA_def_cfa_offset:
-     case DW_CFA_def_cfa_offset_sf:
-       fprintf (f, "\t.cfi_def_cfa_offset "
--	       HOST_WIDE_INT_PRINT_DEC"\n",
-+	       HOST_WIDE_INT_PRINT_DEC "\n",
- 	       cfi->dw_cfi_oprnd1.dw_cfi_offset);
-       break;
- 
 @@ -3316,13 +3316,13 @@
  	  fprintf (f, "\t.cfi_escape %#x,", DW_CFA_GNU_args_size);
  	  dw2_asm_output_data_uleb128_raw (cfi->dw_cfi_oprnd1.dw_cfi_offset);
@@ -187,9 +227,9 @@ diff -Naur gcc-5.5.0/gcc/dwarf2cfi.c gcc-5.5.0_good/gcc/dwarf2cfi.c
  		   cfi->dw_cfi_oprnd1.dw_cfi_offset);
  	}
        break;
-diff -Naur gcc-5.5.0/gcc/dwarf2out.c gcc-5.5.0_good/gcc/dwarf2out.c
---- gcc-5.5.0/gcc/dwarf2out.c	2017-05-30 03:18:37.000000000 -0400
-+++ gcc-5.5.0_good/gcc/dwarf2out.c	2024-05-04 23:21:48.360591952 -0400
+diff -Naur gcc-5.3.0/gcc/dwarf2out.c gcc-5.3.0_my/gcc/dwarf2out.c
+--- gcc-5.3.0/gcc/dwarf2out.c	2015-11-09 13:27:43.000000000 -0500
++++ gcc-5.3.0_my/gcc/dwarf2out.c	2024-05-21 20:50:20.873580402 -0400
 @@ -5450,8 +5450,8 @@
        fprintf (outfile, HOST_WIDE_INT_PRINT_UNSIGNED, val->v.val_unsigned);
        break;
@@ -201,9 +241,9 @@ diff -Naur gcc-5.5.0/gcc/dwarf2out.c gcc-5.5.0_good/gcc/dwarf2out.c
  	       val->v.val_double.high,
  	       val->v.val_double.low);
        break;
-diff -Naur gcc-5.5.0/gcc/final.c gcc-5.5.0_good/gcc/final.c
---- gcc-5.5.0/gcc/final.c	2015-01-15 08:28:42.000000000 -0500
-+++ gcc-5.5.0_good/gcc/final.c	2024-05-04 23:22:34.533929885 -0400
+diff -Naur gcc-5.3.0/gcc/final.c gcc-5.3.0_my/gcc/final.c
+--- gcc-5.3.0/gcc/final.c	2015-01-15 08:28:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/final.c	2024-05-22 00:31:34.762566921 -0400
 @@ -1989,7 +1989,7 @@
        if (bb->frequency)
          fprintf (file, " freq:%d", bb->frequency);
@@ -213,9 +253,68 @@ diff -Naur gcc-5.5.0/gcc/final.c gcc-5.5.0_good/gcc/final.c
                   bb->count);
        fprintf (file, " seq:%d", (*bb_seqn)++);
        fprintf (file, "\n%s PRED:", ASM_COMMENT_START);
-diff -Naur gcc-5.5.0/gcc/ipa-cp.c gcc-5.5.0_good/gcc/ipa-cp.c
---- gcc-5.5.0/gcc/ipa-cp.c	2017-05-29 05:10:58.000000000 -0400
-+++ gcc-5.5.0_good/gcc/ipa-cp.c	2024-05-05 01:45:54.825133630 -0400
+diff -Naur gcc-5.3.0/gcc/gcov-dump.c gcc-5.3.0_my/gcc/gcov-dump.c
+--- gcc-5.3.0/gcc/gcov-dump.c	2015-01-05 07:05:46.000000000 -0500
++++ gcc-5.3.0_my/gcc/gcov-dump.c	2024-05-22 04:18:55.063925754 -0400
+@@ -450,7 +450,7 @@
+ 
+ 	  count = gcov_read_counter ();
+ 	  printf (" ");
+-	  printf ("%"PRId64, count);
++	  printf ("%" PRId64, count);
+ 	}
+     }
+ }
+@@ -473,11 +473,11 @@
+       printf ("\t\tcounts=%u, runs=%u",
+ 	      summary.ctrs[ix].num, summary.ctrs[ix].runs);
+ 
+-      printf (", sum_all=%"PRId64,
++      printf (", sum_all=%" PRId64,
+ 	      (int64_t)summary.ctrs[ix].sum_all);
+-      printf (", run_max=%"PRId64,
++      printf (", run_max=%" PRId64,
+ 	      (int64_t)summary.ctrs[ix].run_max);
+-      printf (", sum_max=%"PRId64,
++      printf (", sum_max=%" PRId64,
+ 	      (int64_t)summary.ctrs[ix].sum_max);
+       if (ix != GCOV_COUNTER_ARCS)
+         continue;
+@@ -492,8 +492,8 @@
+           printf ("\n");
+           print_prefix (filename, 0, 0);
+           printf ("\t\t%d: num counts=%u, min counter="
+-              "%"PRId64 ", cum_counter="
+-              "%"PRId64,
++              "%" PRId64 ", cum_counter="
++              "%" PRId64,
+ 	      h_ix, histo_bucket->num_counters,
+               (int64_t)histo_bucket->min_value,
+               (int64_t)histo_bucket->cum_value);
+@@ -528,7 +528,7 @@
+       printf ("\n");
+       print_prefix (filename, 0, 0);
+       printf ("\t\t%u.%02u%%: num counts=%u, min counter="
+-               "%"PRId64,
++               "%" PRId64,
+                pct / 100, pct - (pct / 100 * 100),
+                ws_info->num_counters,
+                (int64_t)ws_info->min_counter);
+diff -Naur gcc-5.3.0/gcc/gcov.c gcc-5.3.0_my/gcc/gcov.c
+--- gcc-5.3.0/gcc/gcov.c	2015-04-11 08:08:26.000000000 -0400
++++ gcc-5.3.0_my/gcc/gcov.c	2024-05-22 04:38:39.590710422 -0400
+@@ -1804,7 +1804,7 @@
+ 	}
+     }
+   else
+-    sprintf (buffer, "%"PRId64, (int64_t)top);
++    sprintf (buffer, "%" PRId64, (int64_t)top);
+ 
+   return buffer;
+ }
+diff -Naur gcc-5.3.0/gcc/ipa-cp.c gcc-5.3.0_my/gcc/ipa-cp.c
+--- gcc-5.3.0/gcc/ipa-cp.c	2015-04-06 11:58:37.000000000 -0400
++++ gcc-5.3.0_my/gcc/ipa-cp.c	2024-05-22 00:55:15.656041803 -0400
 @@ -2208,7 +2208,7 @@
        if (dump_file && (dump_flags & TDF_DETAILS))
  	fprintf (dump_file, "     good_cloning_opportunity_p (time: %i, "
@@ -234,9 +333,9 @@ diff -Naur gcc-5.5.0/gcc/ipa-cp.c gcc-5.5.0_good/gcc/ipa-cp.c
  		 time_benefit, size_cost, freq_sum,
  		 info->node_within_scc ? ", scc" : "",
  		 info->node_calling_single_call ? ", single_call" : "",
-diff -Naur gcc-5.5.0/gcc/ipa-inline.c gcc-5.5.0_good/gcc/ipa-inline.c
---- gcc-5.5.0/gcc/ipa-inline.c	2015-05-17 13:43:04.000000000 -0400
-+++ gcc-5.5.0_good/gcc/ipa-inline.c	2024-05-05 01:55:39.001858493 -0400
+diff -Naur gcc-5.3.0/gcc/ipa-inline.c gcc-5.3.0_my/gcc/ipa-inline.c
+--- gcc-5.3.0/gcc/ipa-inline.c	2015-05-17 13:43:04.000000000 -0400
++++ gcc-5.3.0_my/gcc/ipa-inline.c	2024-05-21 20:56:44.056951908 -0400
 @@ -1191,8 +1191,8 @@
        if (dump)
  	{
@@ -314,9 +413,9 @@ diff -Naur gcc-5.5.0/gcc/ipa-inline.c gcc-5.5.0_good/gcc/ipa-inline.c
  	       cgraph_inline_failed_string ((cgraph_inline_failed_t) i),
  	       (int) reason[i][2], (int) reason[i][1], reason[i][0]);
  }
-diff -Naur gcc-5.5.0/gcc/ipa-polymorphic-call.c gcc-5.5.0_good/gcc/ipa-polymorphic-call.c
---- gcc-5.5.0/gcc/ipa-polymorphic-call.c	2017-01-20 03:49:08.000000000 -0500
-+++ gcc-5.5.0_good/gcc/ipa-polymorphic-call.c	2024-05-05 01:44:11.588456679 -0400
+diff -Naur gcc-5.3.0/gcc/ipa-polymorphic-call.c gcc-5.3.0_my/gcc/ipa-polymorphic-call.c
+--- gcc-5.3.0/gcc/ipa-polymorphic-call.c	2015-11-18 10:23:48.000000000 -0500
++++ gcc-5.3.0_my/gcc/ipa-polymorphic-call.c	2024-05-22 00:50:30.909346770 -0400
 @@ -661,7 +661,7 @@
  	    fprintf (f, " (or a derived type)");
  	  if (maybe_in_construction)
@@ -335,9 +434,9 @@ diff -Naur gcc-5.5.0/gcc/ipa-polymorphic-call.c gcc-5.5.0_good/gcc/ipa-polymorph
  		   speculative_offset);
  	}
      }
-diff -Naur gcc-5.5.0/gcc/ipa-profile.c gcc-5.5.0_good/gcc/ipa-profile.c
---- gcc-5.5.0/gcc/ipa-profile.c	2015-02-17 16:57:53.000000000 -0500
-+++ gcc-5.5.0_good/gcc/ipa-profile.c	2024-05-05 01:57:14.061867963 -0400
+diff -Naur gcc-5.3.0/gcc/ipa-profile.c gcc-5.3.0_my/gcc/ipa-profile.c
+--- gcc-5.3.0/gcc/ipa-profile.c	2015-02-17 16:57:53.000000000 -0500
++++ gcc-5.3.0_my/gcc/ipa-profile.c	2024-05-21 20:57:49.883625133 -0400
 @@ -186,7 +186,7 @@
      {
        cumulated_time += histogram[i]->count * histogram[i]->time;
@@ -374,9 +473,9 @@ diff -Naur gcc-5.5.0/gcc/ipa-profile.c gcc-5.5.0_good/gcc/ipa-profile.c
  		   " Time:%3.2f%% Size:%3.2f%%\n", 
  		   (int64_t)threshold,
  		   cumulated_time * 100.0 / overall_time,
-diff -Naur gcc-5.5.0/gcc/ipa-prop.c gcc-5.5.0_good/gcc/ipa-prop.c
---- gcc-5.5.0/gcc/ipa-prop.c	2017-03-01 08:54:56.000000000 -0500
-+++ gcc-5.5.0_good/gcc/ipa-prop.c	2024-05-05 01:57:42.271870773 -0400
+diff -Naur gcc-5.3.0/gcc/ipa-prop.c gcc-5.3.0_my/gcc/ipa-prop.c
+--- gcc-5.3.0/gcc/ipa-prop.c	2015-07-23 12:14:00.000000000 -0400
++++ gcc-5.3.0_my/gcc/ipa-prop.c	2024-05-21 20:59:22.623634371 -0400
 @@ -300,7 +300,7 @@
        else if (type == IPA_JF_ANCESTOR)
  	{
@@ -386,9 +485,9 @@ diff -Naur gcc-5.5.0/gcc/ipa-prop.c gcc-5.5.0_good/gcc/ipa-prop.c
  		   jump_func->value.ancestor.formal_id,
  		   jump_func->value.ancestor.offset);
  	  if (jump_func->value.ancestor.agg_preserved)
-diff -Naur gcc-5.5.0/gcc/ira-color.c gcc-5.5.0_good/gcc/ira-color.c
---- gcc-5.5.0/gcc/ira-color.c	2015-09-30 12:39:44.000000000 -0400
-+++ gcc-5.5.0_good/gcc/ira-color.c	2024-05-05 02:00:26.821887165 -0400
+diff -Naur gcc-5.3.0/gcc/ira-color.c gcc-5.3.0_my/gcc/ira-color.c
+--- gcc-5.3.0/gcc/ira-color.c	2015-09-30 12:39:44.000000000 -0400
++++ gcc-5.3.0_my/gcc/ira-color.c	2024-05-22 01:03:10.522755775 -0400
 @@ -548,7 +548,7 @@
  	fprintf (f, " ");
        fprintf (f, "%d:(", node->preorder_num);
@@ -398,9 +497,9 @@ diff -Naur gcc-5.5.0/gcc/ira-color.c gcc-5.5.0_good/gcc/ira-color.c
        print_hard_regs_subforest (f, node->first, level + 1);
      }
  }
-diff -Naur gcc-5.5.0/gcc/ira.c gcc-5.5.0_good/gcc/ira.c
---- gcc-5.5.0/gcc/ira.c	2016-03-31 09:13:13.000000000 -0400
-+++ gcc-5.5.0_good/gcc/ira.c	2024-05-05 01:59:28.451881351 -0400
+diff -Naur gcc-5.3.0/gcc/ira.c gcc-5.3.0_my/gcc/ira.c
+--- gcc-5.3.0/gcc/ira.c	2015-11-11 09:56:17.000000000 -0500
++++ gcc-5.3.0_my/gcc/ira.c	2024-05-22 00:58:43.759395867 -0400
 @@ -2508,12 +2508,12 @@
    if (internal_flag_ira_verbose > 0 && ira_dump_file != NULL)
      {
@@ -429,9 +528,9 @@ diff -Naur gcc-5.5.0/gcc/ira.c gcc-5.5.0_good/gcc/ira.c
  	     ira_overall_cost);
  
    flag_ira_share_spill_slots = saved_flag_ira_share_spill_slots;
-diff -Naur gcc-5.5.0/gcc/loop-doloop.c gcc-5.5.0_good/gcc/loop-doloop.c
---- gcc-5.5.0/gcc/loop-doloop.c	2017-05-30 04:20:03.000000000 -0400
-+++ gcc-5.5.0_good/gcc/loop-doloop.c	2024-05-05 02:02:35.498566651 -0400
+diff -Naur gcc-5.3.0/gcc/loop-doloop.c gcc-5.3.0_my/gcc/loop-doloop.c
+--- gcc-5.3.0/gcc/loop-doloop.c	2015-01-15 08:28:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/loop-doloop.c	2024-05-22 01:16:24.326168187 -0400
 @@ -449,7 +449,7 @@
      {
        fprintf (dump_file, "Doloop: Inserting doloop pattern (");
@@ -441,9 +540,9 @@ diff -Naur gcc-5.5.0/gcc/loop-doloop.c gcc-5.5.0_good/gcc/loop-doloop.c
        else
  	fputs ("runtime", dump_file);
        fputs (" iterations).\n", dump_file);
-diff -Naur gcc-5.5.0/gcc/loop-iv.c gcc-5.5.0_good/gcc/loop-iv.c
---- gcc-5.5.0/gcc/loop-iv.c	2015-01-20 03:29:09.000000000 -0500
-+++ gcc-5.5.0_good/gcc/loop-iv.c	2024-05-05 02:03:14.621903882 -0400
+diff -Naur gcc-5.3.0/gcc/loop-iv.c gcc-5.3.0_my/gcc/loop-iv.c
+--- gcc-5.3.0/gcc/loop-iv.c	2015-01-20 03:29:09.000000000 -0500
++++ gcc-5.3.0_my/gcc/loop-iv.c	2024-05-21 21:00:24.830307235 -0400
 @@ -2357,7 +2357,7 @@
    if (andmax)
      nmax = MIN (nmax, andmax);
@@ -453,9 +552,9 @@ diff -Naur gcc-5.5.0/gcc/loop-iv.c gcc-5.5.0_good/gcc/loop-iv.c
  	     nmax);
    return nmax;
  }
-diff -Naur gcc-5.5.0/gcc/mcf.c gcc-5.5.0_good/gcc/mcf.c
---- gcc-5.5.0/gcc/mcf.c	2015-01-05 07:33:28.000000000 -0500
-+++ gcc-5.5.0_good/gcc/mcf.c	2024-05-05 02:10:24.208613344 -0400
+diff -Naur gcc-5.3.0/gcc/mcf.c gcc-5.3.0_my/gcc/mcf.c
+--- gcc-5.3.0/gcc/mcf.c	2015-01-05 07:33:28.000000000 -0500
++++ gcc-5.3.0_my/gcc/mcf.c	2024-05-22 03:53:01.977104370 -0400
 @@ -214,12 +214,12 @@
  
    if (fedge->type)
@@ -622,9 +721,9 @@ diff -Naur gcc-5.5.0/gcc/mcf.c gcc-5.5.0_good/gcc/mcf.c
                         sum_edge_counts (bb->succs));
              }
           }
-diff -Naur gcc-5.5.0/gcc/modulo-sched.c gcc-5.5.0_good/gcc/modulo-sched.c
---- gcc-5.5.0/gcc/modulo-sched.c	2016-05-23 06:41:35.000000000 -0400
-+++ gcc-5.5.0_good/gcc/modulo-sched.c	2024-05-05 02:07:41.771930495 -0400
+diff -Naur gcc-5.3.0/gcc/modulo-sched.c gcc-5.3.0_my/gcc/modulo-sched.c
+--- gcc-5.3.0/gcc/modulo-sched.c	2015-01-15 08:28:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/modulo-sched.c	2024-05-22 03:53:33.360440830 -0400
 @@ -1487,15 +1487,15 @@
  	      if (profile_info && flag_branch_probabilities)
  	    	{
@@ -679,9 +778,9 @@ diff -Naur gcc-5.5.0/gcc/modulo-sched.c gcc-5.5.0_good/gcc/modulo-sched.c
  		  fprintf (dump_file, ")\n");
  		}
  	      break;
-diff -Naur gcc-5.5.0/gcc/predict.c gcc-5.5.0_good/gcc/predict.c
---- gcc-5.5.0/gcc/predict.c	2015-01-29 02:43:14.000000000 -0500
-+++ gcc-5.5.0_good/gcc/predict.c	2024-05-05 02:11:14.498618354 -0400
+diff -Naur gcc-5.3.0/gcc/predict.c gcc-5.3.0_my/gcc/predict.c
+--- gcc-5.3.0/gcc/predict.c	2015-01-29 02:43:14.000000000 -0500
++++ gcc-5.3.0_my/gcc/predict.c	2024-05-22 03:54:52.390448703 -0400
 @@ -714,10 +714,10 @@
  
    if (bb->count)
@@ -695,9 +794,9 @@ diff -Naur gcc-5.5.0/gcc/predict.c gcc-5.5.0_good/gcc/predict.c
  	  fprintf (file, " (%.1f%%)", e->count * 100.0 / bb->count);
  	}
      }
-diff -Naur gcc-5.5.0/gcc/profile.c gcc-5.5.0_good/gcc/profile.c
---- gcc-5.5.0/gcc/profile.c	2015-01-15 08:28:42.000000000 -0500
-+++ gcc-5.5.0_good/gcc/profile.c	2024-05-05 02:13:39.365299452 -0400
+diff -Naur gcc-5.3.0/gcc/profile.c gcc-5.3.0_my/gcc/profile.c
+--- gcc-5.3.0/gcc/profile.c	2015-01-15 08:28:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/profile.c	2024-05-21 21:02:09.600317672 -0400
 @@ -276,7 +276,7 @@
            ws_info = &gcov_working_sets[ws_ix];
            /* Print out the percentage using int arithmatic to avoid float.  */
@@ -752,9 +851,9 @@ diff -Naur gcc-5.5.0/gcc/profile.c gcc-5.5.0_good/gcc/profile.c
  			 (int64_t) e->count);
  	      }
  	  }
-diff -Naur gcc-5.5.0/gcc/stor-layout.c gcc-5.5.0_good/gcc/stor-layout.c
---- gcc-5.5.0/gcc/stor-layout.c	2015-08-17 11:44:35.000000000 -0400
-+++ gcc-5.5.0_good/gcc/stor-layout.c	2024-05-05 02:18:02.881992370 -0400
+diff -Naur gcc-5.3.0/gcc/stor-layout.c gcc-5.3.0_my/gcc/stor-layout.c
+--- gcc-5.3.0/gcc/stor-layout.c	2015-08-17 11:44:35.000000000 -0400
++++ gcc-5.3.0_my/gcc/stor-layout.c	2024-05-21 20:38:25.476842468 -0400
 @@ -262,7 +262,7 @@
    fntype = build_function_type (return_type, param_type_list);
  
@@ -764,9 +863,9 @@ diff -Naur gcc-5.5.0/gcc/stor-layout.c gcc-5.5.0_good/gcc/stor-layout.c
    fnname = get_file_function_name (buf);
    fndecl = build_decl (input_location, FUNCTION_DECL, fnname, fntype);
    for (t = param_decl_list; t; t = DECL_CHAIN (t))
-diff -Naur gcc-5.5.0/gcc/toplev.c gcc-5.5.0_good/gcc/toplev.c
---- gcc-5.5.0/gcc/toplev.c	2017-09-25 19:49:58.000000000 -0400
-+++ gcc-5.5.0_good/gcc/toplev.c	2024-05-05 02:20:23.235339685 -0400
+diff -Naur gcc-5.3.0/gcc/toplev.c gcc-5.3.0_my/gcc/toplev.c
+--- gcc-5.3.0/gcc/toplev.c	2015-07-10 08:33:28.000000000 -0400
++++ gcc-5.3.0_my/gcc/toplev.c	2024-05-21 20:38:25.483509135 -0400
 @@ -1120,7 +1120,7 @@
  	}
  
@@ -776,3 +875,207 @@ diff -Naur gcc-5.5.0/gcc/toplev.c gcc-5.5.0_good/gcc/toplev.c
  	       lbasename (loc.file),
  	       loc.line,
  	       loc.column,
+diff -Naur gcc-5.3.0/gcc/tree-browser.c gcc-5.3.0_my/gcc/tree-browser.c
+--- gcc-5.3.0/gcc/tree-browser.c	2015-01-09 15:18:42.000000000 -0500
++++ gcc-5.3.0_my/gcc/tree-browser.c	2024-05-21 20:38:25.486842469 -0400
+@@ -940,7 +940,7 @@
+ 
+       while (--copy > 0)
+         {
+-          register int c = getc (stream);
++          int c = getc (stream);
+           if (c == EOF)
+             goto lose;
+           else if ((*p++ = c) == '\n')
+diff -Naur gcc-5.3.0/gcc/tree-ssa-reassoc.c gcc-5.3.0_my/gcc/tree-ssa-reassoc.c
+--- gcc-5.3.0/gcc/tree-ssa-reassoc.c	2015-11-18 05:31:51.000000000 -0500
++++ gcc-5.3.0_my/gcc/tree-ssa-reassoc.c	2024-05-21 20:38:25.490175803 -0400
+@@ -4617,7 +4617,7 @@
+ 		      if (elt < vec_len - 1)
+ 			fputs (" * ", dump_file);
+ 		    }
+-		  fprintf (dump_file, ")^"HOST_WIDE_INT_PRINT_DEC"\n",
++		  fprintf (dump_file, ")^" HOST_WIDE_INT_PRINT_DEC "\n",
+ 			   power);
+ 		}
+ 	    }
+@@ -4651,7 +4651,7 @@
+ 		  if (elt < vec_len - 1)
+ 		    fputs (" * ", dump_file);
+ 		}
+-	      fprintf (dump_file, ")^"HOST_WIDE_INT_PRINT_DEC"\n", power);
++	      fprintf (dump_file, ")^" HOST_WIDE_INT_PRINT_DEC "\n", power);
+ 	    }
+ 
+ 	  reassociate_stats.pows_created++;
+diff -Naur gcc-5.3.0/gcc/value-prof.c gcc-5.3.0_my/gcc/value-prof.c
+--- gcc-5.3.0/gcc/value-prof.c	2015-03-06 11:12:43.000000000 -0500
++++ gcc-5.3.0_my/gcc/value-prof.c	2024-05-21 21:03:31.736992521 -0400
+@@ -296,10 +296,10 @@
+ 	   unsigned int i;
+ 	   fprintf (dump_file, " [");
+            for (i = 0; i < hist->hdata.intvl.steps; i++)
+-	     fprintf (dump_file, " %d:%"PRId64,
++	     fprintf (dump_file, " %d:%" PRId64,
+ 		      hist->hdata.intvl.int_start + i,
+ 		      (int64_t) hist->hvalue.counters[i]);
+-	   fprintf (dump_file, " ] outside range:%"PRId64,
++	   fprintf (dump_file, " ] outside range:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[i]);
+ 	}
+       fprintf (dump_file, ".\n");
+@@ -309,8 +309,8 @@
+       fprintf (dump_file, "Pow2 counter ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "pow2:%"PRId64
+-		    " nonpow2:%"PRId64,
++	   fprintf (dump_file, "pow2:%" PRId64
++		    " nonpow2:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0],
+ 		    (int64_t) hist->hvalue.counters[1]);
+ 	}
+@@ -321,9 +321,9 @@
+       fprintf (dump_file, "Single value ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "value:%"PRId64
+-		    " match:%"PRId64
+-		    " wrong:%"PRId64,
++	   fprintf (dump_file, "value:%" PRId64
++		    " match:%" PRId64
++		    " wrong:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0],
+ 		    (int64_t) hist->hvalue.counters[1],
+ 		    (int64_t) hist->hvalue.counters[2]);
+@@ -335,8 +335,8 @@
+       fprintf (dump_file, "Average value ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "sum:%"PRId64
+-		    " times:%"PRId64,
++	   fprintf (dump_file, "sum:%" PRId64
++		    " times:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0],
+ 		    (int64_t) hist->hvalue.counters[1]);
+ 	}
+@@ -347,7 +347,7 @@
+       fprintf (dump_file, "IOR value ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "ior:%"PRId64,
++	   fprintf (dump_file, "ior:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0]);
+ 	}
+       fprintf (dump_file, ".\n");
+@@ -357,9 +357,9 @@
+       fprintf (dump_file, "Constant delta ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "value:%"PRId64
+-		    " match:%"PRId64
+-		    " wrong:%"PRId64,
++	   fprintf (dump_file, "value:%" PRId64
++		    " match:%" PRId64
++		    " wrong:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0],
+ 		    (int64_t) hist->hvalue.counters[1],
+ 		    (int64_t) hist->hvalue.counters[2]);
+@@ -370,9 +370,9 @@
+       fprintf (dump_file, "Indirect call ");
+       if (hist->hvalue.counters)
+ 	{
+-	   fprintf (dump_file, "value:%"PRId64
+-		    " match:%"PRId64
+-		    " all:%"PRId64,
++	   fprintf (dump_file, "value:%" PRId64
++		    " match:%" PRId64
++		    " all:%" PRId64,
+ 		    (int64_t) hist->hvalue.counters[0],
+ 		    (int64_t) hist->hvalue.counters[1],
+ 		    (int64_t) hist->hvalue.counters[2]);
+@@ -383,7 +383,7 @@
+       fprintf (dump_file, "Time profile ");
+       if (hist->hvalue.counters)
+       {
+-        fprintf (dump_file, "time:%"PRId64,
++        fprintf (dump_file, "time:%" PRId64,
+                  (int64_t) hist->hvalue.counters[0]);
+       }
+       fprintf (dump_file, ".\n");
+@@ -394,10 +394,10 @@
+ 	{
+            int i;
+ 
+-           fprintf (dump_file, "accu:%"PRId64, hist->hvalue.counters[0]);
++           fprintf (dump_file, "accu:%" PRId64, hist->hvalue.counters[0]);
+            for (i = 1; i < (GCOV_ICALL_TOPN_VAL << 2); i += 2)
+              {
+-               fprintf (dump_file, " target:%"PRId64 " value:%"PRId64,
++               fprintf (dump_file, " target:%" PRId64 " value:%" PRId64,
+                        (int64_t) hist->hvalue.counters[i],
+                        (int64_t) hist->hvalue.counters[i+1]);
+              }
+@@ -1676,8 +1676,8 @@
+       print_generic_expr (dump_file, direct_call->decl, TDF_SLIM);
+       fprintf (dump_file, " transformation on insn postponned to ipa-profile");
+       print_gimple_stmt (dump_file, stmt, 0, TDF_SLIM);
+-      fprintf (dump_file, "hist->count %"PRId64
+-	       " hist->all %"PRId64"\n", count, all);
++      fprintf (dump_file, "hist->count %" PRId64
++	       " hist->all %" PRId64 "\n", count, all);
+     }
+ 
+   return true;
+diff -Naur gcc-5.3.0/gcc/wide-int-print.cc gcc-5.3.0_my/gcc/wide-int-print.cc
+--- gcc-5.3.0/gcc/wide-int-print.cc	2015-01-05 07:33:28.000000000 -0500
++++ gcc-5.3.0_my/gcc/wide-int-print.cc	2024-05-22 04:13:08.183891198 -0400
+@@ -127,7 +127,7 @@
+ 
+ 	}
+       else
+-	buf += sprintf (buf, "0x"HOST_WIDE_INT_PRINT_HEX_PURE, wi.elt (--i));
++	buf += sprintf (buf, "0x" HOST_WIDE_INT_PRINT_HEX_PURE, wi.elt (--i));
+ 
+       while (--i >= 0)
+ 	buf += sprintf (buf, HOST_WIDE_INT_PRINT_PADDED_HEX, wi.elt (i));
+diff -Naur gcc-5.3.0/libgcc/libgcov-util.c gcc-5.3.0_my/libgcc/libgcov-util.c
+--- gcc-5.3.0/libgcc/libgcov-util.c	2015-02-27 08:19:38.000000000 -0500
++++ gcc-5.3.0_my/libgcc/libgcov-util.c	2024-05-22 04:38:20.050708476 -0400
+@@ -879,7 +879,7 @@
+ 
+   scale_factor = (float)max_val / curr_max_val;
+   if (verbose)
+-    fnotice (stdout, "max_val is %"PRId64"\n", curr_max_val);
++    fnotice (stdout, "max_val is %" PRId64 "\n", curr_max_val);
+ 
+   return gcov_profile_scale (profile, scale_factor, 0, 0);
+ }
+@@ -1383,8 +1383,8 @@
+                                             cold_gcda_files[1], both_cold_cnt);
+   printf ("    zero files:  %12u\t%12u\t%12u\n", zero_gcda_files[0],
+                                             zero_gcda_files[1], both_zero_cnt);
+-  printf ("       sum_all:  %12"PRId64"\t%12"PRId64"\n", p1_sum_all, p2_sum_all);
+-  printf ("       run_max:  %12"PRId64"\t%12"PRId64"\n", p1_run_max, p2_run_max);
++  printf ("       sum_all:  %12" PRId64 "\t%12" PRId64 "\n", p1_sum_all, p2_sum_all);
++  printf ("       run_max:  %12" PRId64 "\t%12" PRId64 "\n", p1_run_max, p2_run_max);
+ 
+   return prg_val;
+ }
+--- a/gcc/gcc.orig.c	2024-09-19 20:37:43.243511914 -0400
++++ b/gcc/gcc.c	2024-09-19 20:35:42.406833209 -0400
+@@ -771,12 +771,12 @@
+ #define PLUGIN_COND_CLOSE ""
+ #endif
+ #define LINK_PLUGIN_SPEC \
+-    "%{"PLUGIN_COND": \
++    "%{" PLUGIN_COND": \
+     -plugin %(linker_plugin_file) \
+     -plugin-opt=%(lto_wrapper) \
+     -plugin-opt=-fresolution=%u.res \
+     %{!nostdlib:%{!nodefaultlibs:%:pass-through-libs(%(link_gcc_c_sequence))}} \
+-    }"PLUGIN_COND_CLOSE
++    }" PLUGIN_COND_CLOSE
+ #else
+ /* The linker used doesn't support -plugin, reject -fuse-linker-plugin.  */
+ #define LINK_PLUGIN_SPEC "%{fuse-linker-plugin:\

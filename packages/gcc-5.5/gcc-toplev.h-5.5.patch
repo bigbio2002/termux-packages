@@ -1,0 +1,12 @@
+--- a/gcc/toplev.orig.c	2024-09-23 12:10:05.941576667 -0400
++++ b/gcc/toplev.c	2024-09-22 22:40:01.567717325 -0400
+@@ -1386,8 +1386,7 @@
+ 
+       if (flag_sanitize & SANITIZE_THREAD)
+ 	{
+-	  error (UNKNOWN_LOCATION,
+-		 "%<-fcheck-pointer-bounds%> is not supported with "
++	  error ("%<-fcheck-pointer-bounds%> is not supported with "
+ 		 "Thread Sanitizer");
+ 
+ 	  flag_check_pointer_bounds = 0;

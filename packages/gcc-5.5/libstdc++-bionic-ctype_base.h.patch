@@ -3,7 +3,7 @@
 @@ -27,6 +27,19 @@
  //
  
- // Information as gleaned from /usr/include/ctype.h, for solaris2.5.1
+ // Information as gleaned from /usr/include/ctype.h
 +// Define macros by ourselves so we do not get into more troubles.
 +#define _GLIBCXX_U 0x01
 +#define _GLIBCXX_L 0x02
@@ -18,9 +18,9 @@
 +#define _GLIBCXX_A (_GLIBCXX_L|_GLIBCXX_U)
 +#define _GLIBCXX_N _GLIBCXX_D
  
- // Support for Solaris 2.5.1
- 
-@@ -43,17 +56,17 @@
+ namespace std _GLIBCXX_VISIBILITY(default)
+ {
+@@ -41,17 +54,17 @@
      // NB: Offsets into ctype<char>::_M_table force a particular size
      // on the mask type. Because of this, we don't use an enum.
      typedef char 		mask;
@@ -46,6 +46,6 @@
 +    static const mask cntrl 	= _GLIBCXX_C;
 +    static const mask punct 	= _GLIBCXX_P;
 +    static const mask alnum 	= _GLIBCXX_A | _GLIBCXX_N;
-   };
- 
- _GLIBCXX_END_NAMESPACE_VERSION
+ #if __cplusplus >= 201103L
+     static const mask blank 	= space;
+ #endif

@@ -1,6 +1,8 @@
-diff -N -u -r ../gcc-6.1.0/gcc/config/aarch64/aarch64-linux-android.h ./gcc/config/aarch64/aarch64-linux-android.h
---- ../gcc-6.1.0/gcc/config/aarch64/aarch64-linux-android.h	1969-12-31 19:00:00.000000000 -0500
-+++ ./gcc/config/aarch64/aarch64-linux-android.h	2016-04-29 05:16:37.417191309 -0400
+From https://github.com/crystax/android-toolchain-gcc-5/commit/1e57465b9b81699ce8eb603dd4794a839a74c635
+
+diff -N -u -r ../gcc-5.3.0/gcc/config/aarch64/aarch64-linux-android.h ./gcc/config/aarch64/aarch64-linux-android.h
+--- ../gcc-5.3.0/gcc/config/aarch64/aarch64-linux-android.h	1969-12-31 19:00:00.000000000 -0500
++++ ./gcc/config/aarch64/aarch64-linux-android.h	2016-03-19 21:08:15.423913071 -0400
 @@ -0,0 +1,63 @@
 +/* Machine description for AArch64 architecture.
 +   Copyright (C) 2014 Free Software Foundation, Inc.
