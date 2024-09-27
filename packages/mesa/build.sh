@@ -9,7 +9,8 @@ TERMUX_PKG_SHA256=d1ed86a266d5b7b8c136ae587ef5618ed1a9837a43440f3713622bf0123bf5
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="libandroid-shmem, libc++, libdrm, libglvnd, libwayland, libx11, libxext, libxfixes, libxshmfence, libxxf86vm, ncurses, vulkan-loader, zlib, zstd"
 TERMUX_PKG_SUGGESTS="mesa-dev"
-TERMUX_PKG_BUILD_DEPENDS="libllvm-static, libwayland-protocols, libxrandr, llvm, llvm-tools, mlir, xorgproto"
+TERMUX_PKG_BUILD_DEPENDS="libllvm-static, libwayland-protocols, libxrandr, llvm-tools, xorgproto"
+#TERMUX_PKG_BUILD_DEPENDS="llvm"
 TERMUX_PKG_CONFLICTS="libmesa, ndk-sysroot (<= 25b)"
 TERMUX_PKG_REPLACES="libmesa"
 
@@ -24,7 +25,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -Dgles2=enabled
 -Ddri3=enabled
 -Dglx=dri
--Dllvm=enabled
+-Dllvm=disabled
 -Dshared-llvm=disabled
 -Dplatforms=x11,wayland
 -Dgallium-drivers=swrast,virgl,zink
@@ -32,6 +33,10 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -Dglvnd=true
 -Dxmlconfig=disabled
 "
+# original options
+#TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
+#-Dllvm=enabled
+#"
 
 termux_step_post_get_source() {
 	# Do not use meson wrap projects
@@ -56,7 +61,8 @@ termux_step_pre_configure() {
 			> "${_WRAPPER_BIN}/pkg-config"
 		chmod +x "${_WRAPPER_BIN}/pkg-config"
 		export PKG_CONFIG="${_WRAPPER_BIN}/pkg-config"
-		export LLVM_CONFIG="$TERMUX_PREFIX/bin/llvm-config"
+#		export LLVM_CONFIG="$TERMUX_PREFIX/bin/llvm-config"
+		export LLVM_CONFIG=llvm-config
 	fi
 	export PATH="$_WRAPPER_BIN:$PATH"
 
