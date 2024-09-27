@@ -12,7 +12,8 @@ TERMUX_PKG_HOSTBUILD=true
 # `flang-new` should be rebuilt when libllvm bumps version.
 # See https://github.com/termux/termux-packages/issues/19362
 DEP_QUALIFIER=$TERMUX_PKG_VERSION-$TERMUX_PKG_REVISION
-TERMUX_PKG_DEPENDS="libc++, libllvm (= $DEP_QUALIFIER), clang (= $DEP_QUALIFIER), lld (= $DEP_QUALIFIER), mlir (= $DEP_QUALIFIER)"
+TERMUX_PKG_DEPENDS="libc++, libllvm (= $DEP_QUALIFIER), clang (= $DEP_QUALIFIER), lld (= $DEP_QUALIFIER)"
+#TERMUX_PKG_DEPENDS="mlir (= $DEP_QUALIFIER)"
 TERMUX_PKG_BUILD_DEPENDS="libllvm-static"
 
 # Upstream doesn't support 32-bit arches well. See https://github.com/llvm/llvm-project/issues/57621.
