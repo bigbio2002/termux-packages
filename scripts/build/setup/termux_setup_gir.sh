@@ -87,7 +87,7 @@ termux_setup_gir() {
 			done
 
 			cat > "$ldd" <<-EOF
-				#!/bin/bash-static
+				#!/bin/bash
 				unset LD_LIBRARY_PATH
 			EOF
 			sed 1d "$TERMUX_SCRIPTDIR/packages/ldd/ldd.in" >> "$ldd"
@@ -102,7 +102,7 @@ termux_setup_gir() {
 			local w="$bin/$(basename "$cmd")"
 			if [ ! -e "$w" ]; then
 				cat > "$w" <<-EOF
-					#!/bin/bash-static
+					#!/bin/bash
 					unset LD_LIBRARY_PATH
 					exec "$(command -v "$cmd")" "\$@"
 				EOF
