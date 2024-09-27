@@ -23,7 +23,7 @@ termux_step_pre_configure() {
 		local pywrap="$TERMUX_PKG_BUILDDIR/_bin/python-wrapper"
 		mkdir -p "$(dirname "$pywrap")"
 		cat > "$pywrap" <<-EOF
-			#!/bin/bash-static
+			#!/bin/bash
 			unset LD_LIBRARY_PATH
 			exec /usr/bin/python3 "\$@"
 		EOF
