@@ -1,5 +1,6 @@
---- a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.h	2024-06-10 10:30:35.380856179 -0400
-+++ b/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.h	2024-06-10 10:27:39.614172003 -0400
+
+--- a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.h	2017-01-10 10:22:56.255798000 -0500
++++ b/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.h	2020-03-12 07:07:24.000000000 -0400
 @@ -13,6 +13,8 @@
  #ifndef SANITIZER_PLATFORM_LIMITS_POSIX_H
  #define SANITIZER_PLATFORM_LIMITS_POSIX_H
@@ -9,7 +10,19 @@
  #include "sanitizer_internal_defs.h"
  #include "sanitizer_platform.h"
  
-@@ -39,6 +41,7 @@
+@@ -20,7 +22,10 @@
+ // FreeBSD's dlopen() returns a pointer to an Obj_Entry structure that
+ // incorporates the map structure.
+ # define GET_LINK_MAP_BY_DLOPEN_HANDLE(handle) \
+-    ((link_map*)((handle) == nullptr ? nullptr : ((char*)(handle) + 544)))
++    ((link_map*)((handle) == nullptr ? nullptr : ((char*)(handle) + 560)))
++// Get sys/_types.h, because that tells us whether 64-bit inodes are
++// used in struct dirent below.
++#include <sys/_types.h>
+ #else
+ # define GET_LINK_MAP_BY_DLOPEN_HANDLE(handle) ((link_map*)(handle))
+ #endif  // !SANITIZER_FREEBSD
+@@ -39,6 +44,7 @@
    extern unsigned siginfo_t_sz;
    extern unsigned struct_itimerval_sz;
    extern unsigned pthread_t_sz;
@@ -17,7 +30,7 @@
    extern unsigned pthread_cond_t_sz;
    extern unsigned pid_t_sz;
    extern unsigned timeval_sz;
-@@ -169,13 +182,13 @@
+@@ -179,13 +185,13 @@
  #endif // SANITIZER_LINUX || SANITIZER_FREEBSD
  
  #if SANITIZER_ANDROID
@@ -33,7 +46,7 @@
      int v[10];
    };
  
-@@ -194,27 +207,14 @@
+@@ -204,27 +210,14 @@
      unsigned __seq;
      u64 __unused1;
      u64 __unused2;
@@ -62,7 +75,7 @@
      unsigned short __seq;
      unsigned short __pad2;
  #if defined(__x86_64__) && !defined(_LP64)
-@@ -230,17 +230,17 @@
+@@ -240,17 +233,17 @@
    struct __sanitizer_shmid_ds {
      __sanitizer_ipc_perm shm_perm;
    #if defined(__sparc__)
@@ -86,7 +99,7 @@
      long shm_ctime;
      uptr shm_segsz;
      int shm_cpid;
-@@ -396,6 +396,18 @@
+@@ -406,6 +399,18 @@
    typedef long __sanitizer_time_t;
  #endif
  
@@ -105,7 +118,7 @@
    struct __sanitizer_timeb {
      __sanitizer_time_t time;
      unsigned short millitm;
-@@ -430,6 +442,12 @@
+@@ -440,6 +445,12 @@
      int mnt_freq;
      int mnt_passno;
    };
@@ -118,7 +131,7 @@
  #endif
  
  #if SANITIZER_MAC || SANITIZER_FREEBSD
-@@ -464,6 +482,13 @@
+@@ -474,6 +485,13 @@
    };
  #endif
  
@@ -132,7 +145,7 @@
  #if SANITIZER_MAC
    struct __sanitizer_dirent {
      unsigned long long d_ino;
-@@ -473,7 +498,12 @@
+@@ -483,7 +501,12 @@
    };
  #elif SANITIZER_FREEBSD
    struct __sanitizer_dirent {
@@ -145,7 +158,7 @@
      unsigned short d_reclen;
      // more fields that we don't care about
    };
-@@ -511,7 +541,7 @@
+@@ -521,7 +544,7 @@
    typedef long __sanitizer_clock_t;
  #endif
  
@@ -154,7 +167,7 @@
    typedef int __sanitizer_clockid_t;
  #endif
  
-@@ -530,7 +560,7 @@
+@@ -540,7 +563,7 @@
    typedef long __sanitizer___kernel_off_t;
  #endif
  
@@ -163,7 +176,7 @@
    typedef unsigned int __sanitizer___kernel_old_uid_t;
    typedef unsigned int __sanitizer___kernel_old_gid_t;
  #else
-@@ -568,13 +602,22 @@
+@@ -582,13 +605,22 @@
    };
  #endif
  
@@ -188,7 +201,17 @@
      };
      __sanitizer_sigset_t sa_mask;
      void (*sa_restorer)();
-@@ -582,8 +625,8 @@
+@@ -597,16 +629,16 @@
+   struct __sanitizer_sigaction {
+     unsigned sa_flags;
+     union {
+-      void (*sigaction)(int sig, void *siginfo, void *uctx);
+-      void (*handler)(int sig);
++      __sanitizer_sigactionhandler_ptr sigaction;
++      __sanitizer_sighandler_ptr handler;
+     };
+     __sanitizer_sigset_t sa_mask;
+   };
  #elif SANITIZER_ANDROID && (SANITIZER_WORDSIZE == 32)
    struct __sanitizer_sigaction {
      union {
@@ -199,7 +222,7 @@
      };
      __sanitizer_sigset_t sa_mask;
      uptr sa_flags;
-@@ -595,8 +638,8 @@
+@@ -618,8 +650,8 @@
      unsigned int sa_flags;
  #endif
      union {
@@ -210,7 +233,16 @@
      };
  #if SANITIZER_FREEBSD
      int sa_flags;
-@@ -643,7 +693,7 @@
+@@ -678,7 +710,7 @@
+     unsigned int sa_flags;
+     union {
+       void (*handler)(int signo);
+-      void (*sigaction)(int signo, void *info, void *ctx);
++      void (*sigaction)(int signo, __sanitizer_siginfo *info, void *ctx);
+     };
+     __sanitizer_kernel_sigset_t sa_mask;
+     void (*sa_restorer)(void);
+@@ -687,7 +719,7 @@
    struct __sanitizer_kernel_sigaction_t {
      union {
        void (*handler)(int signo);
@@ -219,8 +251,8 @@
      };
      unsigned long sa_flags;
      void (*sa_restorer)(void);
-@@ -652,9 +702,10 @@
-   extern unsigned struct_ElfW_Phdr_sz;
+@@ -695,9 +727,10 @@
+   };
  #endif
  
 -  extern uptr sig_ign;
@@ -233,16 +265,7 @@
  
  #if SANITIZER_LINUX
    extern int e_tabsz;
-@@ -674,6 +736,8 @@
-     const void *dlpi_phdr;
-     short dlpi_phnum;
-   };
-+
-+  extern unsigned struct_ElfW_Phdr_sz;
- #endif
- 
-   struct __sanitizer_addrinfo {
-@@ -819,6 +884,13 @@
+@@ -863,6 +896,13 @@
    extern int shmctl_shm_stat;
  #endif
  
@@ -256,7 +279,7 @@
    extern int map_fixed;
  
    // ioctl arguments
-@@ -866,7 +938,8 @@
+@@ -908,7 +948,8 @@
  
  #define IOC_NRBITS 8
  #define IOC_TYPEBITS 8
@@ -266,7 +289,7 @@
  #define IOC_SIZEBITS 13
  #define IOC_DIRBITS 3
  #define IOC_NONE 1U
-@@ -901,9 +974,8 @@
+@@ -943,9 +984,8 @@
  // In sparc the 14 bits SIZE field overlaps with the
  // least significant bit of DIR, so either IOC_READ or
  // IOC_WRITE shall be 1 in order to get a non-zero SIZE.
@@ -278,7 +301,7 @@
  #else
  #define IOC_SIZE(nr) (((nr) >> IOC_SIZESHIFT) & IOC_SIZEMASK)
  #endif
-@@ -1419,4 +1491,8 @@
+@@ -1471,4 +1511,8 @@
    COMPILER_CHECK(offsetof(struct __sanitizer_##CLASS, MEMBER) ==          \
                   offsetof(struct CLASS, MEMBER))
  
@@ -287,8 +310,8 @@
 +#endif  // SANITIZER_FREEBSD || SANITIZER_LINUX || SANITIZER_MAC
 +
  #endif
---- a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc	2024-06-10 10:30:32.990855941 -0400
-+++ b/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc	2024-06-10 10:27:44.154172456 -0400
+--- a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc	2024-09-28 23:59:47.198578545 -0400
++++ b/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc	2020-03-12 07:07:24.000000000 -0400
 @@ -23,7 +23,6 @@
  #endif
  #include <arpa/inet.h>
@@ -315,7 +338,7 @@
  #endif
  
  #if SANITIZER_LINUX
-@@ -199,6 +206,7 @@
+@@ -204,6 +207,7 @@
    unsigned struct_sigaction_sz = sizeof(struct sigaction);
    unsigned struct_itimerval_sz = sizeof(struct itimerval);
    unsigned pthread_t_sz = sizeof(pthread_t);
@@ -323,7 +346,7 @@
    unsigned pthread_cond_t_sz = sizeof(pthread_cond_t);
    unsigned pid_t_sz = sizeof(pid_t);
    unsigned timeval_sz = sizeof(timeval);
-@@ -265,9 +273,10 @@
+@@ -270,9 +274,10 @@
    unsigned struct_statvfs_sz = sizeof(struct statvfs);
  #endif // (SANITIZER_LINUX || SANITIZER_FREEBSD) && !SANITIZER_ANDROID
  
@@ -337,7 +360,7 @@
  
  #if SANITIZER_LINUX
    int e_tabsz = (int)E_TABSZ;
-@@ -283,6 +292,13 @@
+@@ -288,6 +293,13 @@
    int shmctl_shm_stat = (int)SHM_STAT;
  #endif
  
@@ -351,7 +374,7 @@
    int map_fixed = MAP_FIXED;
  
    int af_inet = (int)AF_INET;
-@@ -909,14 +930,6 @@
+@@ -929,14 +941,6 @@
    unsigned IOCTL_SNDCTL_DSP_GETOSPACE = SNDCTL_DSP_GETOSPACE;
  #endif // (SANITIZER_LINUX || SANITIZER_FREEBSD) && !SANITIZER_ANDROID
  
@@ -366,10 +389,14 @@
    const int si_SEGV_MAPERR = SEGV_MAPERR;
    const int si_SEGV_ACCERR = SEGV_ACCERR;
  } // namespace __sanitizer
-@@ -1009,6 +1024,12 @@
+@@ -1031,6 +1035,16 @@
  CHECK_SIZE_AND_OFFSET(cmsghdr, cmsg_level);
  CHECK_SIZE_AND_OFFSET(cmsghdr, cmsg_type);
  
++#ifndef __GLIBC_PREREQ
++#define __GLIBC_PREREQ(x, y) 0
++#endif
++
 +#if SANITIZER_LINUX && (__ANDROID_API__ >= 21 || __GLIBC_PREREQ (2, 14))
 +CHECK_TYPE_SIZE(mmsghdr);
 +CHECK_SIZE_AND_OFFSET(mmsghdr, msg_hdr);
@@ -379,7 +406,17 @@
  COMPILER_CHECK(sizeof(__sanitizer_dirent) <= sizeof(dirent));
  CHECK_SIZE_AND_OFFSET(dirent, d_ino);
  #if SANITIZER_MAC
-@@ -1116,8 +1145,9 @@
+@@ -1066,9 +1080,6 @@
+ // Can't write checks for sa_handler and sa_sigaction due to them being
+ // preprocessor macros.
+ CHECK_STRUCT_SIZE_AND_OFFSET(sigaction, sa_mask);
+-#ifndef __GLIBC_PREREQ
+-#define __GLIBC_PREREQ(x, y) 0
+-#endif
+ #if !defined(__s390x__) || __GLIBC_PREREQ (2, 20)
+ // On s390x glibc 2.19 and earlier sa_flags was unsigned long, and sa_resv
+ // didn't exist.
+@@ -1145,8 +1156,9 @@
  CHECK_SIZE_AND_OFFSET(ipc_perm, gid);
  CHECK_SIZE_AND_OFFSET(ipc_perm, cuid);
  CHECK_SIZE_AND_OFFSET(ipc_perm, cgid);
@@ -391,7 +428,7 @@
  CHECK_SIZE_AND_OFFSET(ipc_perm, mode);
  #endif
  
-@@ -1168,7 +1195,7 @@
+@@ -1194,7 +1206,7 @@
  #endif
  
  #if SANITIZER_LINUX
@@ -402,7 +439,7 @@
  #if !SANITIZER_ANDROID
 --- a/libsanitizer/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cc
 +++ b/libsanitizer/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cc
-@@ -225,7 +225,7 @@
+@@ -231,7 +231,7 @@
  }
  
  // Signal handler to wake up suspended threads when the tracer thread dies.
