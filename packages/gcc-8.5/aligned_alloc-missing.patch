@@ -1,0 +1,40 @@
+--- a/libstdc++-v3/include/c_global/cstdlib
++++ b/libstdc++-v3/include/c_global/cstdlib
+@@ -77,6 +77,7 @@
+ #include <bits/std_abs.h>
+ 
+ // Get rid of those macros defined in <stdlib.h> in lieu of real functions.
++#undef _GLIBCXX_HAVE_ALIGNED_ALLOC
+ #undef abort
+ #if __cplusplus >= 201703L && defined(_GLIBCXX_HAVE_ALIGNED_ALLOC)
+ # undef aligned_alloc
+--- a/libstdc++-v3/libsupc++/new_opa.orig.cc	2024-07-16 11:28:37.382681797 -0400
++++ b/libstdc++-v3/libsupc++/new_opa.cc	2024-07-16 11:22:25.939311460 -0400
+@@ -29,6 +29,7 @@
+ #include <stdint.h>
+ #include "new"
+ 
++#undef _GLIBCXX_HAVE_ALIGNED_ALLOC
+ #if !_GLIBCXX_HAVE_ALIGNED_ALLOC && !_GLIBCXX_HAVE__ALIGNED_MALLOC \
+   && !_GLIBCXX_HAVE_POSIX_MEMALIGN && _GLIBCXX_HAVE_MEMALIGN
+ # if _GLIBCXX_HOSTED && __has_include(<malloc.h>)
+--- a/libstdc++-v3/libsupc++/del_opa.orig.cc	2024-07-16 11:28:50.966016483 -0400
++++ b/libstdc++-v3/libsupc++/del_opa.cc	2024-07-16 11:22:04.155975956 -0400
+@@ -46,6 +46,7 @@
+ _GLIBCXX_WEAK_DEFINITION void
+ operator delete(void* ptr, std::align_val_t) _GLIBCXX_USE_NOEXCEPT
+ {
++#undef _GLIBCXX_HAVE_ALIGNED_ALLOC
+ #if _GLIBCXX_HAVE_ALIGNED_ALLOC || _GLIBCXX_HAVE_POSIX_MEMALIGN \
+     || _GLIBCXX_HAVE_MEMALIGN
+   std::free (ptr);
+--- a/libstdc++-v3/include/ext/malloc_allocator.orig.h	2024-07-16 11:17:35.565949199 -0400
++++ b/libstdc++-v3/include/ext/malloc_allocator.h	2024-07-16 11:23:46.359319471 -0400
+@@ -105,6 +105,7 @@
+ 	  std::__throw_bad_alloc();
+ 
+ 	pointer __ret = 0;
++#undef _GLIBCXX_HAVE_ALIGNED_ALLOC
+ #if __cpp_aligned_new
+ #if __cplusplus > 201402L && _GLIBCXX_HAVE_ALIGNED_ALLOC
+ 	if (alignof(_Tp) > alignof(std::max_align_t))
