@@ -18,7 +18,7 @@ diff --git a/gcc/config.gcc b/gcc/config.gcc
 index 55c314afdbd..c320f24f123 100644
 --- a/gcc/config.gcc
 +++ b/gcc/config.gcc
-@@ -2866,8 +2866,6 @@ sh-*-elf* | sh[12346l]*-*-elf* | \
+@@ -2888,8 +2888,6 @@ sh-*-elf* | sh[12346l]*-*-elf* | \
  	if test x${enable_incomplete_targets} = xyes ; then
  		tm_defines="$tm_defines SUPPORT_SH1=1 SUPPORT_SH2E=1 SUPPORT_SH4=1 SUPPORT_SH4_SINGLE=1 SUPPORT_SH2A=1 SUPPORT_SH2A_SINGLE=1"
  	fi

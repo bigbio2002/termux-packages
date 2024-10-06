@@ -2,7 +2,7 @@ On Hardened we add some options like -fstack-clash-protection and -z now
 
 --- a/gcc/common.opt	2018-03-28 16:51:09.000000000 +0200
 +++ a/gcc/common.opt	2018-04-30 15:35:55.274096877 +0200
-@@ -2367,7 +2367,7 @@ Common Alias(fstack-check=, specific, no
+@@ -2371,7 +2371,7 @@ Common Alias(fstack-check=, specific, no
  Insert stack checking code into the program.  Same as -fstack-check=specific.
  
  fstack-clash-protection
@@ -13,7 +13,7 @@ On Hardened we add some options like -fstack-clash-protection and -z now
  
 --- a/gcc/defaults.h	2018-01-03 11:03:58.000000000 +0100
 +++ b/gcc/defaults.h	2018-05-01 12:41:29.522851451 +0200
-@@ -1435,6 +1435,15 @@ see the files COPYING3 and COPYING.RUNTI
+@@ -1439,6 +1439,15 @@ see the files COPYING3 and COPYING.RUNTI
  #define STACK_CHECK_MAX_VAR_SIZE (STACK_CHECK_MAX_FRAME_SIZE / 100)
  #endif
  
@@ -45,7 +45,7 @@ On Hardened we add some options like -fstack-clash-protection and -z now
 
 --- a/libgcc/Makefile.in	2011-11-22 04:01:02.000000000 +0100
 +++ b/libgcc/Makefile.in	2011-12-25 15:18:22.449610631 +0100
-@@ -225,7 +225,7 @@ endif
+@@ -243,7 +243,7 @@ endif
  LIBGCC2_DEBUG_CFLAGS = -g
  LIBGCC2_CFLAGS = -O2 $(LIBGCC2_INCLUDES) $(GCC_CFLAGS) $(HOST_LIBGCC2_CFLAGS) \
  		 $(LIBGCC2_DEBUG_CFLAGS) -DIN_LIBGCC2 \
@@ -65,7 +65,7 @@ On Hardened we add some options like -fstack-clash-protection and -z now
  CRTSTUFF_T_CFLAGS =
 --- a/gcc/gcc.c	2016-02-19 23:18:38.000000000 +0100
 +++ b/gcc/gcc.c	2016-05-02 22:56:10.185721270 +0200
-@@ -868,6 +868,12 @@ proper position among the other output f
+@@ -884,6 +884,12 @@ proper position among the other output f
  #endif
  #endif
  
@@ -78,7 +78,7 @@ On Hardened we add some options like -fstack-clash-protection and -z now
  #ifdef ENABLE_DEFAULT_PIE
  #define PIE_SPEC		"!no-pie"
  #define NO_FPIE1_SPEC		"fno-pie"
-@@ -1013,7 +1020,7 @@ proper position among the other output f
+@@ -1039,7 +1045,7 @@ proper position among the other output f
      %(linker) " \
      LINK_PLUGIN_SPEC \
     "%{flto|flto=*:%<fcompare-debug*} \

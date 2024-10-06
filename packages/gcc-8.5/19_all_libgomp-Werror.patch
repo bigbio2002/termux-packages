@@ -4,7 +4,7 @@ https://bugs.gentoo.org/229059
 http://gcc.gnu.org/PR38436
 --- a/libgomp/configure.ac
 +++ b/libgomp/configure.ac
-@@ -4282,5 +4282,5 @@ save_CFLAGS="$CFLAGS"
+@@ -116,5 +116,5 @@ save_CFLAGS="$CFLAGS"
  # Add -Wall -Werror if we are using GCC.
  if test "x$GCC" = "xyes"; then
 -  XCFLAGS="$XCFLAGS -Wall -Werror"
@@ -13,7 +13,7 @@ http://gcc.gnu.org/PR38436
  
 --- a/libgomp/configure
 +++ b/libgomp/configure
-@@ -4282,5 +4282,5 @@ save_CFLAGS="$CFLAGS"
+@@ -4346,5 +4346,5 @@ save_CFLAGS="$CFLAGS"
  # Add -Wall -Werror if we are using GCC.
  if test "x$GCC" = "xyes"; then
 -  XCFLAGS="$XCFLAGS -Wall -Werror"

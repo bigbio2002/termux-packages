@@ -23,7 +23,7 @@ diff -Naur gcc-5.3.0/gcc/system.h gcc-5.3.0_my/gcc/system.h
 diff -Naur gcc-5.3.0/libcpp/system.h gcc-5.3.0_my/libcpp/system.h
 --- gcc-5.3.0/libcpp/system.h	2015-01-05 07:33:28.000000000 -0500
 +++ gcc-5.3.0_my/libcpp/system.h	2024-05-21 23:11:34.136044115 -0400
-@@ -90,6 +90,7 @@
+@@ -86,6 +86,7 @@
  #  undef getchar
  #  define getchar() getchar_unlocked ()
  # endif

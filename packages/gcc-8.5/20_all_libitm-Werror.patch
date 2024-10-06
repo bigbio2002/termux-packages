@@ -3,7 +3,7 @@ libitm does not respect --disable-werror
 https://bugs.gentoo.org/475350
 --- a/libitm/configure.ac
 +++ b/libitm/configure.ac
-@@ -4282,5 +4282,5 @@ save_CFLAGS="$CFLAGS"
+@@ -256,5 +256,5 @@ save_CFLAGS="$CFLAGS"
  # Add -Wall -Werror if we are using GCC.
  if test "x$GCC" = "xyes"; then
 -  XCFLAGS="$XCFLAGS -Wall -Werror"
@@ -12,7 +12,7 @@ https://bugs.gentoo.org/475350
  
 --- a/libitm/configure
 +++ b/libitm/configure
-@@ -4282,5 +4282,5 @@ save_CFLAGS="$CFLAGS"
+@@ -17584,5 +17584,5 @@ save_CFLAGS="$CFLAGS"
  # Add -Wall -Werror if we are using GCC.
  if test "x$GCC" = "xyes"; then
 -  XCFLAGS="$XCFLAGS -Wall -Werror"

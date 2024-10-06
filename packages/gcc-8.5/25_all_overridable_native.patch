@@ -59,7 +59,7 @@ git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@269164 138bc75d-0d04-0410-961f-8
  mtune-ctrl=
 --- a/gcc/opts-common.c
 +++ b/gcc/opts-common.c
-@@ -1015,7 +1015,9 @@ prune_options (struct cl_decoded_option **decoded_options,
+@@ -953,7 +953,9 @@ prune_options (struct cl_decoded_option **decoded_options,
  	    goto keep;
  
  	  /* Skip joined switches.  */
@@ -70,7 +70,7 @@ git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@269164 138bc75d-0d04-0410-961f-8
  	    goto keep;
  
  	  for (j = i + 1; j < old_decoded_options_count; j++)
-@@ -1027,8 +1029,11 @@ prune_options (struct cl_decoded_option **decoded_options,
+@@ -965,8 +967,11 @@ prune_options (struct cl_decoded_option **decoded_options,
  		continue;
  	      if (cl_options[next_opt_idx].neg_index < 0)
  		continue;

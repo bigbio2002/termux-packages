@@ -30,7 +30,7 @@ Differential Revision: https://reviews.llvm.org/D102059
 
 --- a/libsanitizer/sanitizer_common/sanitizer_common_interceptors_ioctl.inc
 +++ b/libsanitizer/sanitizer_common/sanitizer_common_interceptors_ioctl.inc
-@@ -358,15 +358,6 @@ static void ioctl_table_fill() {
+@@ -361,15 +361,6 @@ static void ioctl_table_fill() {
  
  #if SANITIZER_LINUX && !SANITIZER_ANDROID
    // _(SIOCDEVPLIP, WRITE, struct_ifreq_sz); // the same as EQL_ENSLAVE
@@ -48,7 +48,7 @@ Differential Revision: https://reviews.llvm.org/D102059
    _(EQL_GETMASTRCFG, WRITE, struct_ifreq_sz);
 --- a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc
 +++ b/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc
-@@ -150,7 +150,6 @@ typedef struct user_fpregs elf_fpregset_t;
+@@ -157,7 +157,6 @@ typedef struct user_fpregs elf_fpregset_t;
  # include <sys/procfs.h>
  #endif
  #include <sys/user.h>
@@ -56,7 +56,7 @@ Differential Revision: https://reviews.llvm.org/D102059
  #include <linux/if_eql.h>
  #include <linux/if_plip.h>
  #include <linux/lp.h>
-@@ -445,7 +444,6 @@ unsigned struct_ElfW_Phdr_sz = sizeof(Elf_Phdr);
+@@ -464,7 +463,6 @@ unsigned struct_ElfW_Phdr_sz = sizeof(Elf_Phdr);
  
  #if SANITIZER_LINUX && !SANITIZER_ANDROID
    unsigned struct_ax25_parms_struct_sz = sizeof(struct ax25_parms_struct);
@@ -64,7 +64,7 @@ Differential Revision: https://reviews.llvm.org/D102059
  #if EV_VERSION > (0x010000)
    unsigned struct_input_keymap_entry_sz = sizeof(struct input_keymap_entry);
  #else
-@@ -812,15 +810,6 @@ unsigned struct_ElfW_Phdr_sz = sizeof(Elf_Phdr);
+@@ -831,15 +829,6 @@ unsigned struct_ElfW_Phdr_sz = sizeof(Elf_Phdr);
  #endif // SANITIZER_LINUX || SANITIZER_FREEBSD
  
  #if SANITIZER_LINUX && !SANITIZER_ANDROID
@@ -82,7 +82,7 @@ Differential Revision: https://reviews.llvm.org/D102059
    unsigned IOCTL_EQL_GETMASTRCFG = EQL_GETMASTRCFG;
 --- a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.h
 +++ b/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.h
-@@ -956,7 +956,6 @@ struct __sanitizer_cookie_io_functions_t {
+@@ -1004,7 +1004,6 @@ struct __sanitizer_cookie_io_functions_t {
  
  #if SANITIZER_LINUX && !SANITIZER_ANDROID
    extern unsigned struct_ax25_parms_struct_sz;
@@ -90,7 +90,7 @@ Differential Revision: https://reviews.llvm.org/D102059
    extern unsigned struct_input_keymap_entry_sz;
    extern unsigned struct_ipx_config_data_sz;
    extern unsigned struct_kbdiacrs_sz;
-@@ -1301,15 +1300,6 @@ struct __sanitizer_cookie_io_functions_t {
+@@ -1349,15 +1348,6 @@ struct __sanitizer_cookie_io_functions_t {
  #endif  // SANITIZER_LINUX || SANITIZER_FREEBSD
  
  #if SANITIZER_LINUX && !SANITIZER_ANDROID

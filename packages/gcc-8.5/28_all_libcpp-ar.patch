@@ -5,7 +5,7 @@ Make sue we use ${CHOST}-ar and not 'ar'.
 
 --- a/libcpp/configure.ac
 +++ b/libcpp/configure.ac
-@@ -12,6 +12,7 @@ AC_PROG_INSTALL
+@@ -13,6 +13,7 @@ AC_PROG_INSTALL
  AC_PROG_CC
  AC_PROG_CXX
  AC_PROG_RANLIB
@@ -26,7 +26,7 @@ Make sue we use ${CHOST}-ar and not 'ar'.
  AUTOCONF = @AUTOCONF@
 --- a/libcpp/configure
 +++ b/libcpp/configure
-@@ -657,6 +657,7 @@ ACLOCAL
+@@ -626,6 +626,7 @@ ACLOCAL
  EGREP
  GREP
  CPP
@@ -34,7 +34,7 @@ Make sue we use ${CHOST}-ar and not 'ar'.
  RANLIB
  ac_ct_CXX
  CXXFLAGS
-@@ -1038,6 +1039,7 @@ do
+@@ -1006,6 +1007,7 @@ do
    | -silent | --silent | --silen | --sile | --sil)
      silent=yes ;;
  
@@ -42,7 +42,7 @@ Make sue we use ${CHOST}-ar and not 'ar'.
    -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
      ac_prev=sbindir ;;
    -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
-@@ -4006,6 +4008,98 @@ else
+@@ -3942,6 +3944,98 @@ else
    RANLIB="$ac_cv_prog_RANLIB"
  fi
  

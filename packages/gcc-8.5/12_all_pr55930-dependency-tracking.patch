@@ -6,7 +6,7 @@ http://gcc.gnu.org/PR55930
 
 --- a/libatomic/Makefile.in
 +++ b/libatomic/Makefile.in
-@@ -298,7 +298,8 @@ PAT_N = $(word 2,$(PAT_SPLIT))
+@@ -335,7 +335,8 @@ PAT_N = $(word 2,$(PAT_SPLIT))
  PAT_S = $(word 3,$(PAT_SPLIT))
  IFUNC_DEF = -DIFUNC_ALT=$(PAT_S)
  IFUNC_OPT = $(word $(PAT_S),$(IFUNC_OPTIONS))

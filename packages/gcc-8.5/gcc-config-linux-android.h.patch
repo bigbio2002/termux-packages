@@ -1,7 +1,7 @@
 diff -u -r ../gcc-6.1.0/gcc/config/linux-android.h ./gcc/config/linux-android.h
 --- ../gcc-6.1.0/gcc/config/linux-android.h	2016-01-04 09:30:50.000000000 -0500
 +++ ./gcc/config/linux-android.h	2016-04-29 05:09:14.697030172 -0400
-@@ -44,15 +44,18 @@
+@@ -38,15 +38,18 @@
    "%{" NOANDROID "|tno-android-ld:" LINUX_SPEC ";:" ANDROID_SPEC "}"
  
  #define ANDROID_LINK_SPEC \
