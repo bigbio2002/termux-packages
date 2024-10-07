@@ -1,0 +1,56 @@
+--- a/configure.orig.ac	2024-10-06 21:55:01.728015572 -0400
++++ b/configure.ac	2024-10-06 22:04:12.883962605 -0400
+@@ -1654,35 +1654,35 @@
+   AC_CHECK_PROGS([QMAKE], [qmake6 qmake-qt5 qmake5 qmake], [false])
+   AS_IF([test "$QMAKE" = "qmake6"], [
+     # Qt6
+-    AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_HEADERS)/QtCore/QtCore, [
++    if test -f "$(${QMAKE} -query QT_INSTALL_HEADERS)/QtCore/QtCore"; then
+       QTCORE_CFLAGS="-I$(${QMAKE} -query QT_INSTALL_HEADERS) -I$(${QMAKE} -query QT_INSTALL_HEADERS)/QtCore"
+-      AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_LIBS)/libQt6Core.so, [
++      if test -f "$(${QMAKE} -query QT_INSTALL_LIBS)/libQt6Core.so"; then
+         QTCORE_LIBS="-L$(${QMAKE} -query QT_INSTALL_LIBS) -lQt6Core"
+-        AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_HEADERS)/QtWidgets/QtWidgets, [
+-          AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_HEADERS)/QtPrintSupport/QtPrintSupport, [
++        if test -f "$(${QMAKE} -query QT_INSTALL_HEADERS)/QtWidgets/QtWidgets"; then
++          if test -f "$(${QMAKE} -query QT_INSTALL_HEADERS)/QtPrintSupport/QtPrintSupport"; then
+             QTGUI_CFLAGS="-I$(${QMAKE} -query QT_INSTALL_HEADERS) -I$(${QMAKE} -query QT_INSTALL_HEADERS)/QtWidgets -I$(${QMAKE} -query QT_INSTALL_HEADERS)/QtPrintSupport -I$(${QMAKE} -query QT_INSTALL_HEADERS)/QtGui"
+-            AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_LIBS)/libQt6Widgets.so, [
+-              AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_LIBS)/libQt6PrintSupport.so, [
++            if test -f "$(${QMAKE} -query QT_INSTALL_LIBS)/libQt6Widgets.so"; then
++              if test -f "$(${QMAKE} -query QT_INSTALL_LIBS)/libQt6PrintSupport.so"; then
+                 QTGUI_LIBS="-L$(${QMAKE} -query QT_INSTALL_LIBS) -lQt6Widgets -lQt6PrintSupport -lQt6Gui -lQt6Core"
+                 use_qt="Yes"
+-              ], [
++              else
+                 use_qt="No (Qt6PrintSupport library not available)"
+-              ])
+-            ], [
++              fi
++            else
+               use_qt="No (Qt6Widgets library not available)"
+-            ])
+-          ], [
++            fi
++          else
+             use_qt="No (Qt6PrintSupport header not available)"
+-          ])
+-        ], [
++          fi
++        else
+           use_qt="No (Qt6Widgets header not available)"
+-        ])
+-      ], [
++        fi
++      else
+         use_qt="No (Qt6Core library not available)"
+-      ])
+-    ], [
++      fi
++    else
+       use_qt="No (Qt6Core header not available)"
+-    ])
++    fi
+   ], [
+     # Qt5
+     AS_IF([test "$QMAKE" != "false"], [
