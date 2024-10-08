@@ -1,0 +1,60 @@
+--- a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.orig.h	2024-10-07 20:05:26.128419558 -0400
++++ b/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.h	2024-10-07 18:15:13.761094171 -0400
+@@ -654,32 +654,32 @@
+       __sanitizer_sighandler_ptr handler;
+     };
+ #if SANITIZER_FREEBSD
+-    int sa_flags;
+-    __sanitizer_sigset_t sa_mask;
++   int sa_flags;
++   __sanitizer_sigset_t sa_mask;
+ #else
+-#if defined(__s390x__)
+-    int sa_resv;
+-#else
+-    __sanitizer_sigset_t sa_mask;
+-#endif
+-#ifndef __mips__
+-#if defined(__sparc__)
+-#if __GLIBC_PREREQ (2, 20)
+-    // On sparc glibc 2.19 and earlier sa_flags was unsigned long.
+-#if defined(__arch64__)
+-    // To maintain ABI compatibility on sparc64 when switching to an int,
+-    // __glibc_reserved0 was added.
+-    int __glibc_reserved0;
+-#endif
+-    int sa_flags;
+-#else
+-    unsigned long sa_flags;
+-#endif
+-#else
+-    int sa_flags;
+-#endif
+-#endif
+-#endif
++#  if defined(__s390x__)
++     int sa_resv;
++#  else
++     __sanitizer_sigset_t sa_mask;
++#  endif // defined(__s390x__)
++#  ifndef __mips__
++#    if defined(__sparc__)
++#      if __GLIBC_PREREQ (2, 20)
++         // On sparc glibc 2.19 and earlier sa_flags was unsigned long.
++#        if defined(__arch64__)
++           // To maintain ABI compatibility on sparc64 when switching to an int,
++           // __glibc_reserved0 was added.
++           int __glibc_reserved0;
++#        endif // defined(__arch64__)
++         int sa_flags;
++#      else
++         unsigned long sa_flags;
++#      endif // __GLIBC_PREREQ (2, 20)
++#    else
++       int sa_flags;
++#    endif // defined(__sparc__)
++#  endif // __mips__
++#endif // SANITIZER_FREEBSD
+ #if SANITIZER_LINUX
+     void (*sa_restorer)();
+ #endif

@@ -1,0 +1,84 @@
+--- a/gcc/config.orig.gcc	2024-10-03 16:11:36.828477709 -0400
++++ b/gcc/config.gcc	2024-10-05 14:03:56.352909653 -0400
+@@ -3823,8 +3823,8 @@
+ 		fi
+ 		for which in cpu arch tune; do
+ 			eval "val=\$with_$which"
+-			base_val=`echo $val | sed -e 's/\+.*//'`
+-			ext_val=`echo $val | sed -e 's/[a-z0-9.-]\+//'`
++			base_val=`echo $val | sed -E -e 's/\+.*//'`
++			ext_val=`echo $val | sed -E -e 's/[a-z0-9.-]+//'`
+ 
+ 			if [ $which = arch ]; then
+ 			  def=aarch64-arches.def
+@@ -3866,32 +3866,40 @@
+ 			    exit 1
+ 			  fi
+ 
++			  # Use...
++			  #
++			  #
++			  opt_macro="AARCH64_OPT_EXTENSION(A, B, C, D, E, F)=A, B, C, D, E, F"
++			  options_parsed="`$ac_cv_prog_CPP -D"$opt_macro" -x c \
++				${srcdir}/config/aarch64/aarch64-option-extensions.def`"
++
++			  # Match...
++			  #
++			  elem="[ 	]*\([^,]\+\)[ 	]*"
++
++			  # Repeat...
++			  #
++			  sed_patt="^$elem,$elem,$elem,$elem,$elem,$elem"
++
+ 			  while [ x"$ext_val" != x ]
+ 			  do
+-				ext_val=`echo $ext_val | sed -e 's/\+//'`
+-				ext=`echo $ext_val | sed -e 's/\+.*//'`
+-				base_ext=`echo $ext | sed -e 's/^no//'`
++				ext_val=`echo $ext_val | sed -E -e 's/\+//'`
++				ext=`echo $ext_val | sed -E -e 's/\+.*//'`
++				base_ext=`echo $ext | sed -E -e 's/^no//'`
++				opt_line=`echo -e "$options_parsed" | \
++					grep "^\"$base_ext\""`
+ 
+ 				if [ x"$base_ext" = x ] \
+-				    || grep "^AARCH64_OPT_EXTENSION(\"$base_ext\"," \
+-				    ${srcdir}/config/aarch64/aarch64-option-extensions.def \
+-				    > /dev/null; then
+-
+-				  ext_canon=`grep "^AARCH64_OPT_EXTENSION(\"$base_ext\"," \
+-					${srcdir}/config/aarch64/aarch64-option-extensions.def | \
+-					sed -e 's/^[^,]*,[ 	]*//' | \
+-					sed -e 's/,.*$//'`
+-				  ext_on=`grep "^AARCH64_OPT_EXTENSION(\"$base_ext\"," \
+-					${srcdir}/config/aarch64/aarch64-option-extensions.def | \
+-					sed -e 's/^[^,]*,[ 	]*[^,]*,[ 	]*//' | \
+-					sed -e 's/,.*$//' | \
+-					sed -e 's/).*$//'`
+-				  ext_off=`grep "^AARCH64_OPT_EXTENSION(\"$base_ext\"," \
+-					${srcdir}/config/aarch64/aarch64-option-extensions.def | \
+-					sed -e 's/^[^,]*,[ 	]*[^,]*,[ 	]*[^,]*,[ 	]*//' | \
+-					sed -e 's/,.*$//' | \
+-					sed -e 's/).*$//'`
++				    || [[ -n $opt_line ]]; then
+ 
++				  # These...
++				  #
++				  ext_canon=`echo -e "$opt_line" | \
++					sed -e "s/$sed_patt/\2/"`
++				  ext_on=`echo -e "$opt_line" | \
++					sed -e "s/$sed_patt/\3/"`
++				  ext_off=`echo -e "$opt_line" | \
++					sed -e "s/$sed_patt/\4/"`
+ 
+ 				  if [ $ext = $base_ext ]; then
+ 					# Adding extension
+@@ -3906,7 +3914,7 @@
+ 				  echo "Unknown extension used in --with-$which=$val" 1>&2
+ 				  exit 1
+ 				fi
+-				ext_val=`echo $ext_val | sed -e 's/[a-z0-9]\+//'`
++				ext_val=`echo $ext_val | sed -E -e 's/[a-z0-9]+//'`
+ 			  done
+ 
+ 			  ext_mask="(("$ext_mask") << 6)"
