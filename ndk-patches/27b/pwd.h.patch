@@ -14,9 +14,9 @@
 +int access(const char* __path, int __mode);
 +
 +static void android_setup_pwd(struct passwd* pw) {
-+       char const* result = "/data/data/com.termux/files/usr/bin/login";
++       char const* result = "@TERMUX_PREFIX@/bin/login";
 +       if (result == NULL || access(result, /*X_OK*/1) == -1) {
-+               pw->pw_shell = "/data/data/com.termux/files/usr/bin/bash";
++               pw->pw_shell = "@TERMUX_PREFIX@/bin/bash";
 +       } else {
 +               pw->pw_shell = (char*) result;
 +       }
