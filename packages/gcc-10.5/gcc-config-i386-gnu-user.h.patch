@@ -1,7 +1,7 @@
 diff -u -r ../gcc-6.1.0/gcc/config/i386/gnu-user.h ./gcc/config/i386/gnu-user.h
 --- ../gcc-6.1.0/gcc/config/i386/gnu-user.h	2016-01-04 09:30:50.000000000 -0500
 +++ ./gcc/config/i386/gnu-user.h	2016-04-29 05:02:49.942975771 -0400
-@@ -59,9 +59,14 @@
+@@ -65,9 +65,14 @@
     When the -shared link option is used a final link is not being
     done.  */
  

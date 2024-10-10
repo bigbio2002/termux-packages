@@ -54,7 +54,7 @@ On Hardened we add some options like -fstack-clash-protection.
  		 $(INHIBIT_LIBC_CFLAGS)
  
  # Additional options to use when compiling libgcc2.a.
-@@ -291,7 +302,7 @@ INTERNAL_CFLAGS = $(CFLAGS) $(LIBGCC2_CF
+@@ -302,7 +302,7 @@ INTERNAL_CFLAGS = $(CFLAGS) $(LIBGCC2_CF
    $(NO_PIE_CFLAGS) -finhibit-size-directive -fno-inline -fno-exceptions \
    -fno-zero-initialized-in-bss -fno-toplevel-reorder -fno-tree-vectorize \
    -fbuilding-libgcc -fno-stack-protector $(FORCE_EXPLICIT_EH_REGISTRY) \
