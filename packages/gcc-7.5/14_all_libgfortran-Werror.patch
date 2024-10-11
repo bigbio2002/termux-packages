@@ -13,7 +13,7 @@ http://gcc.gnu.org/PR54724
    ## We like to use C11 and C99 routines when available.  This makes
 --- a/libgfortran/configure
 +++ b/libgfortran/configure
-@@ -5764,5 +5764,5 @@ fi
+@@ -5776,5 +5776,5 @@ fi
  # Add -Wall -fno-repack-arrays -fno-underscoring if we are using GCC.
  if test "x$GCC" = "xyes"; then
 -  AM_FCFLAGS="-I . -Wall -Werror -fimplicit-none -fno-repack-arrays -fno-underscoring"

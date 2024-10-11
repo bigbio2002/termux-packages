@@ -1,7 +1,7 @@
 diff -u -r ../gcc-4.8.2/libcpp/files.c ./libcpp/files.c
 --- ../gcc-4.8.2/libcpp/files.c	2013-03-06 17:18:40.000000000 +0100
 +++ ./libcpp/files.c	2014-01-09 00:29:34.940181542 +0100
-@@ -727,11 +727,13 @@
+@@ -740,11 +740,13 @@
      cpp_error_at (pfile, CPP_DL_WARNING, loc,
  	       "%s is shorter than expected", file->path);
  

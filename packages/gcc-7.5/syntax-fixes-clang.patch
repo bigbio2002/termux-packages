@@ -1,7 +1,7 @@
 diff -Naur gcc-6.5.0/gcc/cp/cfns.h gcc-6.5.0_my/gcc/cp/cfns.h
 --- gcc-6.5.0/gcc/cp/cfns.h	2016-02-19 17:13:29.000000000 -0500
 +++ gcc-6.5.0_my/gcc/cp/cfns.h	2024-07-10 11:02:00.345757628 -0400
-@@ -58,7 +58,7 @@
+@@ -60,7 +60,7 @@
  };
  
  inline unsigned int
@@ -10,7 +10,7 @@ diff -Naur gcc-6.5.0/gcc/cp/cfns.h gcc-6.5.0_my/gcc/cp/cfns.h
  {
    static const unsigned short asso_values[] =
      {
-@@ -89,7 +89,7 @@
+@@ -91,7 +91,7 @@
        1488, 1488, 1488, 1488, 1488, 1488, 1488, 1488, 1488, 1488,
        1488, 1488, 1488, 1488, 1488, 1488, 1488
      };

@@ -1,7 +1,7 @@
 diff -u -r ../gcc-5.3.0/gcc/config.gcc ./gcc/config.gcc
 --- ../gcc-5.3.0/gcc/config.gcc	2015-09-10 10:17:53.000000000 -0400
 +++ ./gcc/config.gcc	2016-03-19 21:07:44.888339715 -0400
-@@ -952,13 +952,17 @@
+@@ -963,13 +963,17 @@
  	tmake_file="${tmake_file} aarch64/t-aarch64 aarch64/t-aarch64-freebsd"
  	;;
  aarch64*-*-linux*)

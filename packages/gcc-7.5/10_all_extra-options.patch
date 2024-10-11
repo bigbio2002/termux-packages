@@ -23,7 +23,7 @@ On Hardened we add or remove some options like -fstack-check,
  CRTSTUFF_T_CFLAGS =
 --- a/gcc/defaults.h	2016-01-04 15:30:50.000000000 +0100
 +++ b/gcc/defaults.h	2016-05-02 22:23:43.815707806 +0200
-@@ -1398,8 +1398,12 @@ see the files COPYING3 and COPYING.RUNTI
+@@ -1381,8 +1381,12 @@ see the files COPYING3 and COPYING.RUNTI
  /* Default value for flag_stack_protect when flag_stack_protect is initialized to -1:
     --enable-default-ssp: Default flag_stack_protect to -fstack-protector-strong.
     --disable-default-ssp: Default flag_stack_protect to 0.
@@ -38,7 +38,7 @@ On Hardened we add or remove some options like -fstack-check,
  # endif
 --- a/gcc/gcc.c	2016-02-19 23:18:38.000000000 +0100
 +++ b/gcc/gcc.c	2016-05-02 22:56:10.185721270 +0200
-@@ -868,6 +868,13 @@ proper position among the other output f
+@@ -877,6 +877,13 @@ proper position among the other output f
  #endif
  #endif
  
@@ -52,7 +52,7 @@ On Hardened we add or remove some options like -fstack-check,
  #ifdef ENABLE_DEFAULT_PIE
  #define PIE_SPEC		"!no-pie"
  #define NO_FPIE1_SPEC		"fno-pie"
-@@ -1013,7 +1020,7 @@ proper position among the other output f
+@@ -1031,7 +1038,7 @@ proper position among the other output f
      %(linker) " \
      LINK_PLUGIN_SPEC \
     "%{flto|flto=*:%<fcompare-debug*} \
@@ -61,7 +61,7 @@ On Hardened we add or remove some options like -fstack-check,
     "%{fuse-ld=*:-fuse-ld=%*} " LINK_COMPRESS_DEBUG_SPEC \
     "%X %{o*} %{e*} %{N} %{n} %{r}\
      %{s} %{t} %{u*} %{z} %{Z} %{!nostdlib:%{!nostartfiles:%S}} \
-@@ -1052,7 +1059,11 @@ proper position among the other output f
+@@ -1070,7 +1077,11 @@ proper position among the other output f
  
  static const char *asm_debug = ASM_DEBUG_SPEC;
  static const char *cpp_spec = CPP_SPEC;
@@ -75,7 +75,7 @@ On Hardened we add or remove some options like -fstack-check,
  static const char *link_ssp_spec = LINK_SSP_SPEC;
 --- a/gcc/opts.c	2016-03-17 16:11:35.000000000 +0100
 +++ b/gcc/opts.c	2016-04-27 16:48:59.952580580 +0200
-@@ -495,7 +495,9 @@ static const struct default_options defa
+@@ -496,7 +496,9 @@ static const struct default_options defa
      { OPT_LEVELS_2_PLUS, OPT_fschedule_insns2, NULL, 1 },
  #endif
      { OPT_LEVELS_2_PLUS, OPT_fstrict_aliasing, NULL, 1 },

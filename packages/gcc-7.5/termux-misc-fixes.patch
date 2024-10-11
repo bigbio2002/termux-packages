@@ -13,7 +13,7 @@ diff -Naur gcc-5.3.0/gcc/output.h gcc-5.3.0_my/gcc/output.h
 diff -Naur gcc-5.3.0/gcc/reload1.c gcc-5.3.0_my/gcc/reload1.c
 --- gcc-5.3.0/gcc/reload1.c	2015-01-15 08:28:42.000000000 -0500
 +++ gcc-5.3.0_my/gcc/reload1.c	2024-05-21 20:38:25.473509134 -0400
-@@ -435,7 +435,7 @@
+@@ -428,7 +428,7 @@
  
    while (memory_address_p (QImode, tem))
      {

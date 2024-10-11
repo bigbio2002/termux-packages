@@ -1,6 +1,6 @@
 --- a/gcc/config.orig.gcc	2024-09-17 14:26:51.842865342 -0400
 +++ b/gcc/config.gcc	2024-09-17 14:27:32.412869384 -0400
-@@ -3590,8 +3590,8 @@
+@@ -3611,8 +3611,8 @@
  		for which in cpu arch; do
  
  			eval "val=\$with_$which"
@@ -11,7 +11,7 @@
  
  			if [ $which = arch ]; then
  			  def=aarch64-arches.def
-@@ -3629,9 +3629,9 @@
+@@ -3650,9 +3650,9 @@
  
  			  while [ x"$ext_val" != x ]
  			  do
@@ -24,7 +24,7 @@
  
  				if [ x"$base_ext" = x ] \
  				    || grep "^AARCH64_OPT_EXTENSION(\"$base_ext\"," \
-@@ -3667,7 +3667,7 @@
+@@ -3688,7 +3688,7 @@
  				  echo "Unknown extension used in --with-$which=$val" 1>&2
  				  exit 1
  				fi

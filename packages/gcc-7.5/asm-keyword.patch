@@ -38,7 +38,7 @@
  }
 --- a/gcc/config/aarch64/aarch64-elf.orig.h	2024-03-31 09:26:29.082200943 -0400
 +++ b/gcc/config/aarch64/aarch64-elf.h	2024-03-31 13:43:28.943737101 -0400
-@@ -48,9 +48,9 @@
+@@ -39,9 +39,9 @@
  
  /* Since we use .init_array/.fini_array we don't need the markers at
     the start and end of the ctors/dtors arrays.  */
