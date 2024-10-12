@@ -61,11 +61,7 @@ termux_step_pre_configure() {
 			$TERMUX_PKG_BUILDER_DIR/cmake-wrapper.in \
 			> $_WRAPPER_BIN/cmake
 		chmod 0700 $_WRAPPER_BIN/cmake
-		sed "s|^export PKG_CONFIG_LIBDIR=|export PKG_CONFIG_LIBDIR=${TERMUX_PREFIX}/opt/libwayland/cross/lib/x86_64-linux-gnu/pkgconfig:|" \
-			"${TERMUX_STANDALONE_TOOLCHAIN}/bin/pkg-config" \
-			> "${_WRAPPER_BIN}/pkg-config"
-		chmod +x "${_WRAPPER_BIN}/pkg-config"
-		export PKG_CONFIG="${_WRAPPER_BIN}/pkg-config"
+		termux_setup_wayland_cross_pkg_config_wrapper
 #		export LLVM_CONFIG="$TERMUX_PREFIX/bin/llvm-config"
 		export LLVM_CONFIG=llvm-config
 	fi
@@ -76,7 +72,7 @@ termux_step_pre_configure() {
 		#TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dvulkan-drivers=swrast"
 		TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dfreedreno-kmds=msm,kgsl"
 	elif [ $TERMUX_ARCH = "i686" ] || [ $TERMUX_ARCH = "x86_64" ]; then
-		TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dvulkan-drivers=swrast"
+		#TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dvulkan-drivers=swrast"
 	else
 		termux_error_exit "Invalid arch: $TERMUX_ARCH"
 	fi
