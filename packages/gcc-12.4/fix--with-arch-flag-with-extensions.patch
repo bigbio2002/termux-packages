@@ -1,6 +1,6 @@
 --- a/gcc/config.gcc.orig	2024-09-07 09:47:46.758612580 -0400
 +++ b/gcc/config.gcc	2024-09-07 09:45:00.655262700 -0400
-@@ -4181,8 +4181,8 @@
+@@ -4175,8 +4175,8 @@
  		fi
  		for which in cpu arch tune; do
  			eval "val=\$with_$which"
@@ -11,7 +11,7 @@
  
  			if [ $which = arch ]; then
  			  def=aarch64-arches.def
-@@ -4241,14 +4241,14 @@
+@@ -4235,14 +4235,14 @@
  
  			  while [ x"$ext_val" != x ]
  			  do
@@ -30,7 +30,7 @@
  
  				  # These regexp extract the elements based on
  				  # their group match index in the regexp.
-@@ -4272,7 +4272,7 @@
+@@ -4266,7 +4266,7 @@
  				  echo "Unknown extension used in --with-$which=$val" 1>&2
  				  exit 1
  				fi
