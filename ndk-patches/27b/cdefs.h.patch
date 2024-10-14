@@ -133,29 +133,59 @@
  
  #if defined(ANDROID_STRICT)
  /*
-@@ -249,7 +324,7 @@
- #define __bosn(s, n) __builtin_object_size((s), (n))
- #define __bos(s) __bosn((s), __bos_level)
+@@ -236,12 +311,8 @@
  
+ // As we move some FORTIFY checks to be always on, __bos needs to be
+ // always available.
 -#if defined(__BIONIC_FORTIFY)
-+#if defined(__BIONIC_FORTIFY) && __has_attribute(pass_object_size)
+-#  if _FORTIFY_SOURCE == 2
+-#    define __bos_level 1
+-#  else
+-#    define __bos_level 0
+-#  endif
++#if defined(__BIONIC_FORTIFY) && _FORTIFY_SOURCE == 2
++#  define __bos_level 1
+ #else
+ #  define __bos_level 0
+ #endif
+@@ -251,7 +322,11 @@
+ 
+ #if defined(__BIONIC_FORTIFY)
  #  define __bos0(s) __bosn((s), 0)
- #  define __pass_object_size_n(n) __attribute__((__pass_object_size__(n)))
+-#  define __pass_object_size_n(n) __attribute__((__pass_object_size__(n)))
++#  if __has_attribute(pass_object_size)
++#    define __pass_object_size_n(n) __attribute__((__pass_object_size__(n)))
++#  else
++#    define __pass_object_size_n(n)
++#  endif
  /*
+  * FORTIFY'ed functions all have either enable_if or pass_object_size, which
+  * makes taking their address impossible. Saying (&read)(foo, bar, baz); will
 @@ -263,8 +338,12 @@
   * them available externally. FORTIFY'ed functions try to be as close to possible as 'invisible';
   * having stack protectors detracts from that (b/182948263).
   */
+-#  define __BIONIC_FORTIFY_INLINE static __inline __attribute__((__no_stack_protector__)) \
 +#  if __has_attribute(no_stack_protector)
- #  define __BIONIC_FORTIFY_INLINE static __inline __attribute__((__no_stack_protector__)) \
++#    define __BIONIC_FORTIFY_INLINE static __inline __attribute__((__no_stack_protector__)) \
        __always_inline __VERSIONER_FORTIFY_INLINE
 +#  else
-+#  define __BIONIC_FORTIFY_INLINE static __inline __always_inline __VERSIONER_FORTIFY_INLINE
++#    define __BIONIC_FORTIFY_INLINE static __inline __always_inline __VERSIONER_FORTIFY_INLINE
 +#  endif /* __has_attribute(no_stack_protector) */
  /*
   * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
   * for variadic functions because compilers cannot inline them.
-@@ -303,10 +382,19 @@
+@@ -277,7 +356,8 @@
+ #else
+ /* Further increase sharing for some inline functions */
+ #  define __pass_object_size_n(n)
+-#endif
++#endif /* defined(__BIONIC_FORTIFY) */
++
+ #define __pass_object_size __pass_object_size_n(__bos_level)
+ #define __pass_object_size0 __pass_object_size_n(0)
+ 
+@@ -303,10 +383,19 @@
  #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
  #endif
  
@@ -177,7 +207,7 @@
  /* Used to tag non-static symbols that are private and never exposed by the shared library. */
  #define __LIBC_HIDDEN__ __attribute__((__visibility__("hidden")))
  
-@@ -320,6 +408,11 @@
+@@ -320,6 +409,11 @@
  #define __LIBC32_LEGACY_PUBLIC__ __attribute__((__visibility__("default")))
  #endif
  
