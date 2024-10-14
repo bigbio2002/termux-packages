@@ -20,5 +20,5 @@ termux_step_make() {
 termux_step_make_install() {
 	make install \
 		PREFIX="$TERMUX_PREFIX" \
-		MANDIR="$TERMUX_PREFIX/share/man/man1"
+		MANDIR="$TERMUX_PREFIX/share/man"
 }
