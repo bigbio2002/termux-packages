@@ -15,7 +15,7 @@ http://gcc.gnu.org/PR38436
  # Find other programs we need.
 --- a/libgomp/configure
 +++ b/libgomp/configure
-@@ -4613,7 +4613,7 @@
+@@ -4614,7 +4614,7 @@
  
  # Add -Wall -Werror if we are using GCC.
  if test "x$GCC" = "xyes"; then

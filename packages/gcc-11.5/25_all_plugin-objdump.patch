@@ -12,7 +12,7 @@ https://gcc.gnu.org/PR95648
         else
 --- a/gcc/configure
 +++ b/gcc/configure
-@@ -30386,7 +30386,7 @@ fi
+@@ -32147,7 +32147,7 @@ fi
       ;;
       *)
         if test x$build = x$host; then
@@ -23,7 +23,7 @@ https://gcc.gnu.org/PR95648
         else
 --- a/libcc1/configure
 +++ b/libcc1/configure
-@@ -14819,7 +14819,7 @@ fi
+@@ -15015,7 +15015,7 @@ fi
       ;;
       *)
         if test x$build = x$host; then

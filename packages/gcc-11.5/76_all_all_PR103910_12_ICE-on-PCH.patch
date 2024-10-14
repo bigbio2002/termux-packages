@@ -24,7 +24,7 @@ gcc/ChangeLog:
 	* config/i386/i386.h (x86_mfence): Mark with GTY.
 --- a/gcc/config/i386/i386.h
 +++ b/gcc/config/i386/i386.h
-@@ -486,7 +486,7 @@ extern unsigned char ix86_prefetch_sse;
+@@ -701,7 +701,7 @@ extern unsigned char ix86_prefetch_sse;
  
  /* Fence to use after loop using storent.  */
  
