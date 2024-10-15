@@ -1,0 +1,11 @@
+--- a/libsoup/meson.build
++++ b/libsoup/meson.build
+@@ -238,7 +238,7 @@
+ 
+ pkg.generate(libsoup,
+   libraries : glib_deps,
+-  name : meson.project_name(),
++  name : 'libsoup-3.0',
+   description : 'A glib-based HTTP library',
+   filebase : libsoup_api_name,
+   subdirs: libsoup_api_name,
