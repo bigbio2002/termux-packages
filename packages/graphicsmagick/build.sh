@@ -8,13 +8,15 @@ TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/${TERMUX_PKG_VERSION}/GraphicsMagick-${TERMUX_PKG_VERSION}.tar.xz
 TERMUX_PKG_SHA256=dcea5167414f7c805557de2d7a47a9b3147bcbf617b91f5f0f4afe5e6543026b
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="freetype, libbz2, libc++, libde265, libheif, libjasper, libjpeg-turbo, libjxl, liblzma, libpng, libtiff, libwebp, libxml2, littlecms, zlib, zstd"
+TERMUX_PKG_DEPENDS="freetype, libbz2, libc++, libde265, libheif, libjasper, libjpeg-turbo, liblzma, libpng, libtiff, libwebp, libxml2, littlecms, zlib, zstd"
+#TERMUX_PKG_DEPENDS+=" libjxl"
 TERMUX_PKG_BREAKS="graphicsmagick-dev"
 TERMUX_PKG_REPLACES="graphicsmagick++, graphicsmagick-dev"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 ac_cv_func_ftime=no
 --with-fontpath=/system/fonts
 --without-x
+--without-jxl
 "
 
 termux_step_pre_configure() {
