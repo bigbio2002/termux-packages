@@ -1,0 +1,41 @@
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109927#c21
+
+From 2be19327b38b4e3e183d47529871614a3ef0c3ad Mon Sep 17 00:00:00 2001
+From: Tamar Christina <tamar.christina@arm.com>
+Date: Fri, 5 May 2023 13:36:01 +0100
+Subject: [PATCH 02/15] match.pd: Remove commented out line pragmas unless -vv
+ is used.
+
+genmatch currently outputs commented out line directives that have no effect
+but the compiler still has to parse only to discard.
+
+They are however handy when debugging genmatch output.  As such this moves them
+behind the -vv flag.
+
+gcc/ChangeLog:
+
+	PR bootstrap/84402
+	* genmatch.cc (output_line_directive): Only emit commented directive
+	when -vv.
+
+(cherry picked from commit e487fcc0f7466ea663a0fea52076337bebd42b8b)
+---
+ gcc/genmatch.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gcc/genmatch.cc b/gcc/genmatch.cc
+index 9ecd0a462b4f..45e49c790b6d 100644
+--- a/gcc/genmatch.cc
++++ b/gcc/genmatch.cc
+@@ -209,7 +209,7 @@ output_line_directive (FILE *f, location_t location,
+       else
+ 	fprintf (f, "%s:%d", file, loc.line);
+     }
+-  else
++  else if (verbose >= 2)
+     /* Other gen programs really output line directives here, at least for
+        development it's right now more convenient to have line information
+        from the generated file.  Still keep the directives as comment for now
+-- 
+2.44.0
+

@@ -1,0 +1,45 @@
+https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=ecb95399f43873e1f34119ac260bbea2ef358e53
+
+From 45b0ac72b82e483ac2b8380ce08cedcfd021afb0 Mon Sep 17 00:00:00 2001
+From: Kewen Lin <linkw@linux.ibm.com>
+Date: Tue, 15 Aug 2023 03:01:20 -0500
+Subject: [PATCH 12/15] Makefile.in: Make recog.h depend on $(TREE_H)
+ [PR111021]
+
+Commit r14-3093 introduced a random build failure on
+build/gencondmd.cc building.  Since r14-3093 make recog.h
+include tree.h, which further includes (depends on) some
+files that are generated during the building, such as:
+all-tree.def, tree-check.h etc, when building file
+build/gencondmd.cc, the build can fail if these dependences
+are not ready.  So this patch is to teach this dependence.
+
+Thank Jan-Benedict Glaw for testing this!
+
+	PR bootstrap/111021
+
+gcc/ChangeLog:
+
+	* Makefile.in (RECOG_H): Add $(TREE_H) as dependence.
+
+(cherry picked from commit ecb95399f43873e1f34119ac260bbea2ef358e53)
+---
+ gcc/Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+index 115d2a6d9b76..2c16b14ad0f3 100644
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -985,7 +985,7 @@ GIMPLE_H = gimple.h gimple.def gsstruct.def $(VEC_H) \
+ 	$(GGC_H) $(BASIC_BLOCK_H) $(TREE_H) tree-ssa-operands.h \
+ 	tree-ssa-alias.h $(INTERNAL_FN_H) $(HASH_TABLE_H) is-a.h
+ GCOV_IO_H = gcov-io.h version.h auto-host.h gcov-counter.def
+-RECOG_H = recog.h
++RECOG_H = recog.h $(TREE_H)
+ EMIT_RTL_H = emit-rtl.h
+ FLAGS_H = flags.h flag-types.h $(OPTIONS_H)
+ OPTIONS_H = options.h flag-types.h $(OPTIONS_H_EXTRA)
+-- 
+2.44.0
+

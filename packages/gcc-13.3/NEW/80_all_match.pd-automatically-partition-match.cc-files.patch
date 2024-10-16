@@ -1,0 +1,524 @@
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109927#c21
+
+From daac5d2f67656dcf8cc2bbff1c6eaa34f3fb55b9 Mon Sep 17 00:00:00 2001
+From: Tamar Christina <tamar.christina@arm.com>
+Date: Fri, 5 May 2023 13:38:50 +0100
+Subject: [PATCH 05/15] match.pd: automatically partition *-match.cc files.
+
+Following on from Richi's RFC[1] this is another attempt to split up match.pd
+into multiple gimple-match and generic-match files.  This version is fully
+automated and requires no human intervention.
+
+First things first, some perf numbers.  The following shows the effect of the
+patch on my desktop doing parallel compilation of gimple-match:
+
++--------+------------------+--------+------------------+
+| splits | rel. improvement | splits | rel. improvement |
++--------+------------------+--------+------------------+
+|      1 | 0.00%            |     33 | 91.03%           |
+|      2 | 71.77%           |     34 | 84.02%           |
+|      3 | 100.71%          |     35 | 83.42%           |
+|      4 | 143.08%          |     36 | 78.80%           |
+|      5 | 176.18%          |     37 | 74.06%           |
+|      6 | 174.40%          |     38 | 55.76%           |
+|      7 | 176.62%          |     39 | 66.90%           |
+|      8 | 168.35%          |     40 | 18.25%           |
+|      9 | 189.80%          |     41 | 16.55%           |
+|     10 | 171.77%          |     42 | 47.02%           |
+|     11 | 152.82%          |     43 | 15.29%           |
+|     12 | 112.20%          |     44 | 21.63%           |
+|     13 | 158.57%          |     45 | 41.53%           |
+|     14 | 158.57%          |     46 | 21.98%           |
+|     15 | 152.07%          |     47 | -42.74%          |
+|     16 | 151.70%          |     48 | -32.62%          |
+|     17 | 131.52%          |     49 | 11.81%           |
+|     18 | 133.11%          |     50 | 34.07%           |
+|     19 | 137.33%          |     51 | 2.71%            |
+|     20 | 103.83%          |     52 | -22.23%          |
+|     21 | 132.47%          |     53 | 32.30%           |
+|     22 | 116.52%          |     54 | 21.45%           |
+|     23 | 112.73%          |     55 | 40.02%           |
+|     24 | 111.94%          |     56 | 42.83%           |
+|     25 | 112.73%          |     57 | -9.98%           |
+|     26 | 104.07%          |     58 | 18.01%           |
+|     27 | 113.27%          |     59 | -4.91%           |
+|     28 | 96.77%           |     60 | 22.94%           |
+|     29 | 93.42%           |     61 | -3.73%           |
+|     30 | 87.67%           |     62 | -27.43%          |
+|     31 | 89.54%           |     63 | -1.05%           |
+|     32 | 84.42%           |     64 | -5.44%           |
++--------+------------------+--------+------------------+
+
+As can be seen there seems to be a point of diminishing returns in doing splits.
+This comes from the fact that these match files consume a sizeable amount of
+headers.  At a certain point the parsing overhead of the headers dominate and
+you start losing in gains.
+
+As such from this I've made the default 10 splits per file to allow for some
+room for growth in the future without needing changes to the split amount.
+Since 5-10 show roughly the same gains it means we can afford to double the
+file sizes before we need to up the split amount.  This can be controlled
+by the configure parameter --with-matchpd-partitions=.
+
+At 10 splits the sizes of the files are:
+
+ 1.2M gimple-match-1.cc
+ 490K gimple-match-2.cc
+ 459K gimple-match-3.cc
+ 462K gimple-match-4.cc
+ 466K gimple-match-5.cc
+ 690K gimple-match-6.cc
+ 517K gimple-match-7.cc
+ 693K gimple-match-8.cc
+1011K gimple-match-9.cc
+ 490K gimple-match-10.cc
+ 210K gimple-match-auto.h
+
+The reason gimple-match-1.cc is so large is because it got allocated a very
+large function: gimple_simplify_NE_EXPR.
+
+Because of these sporadically large functions the allocation to a split happens
+based on the amount of data already written to a split instead of just a simple
+round robin allocation (though the patch supports that too.).   This means that
+once gimple_simplify_NE_EXPR is allocated to gimple-match-1.cc nothing uses it
+again until the rest of the files catch up.
+
+To support this split a new header file *-match-auto.h is generated to allow
+the individual files to compile separately.
+
+Lastly for the auto generated files I use pragmas to silence the unused
+predicate warnings instead of the previous Makefile way because I couldn't find
+a way to set them without knowing the number of split files beforehand.
+
+Finally with this change, bootstrap time has dropped 8 minutes on AArch64.
+
+[1] https://gcc.gnu.org/legacy-ml/gcc-patches/2018-04/msg01125.html
+
+gcc/ChangeLog:
+
+	PR bootstrap/84402
+	* genmatch.cc (emit_func, SIZED_BASED_CHUNKS, get_out_file): New.
+	(decision_tree::gen): Accept list of files instead of single and update
+	to write function definition to header and main file.
+	(write_predicate): Likewise.
+	(write_header): Emit pragmas and new includes.
+	(main): Create file buffers and cleanup.
+	(showUsage, write_header_includes): New.
+
+(cherry picked from commit 703417a030b3d80f55ba1402adc3f1692d3631e5)
+---
+ gcc/genmatch.cc | 226 ++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 190 insertions(+), 36 deletions(-)
+
+diff --git a/gcc/genmatch.cc b/gcc/genmatch.cc
+index 665d7e2106ff..f80e4b972288 100644
+--- a/gcc/genmatch.cc
++++ b/gcc/genmatch.cc
+@@ -183,6 +183,33 @@ fprintf_indent (FILE *f, unsigned int indent, const char *format, ...)
+   va_end (ap);
+ }
+ 
++/* Like fprintf, but print to two files, one header one C implementation.  */
++FILE *header_file = NULL;
++
++static void
++#if GCC_VERSION >= 4001
++__attribute__((format (printf, 4, 5)))
++#endif
++emit_func (FILE *f, bool open, bool close, const char *format, ...)
++{
++  va_list ap1, ap2;
++  if (header_file != NULL)
++    {
++      if (open)
++	fprintf (header_file, "extern ");
++      va_start (ap2, format);
++      vfprintf (header_file, format, ap2);
++      va_end (ap2);
++      if (close)
++	fprintf (header_file, ";\n");
++    }
++
++  va_start (ap1, format);
++  vfprintf (f, format, ap1);
++  va_end (ap1);
++  fputc ('\n', f);
++}
++
+ static void
+ output_line_directive (FILE *f, location_t location,
+ 		       bool dumpfile = false, bool fnargs = false)
+@@ -217,6 +244,37 @@ output_line_directive (FILE *f, location_t location,
+     fprintf (f, "/* #line %d \"%s\" */\n", loc.line, loc.file);
+ }
+ 
++/* Find the file to write into next.  We try to evenly distribute the contents
++   over the different files.  */
++
++#define SIZED_BASED_CHUNKS 1
++
++int current_file = 0;
++FILE *get_out_file (vec <FILE *> &parts)
++{
++#ifdef SIZED_BASED_CHUNKS
++   if (parts.length () == 1)
++     return parts[0];
++
++   FILE *f = NULL;
++   long min = 0;
++   /* We've started writing all the files at pos 0, so ftell is equivalent
++      to the size and should be much faster.  */
++   for (unsigned i = 0; i < parts.length (); i++)
++     {
++	long res = ftell (parts[i]);
++	if (!f || res < min)
++	  {
++	    min = res;
++	    f = parts[i];
++	  }
++     }
++  return f;
++#else
++  return parts[current_file++ % parts.length ()];
++#endif
++}
++
+ 
+ /* Pull in tree codes and builtin function codes from their
+    definition files.  */
+@@ -1732,7 +1790,7 @@ public:
+   dt_node *root;
+ 
+   void insert (class simplify *, unsigned);
+-  void gen (FILE *f, bool gimple);
++  void gen (vec <FILE *> &f, bool gimple);
+   void print (FILE *f = stderr);
+ 
+   decision_tree () { root = new dt_node (dt_node::DT_NODE, NULL); }
+@@ -3832,7 +3890,7 @@ sinfo_hashmap_traits::equal_keys (const key_type &v,
+    tree.  */
+ 
+ void
+-decision_tree::gen (FILE *f, bool gimple)
++decision_tree::gen (vec <FILE *> &files, bool gimple)
+ {
+   sinfo_map_t si;
+ 
+@@ -3861,11 +3919,14 @@ decision_tree::gen (FILE *f, bool gimple)
+ 	  output_line_directive (stderr, s->s->s->result->location);
+ 	}
+ 
++      /* Cycle the file buffers.  */
++      FILE *f = get_out_file (files);
++
+       /* Generate a split out function with the leaf transform code.  */
+       s->fname = xasprintf ("%s_simplify_%u", gimple ? "gimple" : "generic",
+ 			    fcnt++);
+       if (gimple)
+-	fprintf (f, "\nstatic bool\n"
++	emit_func (f, true, false, "\nbool\n"
+ 		 "%s (gimple_match_op *res_op, gimple_seq *seq,\n"
+ 		 "                 tree (*valueize)(tree) ATTRIBUTE_UNUSED,\n"
+ 		 "                 const tree ARG_UNUSED (type), tree *ARG_UNUSED "
+@@ -3873,27 +3934,28 @@ decision_tree::gen (FILE *f, bool gimple)
+ 		 s->fname);
+       else
+ 	{
+-	  fprintf (f, "\nstatic tree\n"
++	  emit_func (f, true, false, "\ntree\n"
+ 		   "%s (location_t ARG_UNUSED (loc), const tree ARG_UNUSED (type),\n",
+ 		   (*iter).second->fname);
+ 	  for (unsigned i = 0;
+ 	       i < as_a <expr *>(s->s->s->match)->ops.length (); ++i)
+-	    fprintf (f, " tree ARG_UNUSED (_p%d),", i);
+-	  fprintf (f, " tree *captures\n");
++	    emit_func (f, false, false, " tree ARG_UNUSED (_p%d),", i);
++	  emit_func (f, false, false, " tree *captures\n");
+ 	}
+       for (unsigned i = 0; i < s->s->s->for_subst_vec.length (); ++i)
+ 	{
+ 	  if (! s->s->s->for_subst_vec[i].first->used)
+ 	    continue;
+ 	  if (is_a <operator_id *> (s->s->s->for_subst_vec[i].second))
+-	    fprintf (f, ", const enum tree_code ARG_UNUSED (%s)",
++	    emit_func (f, false, false, ", const enum tree_code ARG_UNUSED (%s)",
+ 		     s->s->s->for_subst_vec[i].first->id);
+ 	  else if (is_a <fn_id *> (s->s->s->for_subst_vec[i].second))
+-	    fprintf (f, ", const combined_fn ARG_UNUSED (%s)",
++	    emit_func (f, false, false, ", const combined_fn ARG_UNUSED (%s)",
+ 		     s->s->s->for_subst_vec[i].first->id);
+ 	}
+ 
+-      fprintf (f, ")\n{\n");
++      emit_func (f, false, true, ")");
++      fprintf (f, "{\n");
+       fprintf_indent (f, 2, "const bool debug_dump = "
+ 			    "dump_file && (dump_flags & TDF_FOLDING);\n");
+       s->s->gen_1 (f, 2, gimple, s->s->s->result);
+@@ -3923,8 +3985,12 @@ decision_tree::gen (FILE *f, bool gimple)
+ 		  && e->operation->kind != id_base::CODE))
+ 	    continue;
+ 
++
++	  /* Cycle the file buffers.  */
++	  FILE *f = get_out_file (files);
++
+ 	  if (gimple)
+-	    fprintf (f, "\nstatic bool\n"
++	    emit_func (f, true, false,"\nbool\n"
+ 		     "gimple_simplify_%s (gimple_match_op *res_op,"
+ 		     " gimple_seq *seq,\n"
+ 		     "                 tree (*valueize)(tree) "
+@@ -3933,13 +3999,13 @@ decision_tree::gen (FILE *f, bool gimple)
+ 		     "ARG_UNUSED (type)\n",
+ 		     e->operation->id);
+ 	  else
+-	    fprintf (f, "\nstatic tree\n"
++	    emit_func (f, true, false, "\ntree\n"
+ 		     "generic_simplify_%s (location_t ARG_UNUSED (loc), enum "
+ 		     "tree_code ARG_UNUSED (code), const tree ARG_UNUSED (type)",
+ 		     e->operation->id);
+ 	  for (unsigned i = 0; i < n; ++i)
+-	    fprintf (f, ", tree _p%d", i);
+-	  fprintf (f, ")\n");
++	    emit_func (f, false, false,", tree _p%d", i);
++	  emit_func (f, false, true, ")");
+ 	  fprintf (f, "{\n");
+ 	  fprintf_indent (f, 2, "const bool debug_dump = "
+ 				"dump_file && (dump_flags & TDF_FOLDING);\n");
+@@ -3956,18 +4022,22 @@ decision_tree::gen (FILE *f, bool gimple)
+ 	 with compiler warnings, by generating a simple stub.  */
+       if (! has_kids_p)
+ 	{
++
++	  /* Cycle the file buffers.  */
++	  FILE *f = get_out_file (files);
++
+ 	  if (gimple)
+-	    fprintf (f, "\nbool\n"
++	    emit_func (f, true, false, "\nbool\n"
+ 			"gimple_simplify (gimple_match_op*, gimple_seq*,\n"
+ 			"                 tree (*)(tree), code_helper,\n"
+ 			"                 const tree");
+ 	  else
+-	    fprintf (f, "\ntree\n"
++	    emit_func (f, true, false,"\ntree\n"
+ 			"generic_simplify (location_t, enum tree_code,\n"
+ 			"                  const tree");
+ 	  for (unsigned i = 0; i < n; ++i)
+-	    fprintf (f, ", tree");
+-	  fprintf (f, ")\n");
++	    emit_func (f, false, false, ", tree");
++	  emit_func (f, false, true, ")");
+ 	  fprintf (f, "{\n");
+ 	  if (gimple)
+ 	    fprintf (f, "  return false;\n");
+@@ -3977,20 +4047,24 @@ decision_tree::gen (FILE *f, bool gimple)
+ 	  continue;
+ 	}
+ 
++
++      /* Cycle the file buffers.  */
++      FILE *f = get_out_file (files);
++
+       /* Then generate the main entry with the outermost switch and
+          tail-calls to the split-out functions.  */
+       if (gimple)
+-	fprintf (f, "\nbool\n"
++	emit_func (f, true, false, "\nbool\n"
+ 		 "gimple_simplify (gimple_match_op *res_op, gimple_seq *seq,\n"
+ 		 "                 tree (*valueize)(tree) ATTRIBUTE_UNUSED,\n"
+ 		 "                 code_helper code, const tree type");
+       else
+-	fprintf (f, "\ntree\n"
++	emit_func (f, true, false, "\ntree\n"
+ 		 "generic_simplify (location_t loc, enum tree_code code, "
+ 		 "const tree type ATTRIBUTE_UNUSED");
+       for (unsigned i = 0; i < n; ++i)
+-	fprintf (f, ", tree _p%d", i);
+-      fprintf (f, ")\n");
++	emit_func (f, false, false, ", tree _p%d", i);
++      emit_func (f, false, true, ")");
+       fprintf (f, "{\n");
+ 
+       if (gimple)
+@@ -4045,11 +4119,11 @@ decision_tree::gen (FILE *f, bool gimple)
+ void
+ write_predicate (FILE *f, predicate_id *p, decision_tree &dt, bool gimple)
+ {
+-  fprintf (f, "\nbool\n"
+-	   "%s%s (tree t%s%s)\n"
+-	   "{\n", gimple ? "gimple_" : "tree_", p->id,
+-	   p->nargs > 0 ? ", tree *res_ops" : "",
+-	   gimple ? ", tree (*valueize)(tree) ATTRIBUTE_UNUSED" : "");
++  emit_func (f, true, true, "\nbool\n%s%s (tree t%s%s)",
++		gimple ? "gimple_" : "tree_", p->id,
++		p->nargs > 0 ? ", tree *res_ops" : "",
++		gimple ? ", tree (*valueize)(tree) ATTRIBUTE_UNUSED" : "");
++  fprintf (f, "{\n");
+   /* Conveniently make 'type' available.  */
+   fprintf_indent (f, 2, "const tree type = TREE_TYPE (t);\n");
+   fprintf_indent (f, 2, "const bool debug_dump = "
+@@ -4070,9 +4144,13 @@ write_header (FILE *f, const char *head)
+ {
+   fprintf (f, "/* Generated automatically by the program `genmatch' from\n");
+   fprintf (f, "   a IL pattern matching and simplification description.  */\n");
++  fprintf (f, "#pragma GCC diagnostic push\n");
++  fprintf (f, "#pragma GCC diagnostic ignored \"-Wunused-variable\"\n");
++  fprintf (f, "#pragma GCC diagnostic ignored \"-Wunused-function\"\n");
+ 
+   /* Include the header instead of writing it awkwardly quoted here.  */
+-  fprintf (f, "\n#include \"%s\"\n", head);
++  if (head)
++    fprintf (f, "\n#include \"%s\"\n", head);
+ }
+ 
+ 
+@@ -5213,6 +5291,30 @@ round_alloc_size (size_t s)
+ }
+ 
+ 
++/* Construct and display the help menu.  */
++
++static void
++showUsage ()
++{
++  fprintf (stderr, "Usage: genmatch [--gimple] [--generic] "
++		   "[--header=<filename>] [--include=<filename>] [-v[v]] input "
++		   "[<outputfile>...]\n");
++  fprintf (stderr, "\nWhen more then one outputfile is specified --header "
++		   "is required.\n");
++}
++
++/* Write out the correct include to the match-head fle containing the helper
++   files.  */
++
++static void
++write_header_includes (bool gimple, FILE *header_file)
++{
++  if (gimple)
++    fprintf (header_file, "#include \"gimple-match-head.cc\"\n");
++  else
++    fprintf (header_file, "#include \"generic-match-head.cc\"\n");
++}
++
+ /* The genmatch generator program.  It reads from a pattern description
+    and outputs GIMPLE or GENERIC IL matching and simplification routines.  */
+ 
+@@ -5227,25 +5329,44 @@ main (int argc, char **argv)
+     return 1;
+ 
+   bool gimple = true;
+-  char *input = argv[argc-1];
+-  for (int i = 1; i < argc - 1; ++i)
++  char *s_header_file = NULL;
++  char *s_include_file = NULL;
++  auto_vec <char *> files;
++  char *input = NULL;
++  int last_file = argc - 1;
++  for (int i = argc - 1; i >= 1; --i)
+     {
+       if (strcmp (argv[i], "--gimple") == 0)
+ 	gimple = true;
+       else if (strcmp (argv[i], "--generic") == 0)
+ 	gimple = false;
++      else if (strncmp (argv[i], "--header=", 9) == 0)
++	s_header_file = &argv[i][9];
++      else if (strncmp (argv[i], "--include=", 10) == 0)
++	s_include_file = &argv[i][10];
+       else if (strcmp (argv[i], "-v") == 0)
+ 	verbose = 1;
+       else if (strcmp (argv[i], "-vv") == 0)
+ 	verbose = 2;
++      else if (strncmp (argv[i], "--", 2) != 0 && last_file-- == i)
++	files.safe_push (argv[i]);
+       else
+ 	{
+-	  fprintf (stderr, "Usage: genmatch "
+-		   "[--gimple] [--generic] [-v[v]] input\n");
++	  showUsage ();
+ 	  return 1;
+ 	}
+     }
+ 
++  /* Validate if the combinations are valid.  */
++  if ((files.length () > 1 && !s_header_file) || files.is_empty ())
++    showUsage ();
++
++  if (!s_include_file)
++    s_include_file = s_header_file;
++
++  /* Input file is the last in the reverse list.  */
++  input = files.pop ();
++
+   line_table = XCNEW (class line_maps);
+   linemap_init (line_table, 0);
+   line_table->reallocator = xrealloc;
+@@ -5292,10 +5413,28 @@ main (int argc, char **argv)
+   /* Parse ahead!  */
+   parser p (r, gimple);
+ 
+-  if (gimple)
+-    write_header (stdout, "gimple-match-head.cc");
++  /* Create file buffers.  */
++  int n_parts = files.is_empty () ? 1 : files.length ();
++  auto_vec <FILE *> parts (n_parts);
++  if (files.is_empty ())
++    {
++      parts.quick_push (stdout);
++      write_header (stdout, s_include_file);
++      write_header_includes (gimple, stdout);
++    }
+   else
+-    write_header (stdout, "generic-match-head.cc");
++    {
++      for (char *s_file : files)
++	{
++	  parts.quick_push (fopen (s_file, "w"));
++	  write_header (parts.last (), s_include_file);
++	}
++
++      header_file = fopen (s_header_file, "w");
++      fprintf (header_file, "#ifndef GCC_GIMPLE_MATCH_AUTO_H\n"
++			    "#define GCC_GIMPLE_MATCH_AUTO_H\n");
++      write_header_includes (gimple, header_file);
++    }
+ 
+   /* Go over all predicates defined with patterns and perform
+      lowering and code generation.  */
+@@ -5315,7 +5454,10 @@ main (int argc, char **argv)
+       if (verbose == 2)
+ 	dt.print (stderr);
+ 
+-      write_predicate (stdout, pred, dt, gimple);
++      /* Cycle the file buffers.  */
++      FILE *f = get_out_file (parts);
++
++      write_predicate (f, pred, dt, gimple);
+     }
+ 
+   /* Lower the main simplifiers and generate code for them.  */
+@@ -5332,7 +5474,19 @@ main (int argc, char **argv)
+   if (verbose == 2)
+     dt.print (stderr);
+ 
+-  dt.gen (stdout, gimple);
++  dt.gen (parts, gimple);
++
++  for (FILE *f : parts)
++    {
++      fprintf (f, "#pragma GCC diagnostic pop\n");
++      fclose (f);
++    }
++
++  if (header_file)
++    {
++      fprintf (header_file, "#endif /* GCC_GIMPLE_MATCH_AUTO_H.  */\n");
++      fclose (header_file);
++    }
+ 
+   /* Finalize.  */
+   cpp_finish (r, NULL);
+-- 
+2.44.0
+

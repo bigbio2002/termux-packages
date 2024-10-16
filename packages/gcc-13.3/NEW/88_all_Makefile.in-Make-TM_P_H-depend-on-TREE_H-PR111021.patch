@@ -1,0 +1,66 @@
+https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=8353b9c5f5af0e65cb04fcbb7325d6a566006cd4
+
+From 87192b63d3ab56543461cb456c4f8b2f1085fd6c Mon Sep 17 00:00:00 2001
+From: Kewen Lin <linkw@linux.ibm.com>
+Date: Fri, 18 Aug 2023 05:03:40 -0500
+Subject: [PATCH 11/15] Makefile.in: Make TM_P_H depend on $(TREE_H) [PR111021]
+
+As PR111021 shows, the below ${port}-protos.h include tree.h
+for code_helper and tree_code:
+
+  arm/arm-protos.h:#include "tree.h"
+  cris/cris-protos.h:#include "tree.h" (H-P removed this in r14-3218)
+  microblaze/microblaze-protos.h:#include "tree.h"
+  rl78/rl78-protos.h:#include "tree.h"
+  stormy16/stormy16-protos.h:#include "tree.h"
+
+, when compiling build/gencondmd.cc, the include hierarchy
+makes it depend on tm_p.h -> ${port}-protos.h -> tree.h,
+which further includes (depends on) some files that are
+generated during the building, such as: all-tree.def,
+tree-check.h and so on.  The previous commit r14-3215
+should already force build/gencondmd.cc to depend on
+${TREE_H}, so the reported build failure should be gone.
+
+But for a long term maintenance, especially one day some
+build/xxx.cc requires tm_p.h but not recog.h, the ${TREE_H}
+dependence could be missed and a build failure will show
+up.  So this patch is to make TM_P_H depend on $(TREE_H),
+any new build/xxx.cc depending on tm_p.h will be able to
+consider ${TREE_H}.
+
+It's tested with cross-builds for the affected ports with
+steps:
+ 1) dropped the fix r14-3215;
+ 2) reproduced the build failure with serial build;
+ 3) applied this patch, serial built and verified all passed;
+ 4) added back r14-3215, serial built and verified all passed;
+
+	PR bootstrap/111021
+
+gcc/ChangeLog:
+
+	* Makefile.in (TM_P_H): Add $(TREE_H) as dependence.
+
+(cherry picked from commit 8353b9c5f5af0e65cb04fcbb7325d6a566006cd4)
+---
+ gcc/Makefile.in | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+index 975fbb61ea8a..115d2a6d9b76 100644
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -886,7 +886,8 @@ OPTIONS_C_EXTRA = $(PRETTY_PRINT_H)
+ BCONFIG_H = bconfig.h $(build_xm_file_list)
+ CONFIG_H  = config.h  $(host_xm_file_list)
+ TCONFIG_H = tconfig.h $(xm_file_list)
+-TM_P_H    = tm_p.h    $(tm_p_file_list)
++# Some $(target)-protos.h depends on tree.h
++TM_P_H    = tm_p.h    $(tm_p_file_list) $(TREE_H)
+ TM_D_H    = tm_d.h    $(tm_d_file_list)
+ GTM_H     = tm.h      $(tm_file_list) insn-constants.h
+ TM_H      = $(GTM_H) insn-flags.h $(OPTIONS_H)
+-- 
+2.44.0
+
