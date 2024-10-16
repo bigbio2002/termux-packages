@@ -1,5 +1,5 @@
---- gcc/config.orig.gcc	2024-10-16 01:53:28.679597336 -0400
-+++ gcc/config.gcc	2024-10-16 01:56:50.869617478 -0400
+--- a/gcc/config.orig.gcc	2024-10-16 01:53:28.679597336 -0400
++++ b/gcc/config.gcc	2024-10-16 01:56:50.869617478 -0400
 @@ -4129,8 +4129,8 @@
  		fi
  		for which in cpu arch tune; do

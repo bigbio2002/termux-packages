@@ -1,6 +1,6 @@
 --- a/gcc/configure.orig	2024-07-14 08:22:27.603313665 -0400
 +++ b/gcc/configure	2024-07-14 08:23:22.863319170 -0400
-@@ -32412,7 +32412,7 @@
+@@ -32405,7 +32405,7 @@
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $gcc_cv_c_no_fpie" >&5
  $as_echo "$gcc_cv_c_no_fpie" >&6; }
  if test "$gcc_cv_c_no_fpie" = "yes"; then
@@ -9,7 +9,7 @@
  fi
  
  
-@@ -32440,7 +32440,7 @@
+@@ -32433,7 +32433,7 @@
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $gcc_cv_no_pie" >&5
  $as_echo "$gcc_cv_no_pie" >&6; }
  if test "$gcc_cv_no_pie" = "yes"; then
