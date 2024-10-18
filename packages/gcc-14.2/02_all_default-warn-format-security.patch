@@ -1,5 +1,4 @@
 Enable -Wformat and -Wformat-security by default.
-
 --- a/gcc/c-family/c.opt
 +++ b/gcc/c-family/c.opt
 @@ -774,7 +774,7 @@ Warn about function calls with format strings that write past the end
