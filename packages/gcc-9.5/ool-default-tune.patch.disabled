@@ -32,3 +32,16 @@ index 74236c3cffd..695d56c50ef 100644
  
  /* Align definitions of arrays, unions and structures so that
     initializations and copies can be made more efficient.  This is not
+diff --git a/gcc/config/aarch64/aarch64.opt b/gcc/config/aarch64/aarch64.opt
+index 37181b5baca..d99d14c137d 100644
+--- a/gcc/config/aarch64/aarch64.opt
++++ b/gcc/config/aarch64/aarch64.opt
+@@ -256,7 +256,7 @@ TargetVariable
+ long aarch64_stack_protector_guard_offset = 0
+ 
+ moutline-atomics
+-Target Mask(OUTLINE_ATOMICS) Save
++Target Var(aarch64_flag_outline_atomics) Init(2) Save
+ Generate local calls to out-of-line atomic operations.
+ 
+ -param=aarch64-sve-compare-costs=
