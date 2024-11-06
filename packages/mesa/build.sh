@@ -3,12 +3,11 @@ TERMUX_PKG_DESCRIPTION="An open-source implementation of the OpenGL specificatio
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_LICENSE_FILE="docs/license.rst"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="24.0.8"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_VERSION="24.2.6"
 _LLVM_MAJOR_VERSION=$(. $TERMUX_SCRIPTDIR/packages/libllvm/build.sh; echo $LLVM_MAJOR_VERSION)
 _LLVM_MAJOR_VERSION_NEXT=$((_LLVM_MAJOR_VERSION + 1))
 TERMUX_PKG_SRCURL=https://archive.mesa3d.org/mesa-${TERMUX_PKG_VERSION}.tar.xz
-TERMUX_PKG_SHA256=d1ed86a266d5b7b8c136ae587ef5618ed1a9837a43440f3713622bf0123bf5c1
+TERMUX_PKG_SHA256=2b68c4a6f204c1999815a457299f81c41ba7bf48c4674b0b2d1d8864f41f3709
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="libandroid-shmem, libc++, libdrm, libglvnd, libwayland, libx11, libxext, libxfixes, libxshmfence, libxxf86vm, ncurses, vulkan-loader, zlib, zstd"
 #TERMUX_PKG_DEPENDS+=", libllvm (<< ${_LLVM_MAJOR_VERSION_NEXT})"
@@ -35,7 +34,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -Dplatforms=x11,wayland
 -Dgallium-drivers=swrast,virgl,zink
 -Dosmesa=true
--Dglvnd=true
+-Dglvnd=enabled
 -Dxmlconfig=disabled
 "
 # original options
