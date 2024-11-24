@@ -13,7 +13,7 @@ TERMUX_PKG_DEPENDS="libandroid-shmem, libc++, libdrm, libglvnd, libwayland, libx
 #TERMUX_PKG_DEPENDS+=", libllvm (<< ${_LLVM_MAJOR_VERSION_NEXT})"
 TERMUX_PKG_SUGGESTS="mesa-dev"
 TERMUX_PKG_BUILD_DEPENDS="libwayland-protocols, libxrandr, xorgproto"
-#TERMUX_PKG_BUILD_DEPENDS+=", mlir, llvm, llvm-tools"
+#TERMUX_PKG_BUILD_DEPENDS+=", llvm, llvm-tools, mlir"
 TERMUX_PKG_CONFLICTS="libmesa, ndk-sysroot (<= 25b)"
 TERMUX_PKG_REPLACES="libmesa"
 
@@ -40,6 +40,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 # original options
 #TERMUX_PKG_EXTRA_CONFIGURE_ARGS+="
 #-Dllvm=enabled
+#-Dshared-llvm=enabled
 #-Dgallium-drivers=swrast
 #"
 

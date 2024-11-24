@@ -8,14 +8,16 @@ TERMUX_PKG_SRCURL=https://github.com/strukturag/libheif/releases/download/v${TER
 TERMUX_PKG_SHA256=d3cf0a76076115a070f9bc87cf5259b333a1f05806500045338798486d0afbaf
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="gdk-pixbuf, glib, libaom, libc++, libdav1d, libde265, libx265"
+#TERMUX_PKG_DEPENDS+=", librav1e"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -DENABLE_PLUGIN_LOADING=OFF
+-DWITH_RAV1E=OFF
 "
 
 termux_step_pre_configure() {
 	# SOVERSION suffix is needed for SONAME of shared libs to avoid conflict
 	# with system ones (in /system/lib64 or /system/lib):
-	TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -DCMAKE_SYSTEM_NAME=Linux -DWITH_RAV1E=OFF"
+	TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -DCMAKE_SYSTEM_NAME=Linux"
 }
 
 termux_step_post_massage() {

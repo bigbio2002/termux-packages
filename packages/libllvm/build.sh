@@ -25,6 +25,7 @@ TERMUX_PKG_BREAKS="libclang, libclang-dev, libllvm-dev"
 TERMUX_PKG_REPLACES="gcc, libclang, libclang-dev, libllvm-dev"
 TERMUX_PKG_GROUPS="base-devel"
 # See http://llvm.org/docs/CMake.html:
+## mlir is disabled under LLVM_ENABLE_PROJECTS
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -DANDROID_PLATFORM_LEVEL=$TERMUX_PKG_API_LEVEL
 -DPYTHON_EXECUTABLE=$(command -v python${TERMUX_PYTHON_VERSION})

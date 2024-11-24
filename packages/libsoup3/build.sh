@@ -19,6 +19,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -Dtls_check=false
 -Dsysprof=disabled
 "
+#TERMUX_PKG_EXTRA_CONFIGURE_ARGS+="-Dvapi=enabled"
 
 termux_step_pre_configure() {
 	termux_setup_gir

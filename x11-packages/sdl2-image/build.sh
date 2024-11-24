@@ -10,7 +10,7 @@ TERMUX_PKG_SHA256=8f486bbfbcf8464dd58c9e5d93394ab0255ce68b51c5a966a918244820a76d
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_UPDATE_VERSION_SED_REGEXP='s/.*-//'
 TERMUX_PKG_DEPENDS="libjpeg-turbo, libpng, libtiff, libwebp, sdl2"
-#TERMUX_PKG_DEPENDS+=" libjxl"
+#TERMUX_PKG_DEPENDS+=", libjxl"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --disable-stb-image
 --disable-jpg-shared
