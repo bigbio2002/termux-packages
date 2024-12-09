@@ -89,11 +89,7 @@ termux_step_configure() {
 		--enable-libopencore-amrwb \
 		--enable-libopenmpt \
 		--enable-libopus \
-<<<<<<< HEAD
-=======
-		--enable-librav1e \
 		--enable-librubberband \
->>>>>>> 3378db1e7de804522d3d6efe625b14ffc6270515
 		--enable-libsoxr \
 		--enable-libsrt \
 		--enable-libssh \
@@ -120,6 +116,7 @@ termux_step_configure() {
 		--disable-vulkan \
 		$_EXTRA_CONFIGURE_FLAGS \
 		--disable-libfdk-aac
+		#--enable-librav1e
 	# GPLed FFmpeg binaries linked against fdk-aac are not redistributable.
 }
 
