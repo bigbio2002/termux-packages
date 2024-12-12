@@ -20,7 +20,7 @@
 +       } else {
 +               pw->pw_shell = (char*) result;
 +       }
-+       pw->pw_dir = "/data/data/com.termux/files/home";
++       pw->pw_dir = "@TERMUX_HOME@";
 +       pw->pw_passwd = "*";
 +#ifdef __LP64__
 +       pw->pw_gecos = ""; /* Avoid NULL field. */
