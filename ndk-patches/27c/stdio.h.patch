@@ -55,11 +55,11 @@
  #include <bits/fortify/stdio.h>
  #endif
  
-+extern pid_t getpid(void);
-+uint32_t arc4random(void);
 +int open(const char* _Nonnull, int, ...);
++extern pid_t getpid(void);
 +extern int unlink(const char* _Nonnull);
 +void free(void* _Nullable p);
++uint32_t arc4random(void);
 +static __inline__ FILE* _Nullable tmpfile() {
 +	int p = getpid();
 +	char* path;

@@ -1,6 +1,6 @@
 --- ./usr/include/pwd.h.orig
 +++ ./usr/include/pwd.h
-@@ -89,13 +89,62 @@
+@@ -89,13 +89,60 @@
  struct passwd* _Nullable getpwent(void) __INTRODUCED_IN(26);
  
  void setpwent(void) __INTRODUCED_IN(26);
@@ -12,12 +12,10 @@
  int getpwuid_r(uid_t __uid, struct passwd* _Nonnull __pwd, char* _Nonnull __buf, size_t __n, struct passwd* _Nullable * _Nonnull __result);
  
 +int access(const char* _Nonnull __path, int __mode);
-+#define F_OK 0
-+#define X_OK 1
 +
 +static void android_setup_pwd(struct passwd* pw) {
 +       char const* result = "@TERMUX_PREFIX@/bin/login";
-+       if (result == NULL || access(result, X_OK/*1*/) == -1) {
++       if (result == NULL || access(result, /*X_OK*/1) == -1) {
 +               pw->pw_shell = "@TERMUX_PREFIX@/bin/bash";
 +       } else {
 +               pw->pw_shell = (char*) result;
