@@ -8,8 +8,7 @@ _VERSION="${TERMUX_PKG_VERSION%.*}-${TERMUX_PKG_VERSION##*.}"
 TERMUX_PKG_SRCURL=https://imagemagick.org/archive/releases/ImageMagick-${_VERSION}.tar.xz
 TERMUX_PKG_SHA256=fa79401342b409b9b7f7d3146bd6595787373811e72be1669c39b58d1489da4f
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="fftw, fontconfig, freetype, gdk-pixbuf, glib, harfbuzz, imath, libandroid-support, libbz2, libc++, libcairo, libheif, libjpeg-turbo, liblzma, libpng, libraw, librsvg, libtiff, libwebp, libx11, libxext, libxml2, littlecms, openexr, openjpeg, pango, zlib"
-#TERMUX_PKG_DEPENDS+=", libjxl"
+TERMUX_PKG_DEPENDS="fftw, fontconfig, freetype, gdk-pixbuf, glib, harfbuzz, imath, libandroid-support, libbz2, libc++, libcairo, libheif, libjpeg-turbo, liblzma, libpng, libraw, librsvg, libtiff, libwebp, libx11, libxext, libxml2, littlecms, openexr, openjpeg, pango, zlib, libjxl"
 TERMUX_PKG_BREAKS="imagemagick-dev, imagemagick-x"
 TERMUX_PKG_REPLACES="imagemagick-dev, imagemagick-x"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
@@ -20,13 +19,12 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --with-xml=yes
 --with-rsvg=yes
 --with-lzma
---with-jxl=no
+--with-jxl=yes
 --with-openexr
 --with-fftw
 --disable-openmp
 ac_cv_func_ftime=no
 "
-#TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-jxl=yes"
 
 TERMUX_PKG_RM_AFTER_INSTALL="
 share/ImageMagick-7/francais.xml
