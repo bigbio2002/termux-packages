@@ -1,0 +1,11 @@
+--- a/Makefile
++++ b/Makefile
+@@ -34,7 +34,7 @@
+ 
+ # Build in-place
+ inplace:
+-	$(PYTHON) setup.py $(SETUPFLAGS) build_ext -i $(PYTHON_WITH_CYTHON) --warnings $(subst --,--with-,$(CYTHON_WITH_COVERAGE)) -j7
++	$(PYTHON) setup.py $(SETUPFLAGS) build_ext -i $(PYTHON_WITH_CYTHON) --warnings $(subst --,--with-,$(CYTHON_WITH_COVERAGE)) -j1
+ 
+ rebuild-sdist: require-cython
+ 	rm -f dist/lxml-$(LXMLVERSION).tar.gz
