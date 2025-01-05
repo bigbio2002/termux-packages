@@ -8,7 +8,7 @@ TERMUX_PKG_SRCURL=https://github.com/libsdl-org/SDL_image/releases/download/rele
 TERMUX_PKG_SHA256=5a89a01420a192b89dbcc5f5267448181d5dcc81d2f5a1688cb1eac6f557da67
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_UPDATE_VERSION_SED_REGEXP='s/.*-//'
-TERMUX_PKG_DEPENDS="libjpeg-turbo, libpng, libtiff, libwebp, sdl2, libjxl"
+TERMUX_PKG_DEPENDS="libjpeg-turbo, libjxl, libpng, libtiff, libwebp, sdl2"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --disable-stb-image
 --disable-jpg-shared
