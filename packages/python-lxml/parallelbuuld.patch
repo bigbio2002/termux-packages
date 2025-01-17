@@ -5,7 +5,7 @@
  # Build in-place
  inplace:
 -	$(PYTHON) setup.py $(SETUPFLAGS) build_ext -i $(PYTHON_WITH_CYTHON) --warnings $(subst --,--with-,$(CYTHON_WITH_COVERAGE)) -j7
-+	$(PYTHON) setup.py $(SETUPFLAGS) build_ext -i $(PYTHON_WITH_CYTHON) --warnings $(subst --,--with-,$(CYTHON_WITH_COVERAGE)) -j1
++	$(PYTHON) setup.py $(SETUPFLAGS) build_ext -i $(PYTHON_WITH_CYTHON) --warnings $(subst --,--with-,$(CYTHON_WITH_COVERAGE)) -j1 --without-cython --with-xml2-config=/data/data/com.termux/files/usr/bin/xml2-config --with-xslt-config=/data/data/com.termux/files/usr/bin/xslt-config
  
  rebuild-sdist: require-cython
  	rm -f dist/lxml-$(LXMLVERSION).tar.gz
