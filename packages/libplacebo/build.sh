@@ -6,3 +6,6 @@ TERMUX_PKG_VERSION="6.338.2"
 TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=git+https://github.com/haasn/libplacebo
 TERMUX_PKG_DEPENDS="python"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
+-Ddemos=false
+"
