@@ -1,0 +1,11 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -535,7 +535,7 @@
+     set(prefix "${CMAKE_INSTALL_PREFIX}")
+ endif()
+ set(exec_prefix "\${prefix}")
+-set(libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
++set(libdir "${CMAKE_INSTALL_LIBDIR}")
+ set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+ configure_file(libxslt.pc.in libxslt.pc @ONLY)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxslt.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig COMPONENT development)
