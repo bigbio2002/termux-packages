@@ -1,0 +1,17 @@
+--- a/configure
++++ b/configure
+@@ -26,10 +26,10 @@
+ done
+ 
+ # Handle srcdir != builddir
+-srcdir=$(dirname $0)
+-if ! test -f Makefile; then
+-    ln -s ${srcdir}/Makefile Makefile
+-fi
++#srcdir=$(dirname $0)
++#if ! test -f Makefile; then
++#    ln -s ${srcdir}/Makefile Makefile
++#fi
+ 
+ cat > Makefile.inc.tmp <<EOF
+ srcdir = ${srcdir}
