@@ -10,8 +10,6 @@ TERMUX_PKG_SHA256=84b88d52811cd86e33c42458e0374d375912403e4035893dd57e9cac335114
 TERMUX_PKG_DEPENDS="libc++"
 
 termux_step_pre_configure() {
-	autoreconf -vfi
-
 	sed "s%@TERMUX_PKG_API_LEVEL@%$TERMUX_PKG_API_LEVEL%g" \
 		"$TERMUX_PKG_BUILDER_DIR"/android-api-level.diff | patch --silent -p1
 }
