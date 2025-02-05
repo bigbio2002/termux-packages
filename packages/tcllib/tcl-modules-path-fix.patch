@@ -80,7 +80,7 @@ index 8999b6d..4cd056a 100644
  
  proc tcl_cmd {cmd} {return "[markup <b>]\[$cmd][markup </b>]"}
 -proc wget    {url} {exec /usr/bin/wget -q -O - $url 2>/dev/null}
-+proc wget    {url} {exec @TERMUX_PREFIX@/usr/bin/wget -q -O - $url 2>/dev/null}
++proc wget    {url} {exec @TERMUX_PREFIX@/bin/wget -q -O - $url 2>/dev/null}
  
  proc url {tag text url} {
      set body {
@@ -106,7 +106,7 @@ index d9f0372..103eb24 100644
  }
  
 -#set script [magic::compile {} /usr/share/misc/file/magic]
-+#set script [magic::compile {} @TERMUX_PREFIX@/usr/share/misc/file/magic]
++#set script [magic::compile {} @TERMUX_PREFIX@/share/misc/file/magic]
  #puts "\# types:[array names magic::types]"
  #puts "\# quals:[array names magic::quals]"
  #puts "Script: $script"

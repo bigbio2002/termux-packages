@@ -16,7 +16,7 @@ index dbd74c0..4c76bfe 100644
  
  unsigned char header[] =
 -"#!/usr/bin/env python3\n"
-+"#!@TERMUX_PREFIX@/usr/bin/env python3\n"
++"#!@TERMUX_PREFIX@/bin/env python3\n"
  "import http.server\n\n";
  
  unsigned char footer[] =
