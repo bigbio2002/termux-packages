@@ -1,7 +1,7 @@
 diff -uNr db-6.2.32/src/os/os_tmpdir.c db-6.2.32.mod/src/os/os_tmpdir.c
 --- db-6.2.32/src/os/os_tmpdir.c	2017-04-13 17:06:21.000000000 +0300
 +++ db-6.2.32.mod/src/os/os_tmpdir.c	2019-03-02 02:06:03.557665103 +0200
-@@ -125,9 +125,9 @@
+@@ -125,9 +125,8 @@
  	DB_TEMP_DIRECTORY("C:/temp");
  	DB_TEMP_DIRECTORY("C:/tmp");
  #else
