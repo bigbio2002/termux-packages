@@ -12,9 +12,9 @@ TERMUX_PKG_REPLACES="libcap-dev"
 TERMUX_PKG_BUILD_IN_SRC=true
 
 termux_step_make() {
-	make CC="$CC -Wl,-rpath=$TERMUX_PREFIX/lib -Wl,--enable-new-dtags" OBJCOPY=llvm-objcopy PREFIX="$TERMUX_PREFIX" PTHREADS=no PAM_CAP=no
+	make CC="$CC -Wl,-rpath=$TERMUX_PREFIX/lib -Wl,--enable-new-dtags" OBJCOPY=llvm-objcopy PREFIX="$TERMUX_PREFIX" sbin=bin PTHREADS=no PAM_CAP=no
 }
 
 termux_step_make_install() {
-	make CC="$CC -Wl,-rpath=$TERMUX_PREFIX/lib -Wl,--enable-new-dtags" OBJCOPY=llvm-objcopy prefix="$TERMUX_PREFIX" RAISE_SETFCAP=no lib=/lib PTHREADS=no install PAM_CAP=no
+	make CC="$CC -Wl,-rpath=$TERMUX_PREFIX/lib -Wl,--enable-new-dtags" OBJCOPY=llvm-objcopy prefix="$TERMUX_PREFIX" sbin=bin RAISE_SETFCAP=no lib=/lib PTHREADS=no install PAM_CAP=no
 }
