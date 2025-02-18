@@ -10,6 +10,7 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="libandroid-support, libassuan, libgpg-error, libiconv, ncurses"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --disable-pinentry-fltk
+--disable-pinentry-qt5
 --enable-pinentry-tty
 --without-libcap
 "
