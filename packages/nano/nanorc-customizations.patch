@@ -1,0 +1,35 @@
+--- a/syntax/default.nanorc
++++ b/syntax/default.nanorc
+@@ -26,5 +26,11 @@
+ # Comments.
+ color cyan "^[[:blank:]]*#.*"
+ 
++# Strings.
++color brightyellow ""([^"\]|\\.)*"|'([^'\]|\\.)*'"
++
+ # Control codes.
+ color orange "[[:cntrl:]]"
++
++# Trailing whitespace.
++color ,green "[[:space:]]+$"
+--- a/syntax/makefile.nanorc
++++ b/syntax/makefile.nanorc
+@@ -1,6 +1,6 @@
+ ## Syntax highlighting for Makefiles.
+ 
+-syntax makefile "(^|/)((GNU)?m|M)akefile[^/]*$|\.(make|mk)$"
++syntax makefile "(^|/)((GNU)?m|M)akefile[^/]*$|\.(make|mak|mk)$"
+ magic "makefile script"
+ 
+ tabgives "	"
+--- a/syntax/nanorc.nanorc
++++ b/syntax/nanorc.nanorc
+@@ -7,7 +7,7 @@
+ color brightred ".*"
+ 
+ # Color names
+-color yellow "^[[:blank:]]*(i?color|set[[:blank:]]+((error|function|key|mini|number|prompt|scroller|selected|spotlight|status|stripe|title)color))[[:blank:]]+(bold,)?(italic,)?(((bright|light)?(white|black|red|blue|green|yellow|magenta|cyan))|normal|pink|purple|mauve|lagoon|mint|lime|peach|orange|latte|rosy|beet|plum|sea|sky|slate|teal|sage|brown|ocher|sand|tawny|brick|crimson|grey|gray|#[[:xdigit:]]{3})?(,(((light)?(white|black|red|blue|green|yellow|magenta|cyan))|normal|pink|purple|mauve|lagoon|mint|lime|peach|orange|latte|rosy|beet|plum|sea|sky|slate|teal|sage|brown|ocher|sand|tawny|brick|crimson|grey|gray|#[[:xdigit:]]{3}))?\>"
++color yellow "^[[:blank:]]*(i?color|set[[:blank:]]+((error|function|key|mini|number|prompt|scroller|selected|spotlight|status|stripe|title)color))[[:blank:]]+(bold,)?(italic,)?(((bright|light)?(white|black|red|blue|green|yellow|magenta|cyan))|normal|pink|purple|mauve|lagoon|mint|lime|peach|orange|latte|rosy|beet|plum|sea|sky|slate|teal|sage|brown|ocher|sand|tawny|brick|crimson|grey|gray|#[[:xdigit:]]{3})?(,(((bright|light)?(white|black|red|blue|green|yellow|magenta|cyan))|normal|pink|purple|mauve|lagoon|mint|lime|peach|orange|latte|rosy|beet|plum|sea|sky|slate|teal|sage|brown|ocher|sand|tawny|brick|crimson|grey|gray|#[[:xdigit:]]{3}))?\>"
+ 
+ # The arguments of two special commands
+ color bold,purple "^[[:blank:]]*include[[:blank:]]+[^[:blank:]"]+"
