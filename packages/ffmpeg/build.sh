@@ -73,6 +73,7 @@ termux_step_configure() {
 		--enable-gnutls \
 		--enable-gpl \
 		--enable-version3 \
+		--enable-nonfree \
 		--enable-jni \
 		--enable-lcms2 \
 		--enable-libaom \
