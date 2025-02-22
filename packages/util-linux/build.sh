@@ -58,6 +58,8 @@ ac_cv_type_struct_statx=no
 "
 
 termux_step_pre_configure() {
+	./autogen.sh
+
 	if [ $TERMUX_ARCH_BITS = 64 ]; then
 		#prlimit() is only available in 64-bit bionic.
 		TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_func_prlimit=yes"
