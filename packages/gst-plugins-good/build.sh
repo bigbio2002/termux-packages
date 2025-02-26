@@ -16,6 +16,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -Dtests=disabled
 -Dv4l2=disabled
 -Daalib=disabled
+-Dqt5=disabled
 "
 
 termux_step_pre_configure() {
