@@ -15,6 +15,7 @@ termux_step_pre_configure() {
 	CPPFLAGS+=" -DBIONIC_IOCTL_NO_SIGNEDNESS_OVERLOAD"
 	LDFLAGS+=" -landroid-glob"
 	echo "PREFIX=\"$TERMUX_PREFIX\"" > configure.local
+	echo "SBINDIR=\"$TERMUX_PREFIX/bin\"" >> configure.local
 	echo "CC=\"$CC\"" >> configure.local
 	echo "MANDIR=\"$TERMUX_PREFIX/share/man\"" >> configure.local
 	echo "CFLAGS=\"$CFLAGS -std=c99 -DNULL=0 $CPPFLAGS\"" >> configure.local
