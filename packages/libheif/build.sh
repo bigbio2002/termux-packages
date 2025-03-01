@@ -8,11 +8,11 @@ TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=https://github.com/strukturag/libheif/releases/download/v${TERMUX_PKG_VERSION}/libheif-${TERMUX_PKG_VERSION}.tar.gz
 TERMUX_PKG_SHA256=d3cf0a76076115a070f9bc87cf5259b333a1f05806500045338798486d0afbaf
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="gdk-pixbuf, glib, libaom, libc++, libdav1d, libde265, libx265"
-#TERMUX_PKG_DEPENDS+=", librav1e"
+TERMUX_PKG_DEPENDS="gdk-pixbuf, glib, libaom, libc++, libdav1d, libde265, librav1e, libx265"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -DENABLE_PLUGIN_LOADING=OFF
--DWITH_RAV1E=OFF
+-DWITH_DAV1D=ON
+-DWITH_RAV1E=ON
 "
 
 termux_step_pre_configure() {
