@@ -7,8 +7,7 @@ TERMUX_PKG_VERSION="7.1"
 TERMUX_PKG_REVISION=4
 TERMUX_PKG_SRCURL=https://www.ffmpeg.org/releases/ffmpeg-${TERMUX_PKG_VERSION}.tar.xz
 TERMUX_PKG_SHA256=40973d44970dbc83ef302b0609f2e74982be2d85916dd2ee7472d30678a7abe6
-TERMUX_PKG_DEPENDS="fontconfig, freetype, fribidi, game-music-emu, harfbuzz, libaom, libandroid-glob, libass, libbluray, libbz2, libdav1d, libfdk-aac, libgnutls, libiconv, liblzma, libmp3lame, libopencore-amr, libopenmpt, libopus, libsoxr, libsrt, libssh, libtheora, libv4l, libvidstab, libvmaf, libvo-amrwbenc, libvorbis, libvpx, libwebp, libx264, libx265, libxml2, libzimg, littlecms, ocl-icd, rubberband, svt-av1, xvidcore, zlib"
-#TERMUX_PKG_DEPENDS+=", librav1e"
+TERMUX_PKG_DEPENDS="fontconfig, freetype, fribidi, game-music-emu, harfbuzz, libaom, libandroid-glob, libass, libbluray, libbz2, libdav1d, libfdk-aac, libgnutls, libiconv, liblzma, libmp3lame, libopencore-amr, libopenmpt, libopus, librav1e, libsoxr, libsrt, libssh, libtheora, libv4l, libvidstab, libvmaf, libvo-amrwbenc, libvorbis, libvpx, libwebp, libx264, libx265, libxml2, libzimg, littlecms, ocl-icd, rubberband, svt-av1, xvidcore, zlib"
 TERMUX_PKG_BUILD_DEPENDS="opencl-headers"
 TERMUX_PKG_CONFLICTS="libav"
 TERMUX_PKG_BREAKS="ffmpeg-dev"
@@ -91,6 +90,7 @@ termux_step_configure() {
 		--enable-libopencore-amrwb \
 		--enable-libopenmpt \
 		--enable-libopus \
+		--enable-librav1e \
 		--enable-librubberband \
 		--enable-libsoxr \
 		--enable-libsrt \
@@ -117,7 +117,6 @@ termux_step_configure() {
 		--extra-libs="-landroid-glob" \
 		--disable-vulkan \
 		$_EXTRA_CONFIGURE_FLAGS
-		#--enable-librav1e
 	# GPLed FFmpeg binaries linked against fdk-aac are not redistributable.
 }
 
