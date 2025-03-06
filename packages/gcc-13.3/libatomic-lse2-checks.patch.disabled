@@ -1,0 +1,61 @@
+At present, Evaluation of both `has_lse2(hwcap)' and
+`has_lse128(hwcap)' may require issuing an `mrs' instruction to query
+a system register.  This instruction, when issued from user-space
+results in a trap by the kernel which then returns the value read in
+by the system register.  Given the undesirable nature of the
+computational expense associated with the context switch, it is
+important to implement mechanisms to, wherever possible, forgo the
+operation.
+
+In light of this, given how other architectural requirements serving
+as prerequisites have long been assigned HWCAP bits by the kernel, we
+can inexpensively query for their availability before attempting to
+read any system registers.  Where one of these early tests fail, we
+can assert that the main feature of interest (be it LSE2 or LSE128)
+cannot be present, allowing us to return from the function early and
+skip the unnecessary expensive kernel-mediated access to system
+registers.
+
+libatomic/ChangeLog:
+
+	* config/linux/aarch64/host-config.h (has_lse2): Add test for LSE.
+	(has_lse128): Add test for LSE2.
+---
+ libatomic/config/linux/aarch64/host-config.h | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/libatomic/config/linux/aarch64/host-config.h b/libatomic/config/linux/aarch64/host-config.h
+index 1bc7d839232..4e354124063 100644
+--- a/libatomic/config/linux/aarch64/host-config.h
++++ b/libatomic/config/linux/aarch64/host-config.h
+@@ -64,8 +64,13 @@ typedef struct __ifunc_arg_t {
+ static inline bool
+ has_lse2 (unsigned long hwcap, const __ifunc_arg_t *features)
+ {
++  /* Check for LSE2.  */
+   if (hwcap & HWCAP_USCAT)
+     return true;
++  /* No point checking further for atomic 128-bit load/store if LSE
++     prerequisite not met.  */
++  if (!(hwcap & HWCAP_ATOMICS))
++    return false;
+   if (!(hwcap & HWCAP_CPUID))
+     return false;
+ 
+@@ -99,9 +104,11 @@ has_lse128 (unsigned long hwcap, const __ifunc_arg_t *features)
+      support in older kernels as it is of CPU feature absence.  Try fallback
+      method to guarantee LSE128 is not implemented.
+ 
+-     In the absence of HWCAP_CPUID, we are unable to check for LSE128.  */
+-  if (!(hwcap & HWCAP_CPUID))
+-    return false;
++     In the absence of HWCAP_CPUID, we are unable to check for LSE128.
++     If feature check available, check LSE2 prerequisite before proceeding.  */
++  if (!(hwcap & HWCAP_CPUID) || !(hwcap & HWCAP_USCAT))
++     return false;
++
+   unsigned long isar0;
+   asm volatile ("mrs %0, ID_AA64ISAR0_EL1" : "=r" (isar0));
+   if (AT_FEAT_FIELD (isar0) >= 3)
+-- 
+2.42.0

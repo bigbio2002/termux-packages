@@ -1,0 +1,393 @@
+From: Victor Do Nascimento <victor.donascimento@arm.com>
+To: <gcc-patches@gcc.gnu.org>
+Cc: <kyrylo.tkachov@arm.com>, <richard.sandiford@arm.com>,
+	<Richard.Earnshaw@arm.com>,
+	Victor Do Nascimento <victor.donascimento@arm.com>
+Subject: [PATCH v2 1/2] libatomic: atomic_16.S: Improve ENTRY, END and ALIAS macro interface
+Date: Mon, 13 Nov 2023 11:37:32 +0000	[thread overview]
+Message-ID: <20231113113744.70784-2-victor.donascimento@arm.com> (raw)
+In-Reply-To: <20231113113744.70784-1-victor.donascimento@arm.com>
+
+The introduction of further architectural-feature dependent ifuncs
+for AArch64 makes hard-coding ifunc `_i<n>' suffixes to functions
+cumbersome to work with.  It is awkward to remember which ifunc maps
+onto which arch feature and makes the code harder to maintain when new
+ifuncs are added and their suffixes possibly altered.
+
+This patch uses pre-processor `#define' statements to map each suffix to
+a descriptive feature name macro, for example:
+
+  #define LSE2 _i1
+
+and reconstructs function names with the pre-processor's token
+concatenation feature, such that for `MACRO(name)', we would now have
+`MACRO(name, feature)' and in the macro definition body we replace
+`name` with `name##feature`.
+
+libatomic/ChangeLog:
+	* config/linux/aarch64/atomic_16.S (CORE): New macro.
+	(LSE2): Likewise.
+	(ENTRY): Modify macro to take in `arch' argument.
+	(END): Likewise.
+	(ALIAS): Likewise.
+	(ENTRY1): New macro.
+	(END1): Likewise.
+	(ALIAS): Likewise.
+---
+ libatomic/config/linux/aarch64/atomic_16.S | 147 +++++++++++----------
+ 1 file changed, 79 insertions(+), 68 deletions(-)
+
+diff --git a/libatomic/config/linux/aarch64/atomic_16.S b/libatomic/config/linux/aarch64/atomic_16.S
+index 0485c284117..3f6225830e6 100644
+--- a/libatomic/config/linux/aarch64/atomic_16.S
++++ b/libatomic/config/linux/aarch64/atomic_16.S
+@@ -39,22 +39,34 @@
+ 
+ 	.arch	armv8-a+lse
+ 
+-#define ENTRY(name)		\
+-	.global name;		\
+-	.hidden name;		\
+-	.type name,%function;	\
+-	.p2align 4;		\
+-name:				\
+-	.cfi_startproc;		\
++#define ENTRY(name, feat)		\
++	ENTRY1(name, feat)
++
++#define ENTRY1(name, feat)		\
++	.global name##feat;		\
++	.hidden name##feat;		\
++	.type name##feat,%function;	\
++	.p2align 4;			\
++name##feat:				\
++	.cfi_startproc;			\
+ 	hint	34	// bti c
+ 
+-#define END(name)		\
+-	.cfi_endproc;		\
+-	.size name, .-name;
++#define END(name, feat)			\
++	END1(name, feat)
+ 
+-#define ALIAS(alias,name)	\
+-	.global alias;		\
+-	.set alias, name;
++#define END1(name, feat)		\
++	.cfi_endproc;			\
++	.size name##feat, .-name##feat;
++
++#define ALIAS(alias, from, to)		\
++	ALIAS1(alias,from,to)
++
++#define ALIAS1(alias, from, to)		\
++	.global alias##from;		\
++	.set alias##from, alias##to;
++
++#define CORE
++#define LSE2	_i1
+ 
+ #define res0 x0
+ #define res1 x1
+@@ -89,7 +101,7 @@ name:				\
+ #define SEQ_CST 5
+ 
+ 
+-ENTRY (libat_load_16)
++ENTRY (libat_load_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w1, 2f
+ 
+@@ -104,10 +116,10 @@ ENTRY (libat_load_16)
+ 	stxp	w4, res0, res1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_load_16)
++END (libat_load_16, CORE)
+ 
+ 
+-ENTRY (libat_load_16_i1)
++ENTRY (libat_load_16, LSE2)
+ 	cbnz	w1, 1f
+ 
+ 	/* RELAXED.  */
+@@ -127,10 +139,10 @@ ENTRY (libat_load_16_i1)
+ 	ldp	res0, res1, [x0]
+ 	dmb	ishld
+ 	ret
+-END (libat_load_16_i1)
++END (libat_load_16, LSE2)
+ 
+ 
+-ENTRY (libat_store_16)
++ENTRY (libat_store_16, CORE)
+ 	cbnz	w4, 2f
+ 
+ 	/* RELAXED.  */
+@@ -144,10 +156,10 @@ ENTRY (libat_store_16)
+ 	stlxp	w4, in0, in1, [x0]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_store_16)
++END (libat_store_16, CORE)
+ 
+ 
+-ENTRY (libat_store_16_i1)
++ENTRY (libat_store_16, LSE2)
+ 	cbnz	w4, 1f
+ 
+ 	/* RELAXED.  */
+@@ -159,10 +171,10 @@ ENTRY (libat_store_16_i1)
+ 	stlxp	w4, in0, in1, [x0]
+ 	cbnz	w4, 1b
+ 	ret
+-END (libat_store_16_i1)
++END (libat_store_16, LSE2)
+ 
+ 
+-ENTRY (libat_exchange_16)
++ENTRY (libat_exchange_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+ 
+@@ -186,10 +198,10 @@ ENTRY (libat_exchange_16)
+ 	stlxp	w4, in0, in1, [x5]
+ 	cbnz	w4, 4b
+ 	ret
+-END (libat_exchange_16)
++END (libat_exchange_16, CORE)
+ 
+ 
+-ENTRY (libat_compare_exchange_16)
++ENTRY (libat_compare_exchange_16, CORE)
+ 	ldp	exp0, exp1, [x1]
+ 	cbz	w4, 3f
+ 	cmp	w4, RELEASE
+@@ -228,10 +240,10 @@ ENTRY (libat_compare_exchange_16)
+ 	cbnz	w4, 4b
+ 	mov	x0, 1
+ 	ret
+-END (libat_compare_exchange_16)
++END (libat_compare_exchange_16, CORE)
+ 
+ 
+-ENTRY (libat_compare_exchange_16_i1)
++ENTRY (libat_compare_exchange_16, LSE2)
+ 	ldp	exp0, exp1, [x1]
+ 	mov	tmp0, exp0
+ 	mov	tmp1, exp1
+@@ -264,10 +276,10 @@ ENTRY (libat_compare_exchange_16_i1)
+ 	/* ACQ_REL/SEQ_CST.  */
+ 4:	caspal	exp0, exp1, in0, in1, [x0]
+ 	b	0b
+-END (libat_compare_exchange_16_i1)
++END (libat_compare_exchange_16, LSE2)
+ 
+ 
+-ENTRY (libat_fetch_add_16)
++ENTRY (libat_fetch_add_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+ 
+@@ -286,10 +298,10 @@ ENTRY (libat_fetch_add_16)
+ 	stlxp	w4, tmp0, tmp1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_fetch_add_16)
++END (libat_fetch_add_16, CORE)
+ 
+ 
+-ENTRY (libat_add_fetch_16)
++ENTRY (libat_add_fetch_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+ 
+@@ -308,10 +320,10 @@ ENTRY (libat_add_fetch_16)
+ 	stlxp	w4, res0, res1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_add_fetch_16)
++END (libat_add_fetch_16, CORE)
+ 
+ 
+-ENTRY (libat_fetch_sub_16)
++ENTRY (libat_fetch_sub_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+ 
+@@ -330,10 +342,10 @@ ENTRY (libat_fetch_sub_16)
+ 	stlxp	w4, tmp0, tmp1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_fetch_sub_16)
++END (libat_fetch_sub_16, CORE)
+ 
+ 
+-ENTRY (libat_sub_fetch_16)
++ENTRY (libat_sub_fetch_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+ 
+@@ -352,10 +364,10 @@ ENTRY (libat_sub_fetch_16)
+ 	stlxp	w4, res0, res1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_sub_fetch_16)
++END (libat_sub_fetch_16, CORE)
+ 
+ 
+-ENTRY (libat_fetch_or_16)
++ENTRY (libat_fetch_or_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+ 
+@@ -374,10 +386,10 @@ ENTRY (libat_fetch_or_16)
+ 	stlxp	w4, tmp0, tmp1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_fetch_or_16)
++END (libat_fetch_or_16, CORE)
+ 
+ 
+-ENTRY (libat_or_fetch_16)
++ENTRY (libat_or_fetch_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+ 
+@@ -396,10 +408,10 @@ ENTRY (libat_or_fetch_16)
+ 	stlxp	w4, res0, res1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_or_fetch_16)
++END (libat_or_fetch_16, CORE)
+ 
+ 
+-ENTRY (libat_fetch_and_16)
++ENTRY (libat_fetch_and_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+ 
+@@ -418,10 +430,10 @@ ENTRY (libat_fetch_and_16)
+ 	stlxp	w4, tmp0, tmp1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_fetch_and_16)
++END (libat_fetch_and_16, CORE)
+ 
+ 
+-ENTRY (libat_and_fetch_16)
++ENTRY (libat_and_fetch_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+ 
+@@ -440,10 +452,10 @@ ENTRY (libat_and_fetch_16)
+ 	stlxp	w4, res0, res1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_and_fetch_16)
++END (libat_and_fetch_16, CORE)
+ 
+ 
+-ENTRY (libat_fetch_xor_16)
++ENTRY (libat_fetch_xor_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+ 
+@@ -462,10 +474,10 @@ ENTRY (libat_fetch_xor_16)
+ 	stlxp	w4, tmp0, tmp1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_fetch_xor_16)
++END (libat_fetch_xor_16, CORE)
+ 
+ 
+-ENTRY (libat_xor_fetch_16)
++ENTRY (libat_xor_fetch_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+ 
+@@ -484,10 +496,10 @@ ENTRY (libat_xor_fetch_16)
+ 	stlxp	w4, res0, res1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_xor_fetch_16)
++END (libat_xor_fetch_16, CORE)
+ 
+ 
+-ENTRY (libat_fetch_nand_16)
++ENTRY (libat_fetch_nand_16, CORE)
+ 	mov	x5, x0
+ 	mvn	in0, in0
+ 	mvn	in1, in1
+@@ -508,10 +520,10 @@ ENTRY (libat_fetch_nand_16)
+ 	stlxp	w4, tmp0, tmp1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_fetch_nand_16)
++END (libat_fetch_nand_16, CORE)
+ 
+ 
+-ENTRY (libat_nand_fetch_16)
++ENTRY (libat_nand_fetch_16, CORE)
+ 	mov	x5, x0
+ 	mvn	in0, in0
+ 	mvn	in1, in1
+@@ -532,12 +544,12 @@ ENTRY (libat_nand_fetch_16)
+ 	stlxp	w4, res0, res1, [x5]
+ 	cbnz	w4, 2b
+ 	ret
+-END (libat_nand_fetch_16)
++END (libat_nand_fetch_16, CORE)
+ 
+ 
+ /* __atomic_test_and_set is always inlined, so this entry is unused and
+    only required for completeness.  */
+-ENTRY (libat_test_and_set_16)
++ENTRY (libat_test_and_set_16, CORE)
+ 
+ 	/* RELAXED/ACQUIRE/CONSUME/RELEASE/ACQ_REL/SEQ_CST.  */
+ 	mov	x5, x0
+@@ -545,26 +557,25 @@ ENTRY (libat_test_and_set_16)
+ 	stlxrb	w4, w2, [x5]
+ 	cbnz	w4, 1b
+ 	ret
+-END (libat_test_and_set_16)
++END (libat_test_and_set_16, CORE)
+ 
+ 
+ /* Alias entry points which are the same in baseline and LSE2.  */
+ 
+-ALIAS (libat_exchange_16_i1, libat_exchange_16)
+-ALIAS (libat_fetch_add_16_i1, libat_fetch_add_16)
+-ALIAS (libat_add_fetch_16_i1, libat_add_fetch_16)
+-ALIAS (libat_fetch_sub_16_i1, libat_fetch_sub_16)
+-ALIAS (libat_sub_fetch_16_i1, libat_sub_fetch_16)
+-ALIAS (libat_fetch_or_16_i1, libat_fetch_or_16)
+-ALIAS (libat_or_fetch_16_i1, libat_or_fetch_16)
+-ALIAS (libat_fetch_and_16_i1, libat_fetch_and_16)
+-ALIAS (libat_and_fetch_16_i1, libat_and_fetch_16)
+-ALIAS (libat_fetch_xor_16_i1, libat_fetch_xor_16)
+-ALIAS (libat_xor_fetch_16_i1, libat_xor_fetch_16)
+-ALIAS (libat_fetch_nand_16_i1, libat_fetch_nand_16)
+-ALIAS (libat_nand_fetch_16_i1, libat_nand_fetch_16)
+-ALIAS (libat_test_and_set_16_i1, libat_test_and_set_16)
+-
++ALIAS (libat_exchange_16, LSE2, CORE)
++ALIAS (libat_fetch_add_16, LSE2, CORE)
++ALIAS (libat_add_fetch_16, LSE2, CORE)
++ALIAS (libat_fetch_sub_16, LSE2, CORE)
++ALIAS (libat_sub_fetch_16, LSE2, CORE)
++ALIAS (libat_fetch_or_16, LSE2, CORE)
++ALIAS (libat_or_fetch_16, LSE2, CORE)
++ALIAS (libat_fetch_and_16, LSE2, CORE)
++ALIAS (libat_and_fetch_16, LSE2, CORE)
++ALIAS (libat_fetch_xor_16, LSE2, CORE)
++ALIAS (libat_xor_fetch_16, LSE2, CORE)
++ALIAS (libat_fetch_nand_16, LSE2, CORE)
++ALIAS (libat_nand_fetch_16, LSE2, CORE)
++ALIAS (libat_test_and_set_16, LSE2, CORE)
+ 
+ /* GNU_PROPERTY_AARCH64_* macros from elf.h for use in asm code.  */
+ #define FEATURE_1_AND 0xc0000000
+-- 
+2.42.0

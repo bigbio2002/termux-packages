@@ -1,0 +1,47 @@
+From: Victor Do Nascimento <victor.donascimento@arm.com>
+To: <gcc-patches@gcc.gnu.org>
+Cc: <kyrylo.tkachov@arm.com>, <richard.sandiford@arm.com>,
+	<Richard.Earnshaw@arm.com>,
+	Victor Do Nascimento <victor.donascimento@arm.com>
+Subject: [PATCH v2 0/2] Libatomic: Add LSE128 atomics support for AArch64
+Date: Mon, 13 Nov 2023 11:37:31 +0000	[thread overview]
+Message-ID: <20231113113744.70784-1-victor.donascimento@arm.com> (raw)
+
+v2 updates:
+
+Move the previously unguarded definition of IFUNC_NCONDN(N) in
+`host-config.h' to within the scope of `#ifdef HWCAP_USCAP'.
+This is done so that its definition is not only contingent on the
+value of N but also on the definition of HWCAP_USCAP as it was found
+that building on systems where !HWCAP_USCAP and N == 16 led to a
+previously-undetected build error.
+
+---
+
+Building upon Wilco Dijkstra's work on AArch64 128-bit atomics for
+Libatomic, namely the patches from [1] and [2],  this patch series
+extends the library's  capabilities to dynamically select and emit
+Armv9.4-a LSE128 implementations of atomic operations via ifuncs at
+run-time whenever architectural support is present.
+
+Regression tested on aarch64-linux-gnu target with LSE128-support.
+
+[1] https://gcc.gnu.org/pipermail/gcc-patches/2023-June/620529.html
+[2] https://gcc.gnu.org/pipermail/gcc-patches/2023-August/626358.html
+
+Victor Do Nascimento (2):
+  libatomic: atomic_16.S: Improve ENTRY, END and ALIAS macro interface
+  libatomic: Enable LSE128 128-bit atomics for armv9.4-a
+
+ libatomic/Makefile.am                        |   3 +
+ libatomic/Makefile.in                        |   1 +
+ libatomic/acinclude.m4                       |  19 ++
+ libatomic/auto-config.h.in                   |   3 +
+ libatomic/config/linux/aarch64/atomic_16.S   | 315 ++++++++++++++-----
+ libatomic/config/linux/aarch64/host-config.h |  27 +-
+ libatomic/configure                          |  59 +++-
+ libatomic/configure.ac                       |   1 +
+ 8 files changed, 352 insertions(+), 76 deletions(-)
+
+-- 
+2.42.0

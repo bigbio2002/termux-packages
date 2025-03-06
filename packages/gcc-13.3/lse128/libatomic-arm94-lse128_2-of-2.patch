@@ -1,0 +1,539 @@
+From: Victor Do Nascimento <victor.donascimento@arm.com>
+To: <gcc-patches@gcc.gnu.org>
+Cc: <kyrylo.tkachov@arm.com>, <richard.sandiford@arm.com>,
+	<Richard.Earnshaw@arm.com>,
+	Victor Do Nascimento <victor.donascimento@arm.com>
+Subject: [PATCH v2 2/2] libatomic: Enable LSE128 128-bit atomics for armv9.4-a
+Date: Mon, 13 Nov 2023 11:37:33 +0000	[thread overview]
+Message-ID: <20231113113744.70784-3-victor.donascimento@arm.com> (raw)
+In-Reply-To: <20231113113744.70784-1-victor.donascimento@arm.com>
+
+The armv9.4-a architectural revision adds three new atomic operations
+associated with the LSE128 feature:
+
+  * LDCLRP - Atomic AND NOT (bitclear) of a location with 128-bit
+  value held in a pair of registers, with original data loaded into
+  the same 2 registers.
+  * LDSETP - Atomic OR (bitset) of a location with 128-bit value held
+  in a pair of registers, with original data loaded into the same 2
+  registers.
+  * SWPP - Atomic swap of one 128-bit value with 128-bit value held
+  in a pair of registers.
+
+This patch adds the logic required to make use of these when the
+architectural feature is present and a suitable assembler available.
+
+In order to do this, the following changes are made:
+
+  1. Add a configure-time check to check for LSE128 support in the
+  assembler.
+  2. Edit host-config.h so that when N == 16, nifunc = 2.
+  3. Where available due to LSE128, implement the second ifunc, making
+  use of the novel instructions.
+  4. For atomic functions unable to make use of these new
+  instructions, define a new alias which causes the _i1 function
+  variant to point ahead to the corresponding _i2 implementation.
+
+libatomic/ChangeLog:
+
+	* Makefile.am (AM_CPPFLAGS): add conditional setting of
+	-DHAVE_FEAT_LSE128.
+	* acinclude.m4 (LIBAT_TEST_FEAT_LSE128): New.
+	* config/linux/aarch64/atomic_16.S (LSE128): New macro
+	definition.
+	(libat_exchange_16): New LSE128 variant.
+	(libat_fetch_or_16): Likewise.
+	(libat_or_fetch_16): Likewise.
+	(libat_fetch_and_16): Likewise.
+	(libat_and_fetch_16): Likewise.
+	* config/linux/aarch64/host-config.h (IFUNC_COND_2): New.
+	(IFUNC_NCOND): Add operand size checking.
+	(has_lse2): Renamed from `ifunc1`.
+	(has_lse128): New.
+	(HAS_LSE128): Likewise.
+	* libatomic/configure.ac: Add call to LIBAT_TEST_FEAT_LSE128.
+	* configure (ac_subst_vars): Regenerated via autoreconf.
+	* libatomic/Makefile.in: Likewise.
+	* libatomic/auto-config.h.in: Likewise.
+---
+ libatomic/Makefile.am                        |   3 +
+ libatomic/Makefile.in                        |   1 +
+ libatomic/acinclude.m4                       |  19 +++
+ libatomic/auto-config.h.in                   |   3 +
+ libatomic/config/linux/aarch64/atomic_16.S   | 170 ++++++++++++++++++-
+ libatomic/config/linux/aarch64/host-config.h |  27 ++-
+ libatomic/configure                          |  59 ++++++-
+ libatomic/configure.ac                       |   1 +
+ 8 files changed, 274 insertions(+), 9 deletions(-)
+
+diff --git a/libatomic/Makefile.am b/libatomic/Makefile.am
+index c0b8dea5037..24e843db67d 100644
+--- a/libatomic/Makefile.am
++++ b/libatomic/Makefile.am
+@@ -130,6 +130,9 @@ libatomic_la_LIBADD = $(foreach s,$(SIZES),$(addsuffix _$(s)_.lo,$(SIZEOBJS)))
+ ## On a target-specific basis, include alternates to be selected by IFUNC.
+ if HAVE_IFUNC
+ if ARCH_AARCH64_LINUX
++if ARCH_AARCH64_HAVE_LSE128
++AM_CPPFLAGS	     = -DHAVE_FEAT_LSE128
++endif
+ IFUNC_OPTIONS	     = -march=armv8-a+lse
+ libatomic_la_LIBADD += $(foreach s,$(SIZES),$(addsuffix _$(s)_1_.lo,$(SIZEOBJS)))
+ libatomic_la_SOURCES += atomic_16.S
+diff --git a/libatomic/Makefile.in b/libatomic/Makefile.in
+index dc2330b91fd..cd48fa21334 100644
+--- a/libatomic/Makefile.in
++++ b/libatomic/Makefile.in
+@@ -452,6 +452,7 @@ M_SRC = $(firstword $(filter %/$(M_FILE), $(all_c_files)))
+ libatomic_la_LIBADD = $(foreach s,$(SIZES),$(addsuffix \
+ 	_$(s)_.lo,$(SIZEOBJS))) $(am__append_1) $(am__append_3) \
+ 	$(am__append_4) $(am__append_5)
++@ARCH_AARCH64_HAVE_LSE128_TRUE@@ARCH_AARCH64_LINUX_TRUE@@HAVE_IFUNC_TRUE@AM_CPPFLAGS = -DHAVE_FEAT_LSE128
+ @ARCH_AARCH64_LINUX_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS = -march=armv8-a+lse
+ @ARCH_ARM_LINUX_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS = -march=armv7-a+fp -DHAVE_KERNEL64
+ @ARCH_I386_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS = -march=i586
+diff --git a/libatomic/acinclude.m4 b/libatomic/acinclude.m4
+index f35ab5b60a5..4197db8f404 100644
+--- a/libatomic/acinclude.m4
++++ b/libatomic/acinclude.m4
+@@ -83,6 +83,25 @@ AC_DEFUN([LIBAT_TEST_ATOMIC_BUILTIN],[
+   ])
+ ])
+ 
++dnl
++dnl Test if the host assembler supports armv9.4-a LSE128 isns.
++dnl
++AC_DEFUN([LIBAT_TEST_FEAT_LSE128],[
++  AC_CACHE_CHECK([for armv9.4-a LSE128 insn support],
++    [libat_cv_have_feat_lse128],[
++    AC_LANG_CONFTEST([AC_LANG_PROGRAM([],[asm(".arch armv9-a+lse128")])])
++    if AC_TRY_EVAL(ac_link); then
++      eval libat_cv_have_feat_lse128=yes
++    else
++      eval libat_cv_have_feat_lse128=no
++    fi
++    rm -f conftest*
++  ])
++  LIBAT_DEFINE_YESNO([HAVE_FEAT_LSE128], [$libat_cv_have_feat_lse128],
++	[Have LSE128 support for 16 byte integers.])
++  AM_CONDITIONAL([ARCH_AARCH64_HAVE_LSE128], [test x$libat_cv_have_feat_lse128 = xyes])
++])
++
+ dnl
+ dnl Test if we have __atomic_load and __atomic_store for mode $1, size $2
+ dnl
+diff --git a/libatomic/auto-config.h.in b/libatomic/auto-config.h.in
+index ab3424a759e..7c78933b07d 100644
+--- a/libatomic/auto-config.h.in
++++ b/libatomic/auto-config.h.in
+@@ -105,6 +105,9 @@
+ /* Define to 1 if you have the <dlfcn.h> header file. */
+ #undef HAVE_DLFCN_H
+ 
++/* Have LSE128 support for 16 byte integers. */
++#undef HAVE_FEAT_LSE128
++
+ /* Define to 1 if you have the <fenv.h> header file. */
+ #undef HAVE_FENV_H
+ 
+diff --git a/libatomic/config/linux/aarch64/atomic_16.S b/libatomic/config/linux/aarch64/atomic_16.S
+index 3f6225830e6..44a773031f8 100644
+--- a/libatomic/config/linux/aarch64/atomic_16.S
++++ b/libatomic/config/linux/aarch64/atomic_16.S
+@@ -34,10 +34,14 @@
+    writes, this will be true when using atomics in actual code.
+ 
+    The libat_<op>_16 entry points are ARMv8.0.
+-   The libat_<op>_16_i1 entry points are used when LSE2 is available.  */
+-
++   The libat_<op>_16_i1 entry points are used when LSE128 is available.
++   The libat_<op>_16_i2 entry points are used when LSE2 is available.  */
+ 
++#if HAVE_FEAT_LSE128
++	.arch	armv8-a+lse128
++#else
+ 	.arch	armv8-a+lse
++#endif
+ 
+ #define ENTRY(name, feat)		\
+ 	ENTRY1(name, feat)
+@@ -66,7 +70,8 @@ name##feat:				\
+ 	.set alias##from, alias##to;
+ 
+ #define CORE
+-#define LSE2	_i1
++#define LSE128	_i1
++#define LSE2	_i2
+ 
+ #define res0 x0
+ #define res1 x1
+@@ -201,6 +206,31 @@ ENTRY (libat_exchange_16, CORE)
+ END (libat_exchange_16, CORE)
+ 
+ 
++#if HAVE_FEAT_LSE128
++ENTRY (libat_exchange_16, LSE128)
++	mov	tmp0, x0
++	mov	res0, in0
++	mov	res1, in1
++	cbnz	w4, 1f
++
++	/* RELAXED.  */
++	swpp	res0, res1, [tmp0]
++	ret
++1:
++	cmp	w4, ACQUIRE
++	b.hi	2f
++
++	/* ACQUIRE/CONSUME.  */
++	swppa	res0, res1, [tmp0]
++	ret
++
++	/* RELEASE/ACQ_REL/SEQ_CST.  */
++2:	swppal	res0, res1, [tmp0]
++	ret
++END (libat_exchange_16, LSE128)
++#endif
++
++
+ ENTRY (libat_compare_exchange_16, CORE)
+ 	ldp	exp0, exp1, [x1]
+ 	cbz	w4, 3f
+@@ -389,6 +419,31 @@ ENTRY (libat_fetch_or_16, CORE)
+ END (libat_fetch_or_16, CORE)
+ 
+ 
++#if HAVE_FEAT_LSE128
++ENTRY (libat_fetch_or_16, LSE128)
++	mov	tmp0, x0
++	mov	res0, in0
++	mov	res1, in1
++	cbnz	w4, 1f
++
++	/* RELAXED.  */
++	ldsetp	res0, res1, [tmp0]
++	ret
++1:
++	cmp	w4, ACQUIRE
++	b.hi	2f
++
++	/* ACQUIRE/CONSUME.  */
++	ldsetpa	res0, res1, [tmp0]
++	ret
++
++	/* RELEASE/ACQ_REL/SEQ_CST.  */
++2:	ldsetpal	res0, res1, [tmp0]
++	ret
++END (libat_fetch_or_16, LSE128)
++#endif
++
++
+ ENTRY (libat_or_fetch_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+@@ -411,6 +466,36 @@ ENTRY (libat_or_fetch_16, CORE)
+ END (libat_or_fetch_16, CORE)
+ 
+ 
++#if HAVE_FEAT_LSE128
++ENTRY (libat_or_fetch_16, LSE128)
++	cbnz	w4, 1f
++	mov	tmp0, in0
++	mov	tmp1, in1
++
++	/* RELAXED.  */
++	ldsetp	in0, in1, [x0]
++	orr	res0, in0, tmp0
++	orr	res1, in1, tmp1
++	ret
++1:
++	cmp	w4, ACQUIRE
++	b.hi	2f
++
++	/* ACQUIRE/CONSUME.  */
++	ldsetpa	in0, in1, [x0]
++	orr	res0, in0, tmp0
++	orr	res1, in1, tmp1
++	ret
++
++	/* RELEASE/ACQ_REL/SEQ_CST.  */
++2:	ldsetpal	in0, in1, [x0]
++	orr	res0, in0, tmp0
++	orr	res1, in1, tmp1
++	ret
++END (libat_or_fetch_16, LSE128)
++#endif
++
++
+ ENTRY (libat_fetch_and_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+@@ -433,6 +518,32 @@ ENTRY (libat_fetch_and_16, CORE)
+ END (libat_fetch_and_16, CORE)
+ 
+ 
++#if HAVE_FEAT_LSE128
++ENTRY (libat_fetch_and_16, LSE128)
++	mov	tmp0, x0
++	mvn	res0, in0
++	mvn	res1, in1
++	cbnz	w4, 1f
++
++	/* RELAXED.  */
++	ldclrp	res0, res1, [tmp0]
++	ret
++
++1:
++	cmp	w4, ACQUIRE
++	b.hi	2f
++
++	/* ACQUIRE/CONSUME.  */
++	ldclrpa res0, res1, [tmp0]
++	ret
++
++	/* RELEASE/ACQ_REL/SEQ_CST.  */
++2:	ldclrpal	res0, res1, [tmp0]
++	ret
++END (libat_fetch_and_16, LSE128)
++#endif
++
++
+ ENTRY (libat_and_fetch_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+@@ -455,6 +566,37 @@ ENTRY (libat_and_fetch_16, CORE)
+ END (libat_and_fetch_16, CORE)
+ 
+ 
++#if HAVE_FEAT_LSE128
++ENTRY (libat_and_fetch_16, LSE128)
++	mvn	tmp0, in0
++	mvn	tmp0, in1
++	cbnz	w4, 1f
++
++	/* RELAXED.  */
++	ldclrp	tmp0, tmp1, [x0]
++	and	res0, tmp0, in0
++	and	res1, tmp1, in1
++	ret
++
++1:
++	cmp	w4, ACQUIRE
++	b.hi	2f
++
++	/* ACQUIRE/CONSUME.  */
++	ldclrpa tmp0, tmp1, [x0]
++	and	res0, tmp0, in0
++	and	res1, tmp1, in1
++	ret
++
++	/* RELEASE/ACQ_REL/SEQ_CST.  */
++2:	ldclrpal	tmp0, tmp1, [x5]
++	and	res0, tmp0, in0
++	and	res1, tmp1, in1
++	ret
++END (libat_and_fetch_16, LSE128)
++#endif
++
++
+ ENTRY (libat_fetch_xor_16, CORE)
+ 	mov	x5, x0
+ 	cbnz	w4, 2f
+@@ -560,6 +702,28 @@ ENTRY (libat_test_and_set_16, CORE)
+ END (libat_test_and_set_16, CORE)
+ 
+ 
++/* Alias entry points which are the same in LSE2 and LSE128.  */
++
++#if !HAVE_FEAT_LSE128
++ALIAS (libat_exchange_16, LSE128, LSE2)
++ALIAS (libat_fetch_or_16, LSE128, LSE2)
++ALIAS (libat_fetch_and_16, LSE128, LSE2)
++ALIAS (libat_or_fetch_16, LSE128, LSE2)
++ALIAS (libat_and_fetch_16, LSE128, LSE2)
++#endif
++ALIAS (libat_load_16, LSE128, LSE2)
++ALIAS (libat_store_16, LSE128, LSE2)
++ALIAS (libat_compare_exchange_16, LSE128, LSE2)
++ALIAS (libat_fetch_add_16, LSE128, LSE2)
++ALIAS (libat_add_fetch_16, LSE128, LSE2)
++ALIAS (libat_fetch_sub_16, LSE128, LSE2)
++ALIAS (libat_sub_fetch_16, LSE128, LSE2)
++ALIAS (libat_fetch_xor_16, LSE128, LSE2)
++ALIAS (libat_xor_fetch_16, LSE128, LSE2)
++ALIAS (libat_fetch_nand_16, LSE128, LSE2)
++ALIAS (libat_nand_fetch_16, LSE128, LSE2)
++ALIAS (libat_test_and_set_16, LSE128, LSE2)
++
+ /* Alias entry points which are the same in baseline and LSE2.  */
+ 
+ ALIAS (libat_exchange_16, LSE2, CORE)
+diff --git a/libatomic/config/linux/aarch64/host-config.h b/libatomic/config/linux/aarch64/host-config.h
+index 30ef21c7715..d873e91b1c9 100644
+--- a/libatomic/config/linux/aarch64/host-config.h
++++ b/libatomic/config/linux/aarch64/host-config.h
+@@ -26,14 +26,17 @@
+ 
+ #ifdef HWCAP_USCAT
+ # if N == 16
+-#  define IFUNC_COND_1	(ifunc1 (hwcap))
++#  define IFUNC_COND_1		(has_lse128 (hwcap))
++#  define IFUNC_COND_2		(has_lse2 (hwcap))
++#  define IFUNC_NCOND(N)	2
+ # else
+-#  define IFUNC_COND_1	(hwcap & HWCAP_ATOMICS)
++#  define IFUNC_COND_1		(hwcap & HWCAP_ATOMICS)
++#  define IFUNC_NCOND(N)	1
+ # endif
+ #else
+ #  define IFUNC_COND_1	(false)
++#  define IFUNC_NCOND(N)	1
+ #endif
+-#define IFUNC_NCOND(N)	(1)
+ 
+ #endif /* HAVE_IFUNC */
+ 
+@@ -56,7 +59,7 @@
+ #define MIDR_PARTNUM(midr)	(((midr) >> 4) & 0xfff)
+ 
+ static inline bool
+-ifunc1 (unsigned long hwcap)
++has_lse2 (unsigned long hwcap)
+ {
+   if (hwcap & HWCAP_USCAT)
+     return true;
+@@ -69,6 +72,22 @@ ifunc1 (unsigned long hwcap)
+     return true;
+   return false;
+ }
++
++/* LSE128 atomic support encoded in ID_AA64ISAR0_EL1.Atomic,
++   bits[23:20].  The expected value is 0b0011.  Check that.  */
++#define HAS_LSE128() ({						\
++  unsigned long val;						\
++  asm volatile ("mrs %0, ID_AA64ISAR0_EL1" : "=r" (val));	\
++  (val & 0xf00000) >= 0x300000;					\
++    })
++
++static inline bool
++has_lse128 (unsigned long hwcap)
++{
++  if (has_lse2 (hwcap) && HAS_LSE128 ())
++    return true;
++  return false;
++}
+ #endif
+ 
+ #include_next <host-config.h>
+diff --git a/libatomic/configure b/libatomic/configure
+index d579bab96f8..ee3bbb97d69 100755
+--- a/libatomic/configure
++++ b/libatomic/configure
+@@ -657,6 +657,8 @@ LIBAT_BUILD_VERSIONED_SHLIB_TRUE
+ OPT_LDFLAGS
+ SECTION_LDFLAGS
+ SYSROOT_CFLAGS_FOR_TARGET
++ARCH_AARCH64_HAVE_LSE128_FALSE
++ARCH_AARCH64_HAVE_LSE128_TRUE
+ enable_aarch64_lse
+ libtool_VERSION
+ ENABLE_DARWIN_AT_RPATH_FALSE
+@@ -11456,7 +11458,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 11459 "configure"
++#line 11461 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -11562,7 +11564,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 11565 "configure"
++#line 11567 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -11926,6 +11928,55 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
+ ac_compiler_gnu=$ac_cv_c_compiler_gnu
+ 
+ 
++
++  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for armv9.4-a LSE128 insn support" >&5
++$as_echo_n "checking for armv9.4-a LSE128 insn support... " >&6; }
++if ${libat_cv_have_feat_lse128+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++
++    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++
++int
++main ()
++{
++asm(".arch armv9-a+lse128")
++  ;
++  return 0;
++}
++_ACEOF
++    if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_link\""; } >&5
++  (eval $ac_link) 2>&5
++  ac_status=$?
++  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
++  test $ac_status = 0; }; then
++      eval libat_cv_have_feat_lse128=yes
++    else
++      eval libat_cv_have_feat_lse128=no
++    fi
++    rm -f conftest*
++
++fi
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libat_cv_have_feat_lse128" >&5
++$as_echo "$libat_cv_have_feat_lse128" >&6; }
++
++  yesno=`echo $libat_cv_have_feat_lse128 | tr 'yesno' '1  0 '`
++
++cat >>confdefs.h <<_ACEOF
++#define HAVE_FEAT_LSE128 $yesno
++_ACEOF
++
++
++   if test x$libat_cv_have_feat_lse128 = xyes; then
++  ARCH_AARCH64_HAVE_LSE128_TRUE=
++  ARCH_AARCH64_HAVE_LSE128_FALSE='#'
++else
++  ARCH_AARCH64_HAVE_LSE128_TRUE='#'
++  ARCH_AARCH64_HAVE_LSE128_FALSE=
++fi
++
++
+     ;;
+ esac
+ 
+@@ -15989,6 +16040,10 @@ if test -z "${ENABLE_DARWIN_AT_RPATH_TRUE}" && test -z "${ENABLE_DARWIN_AT_RPATH
+   as_fn_error $? "conditional \"ENABLE_DARWIN_AT_RPATH\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${ARCH_AARCH64_HAVE_LSE128_TRUE}" && test -z "${ARCH_AARCH64_HAVE_LSE128_FALSE}"; then
++  as_fn_error $? "conditional \"ARCH_AARCH64_HAVE_LSE128\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ 
+ if test -z "${LIBAT_BUILD_VERSIONED_SHLIB_TRUE}" && test -z "${LIBAT_BUILD_VERSIONED_SHLIB_FALSE}"; then
+   as_fn_error $? "conditional \"LIBAT_BUILD_VERSIONED_SHLIB\" was never defined.
+diff --git a/libatomic/configure.ac b/libatomic/configure.ac
+index 5f2821ac3f4..b2fe68d7d0f 100644
+--- a/libatomic/configure.ac
++++ b/libatomic/configure.ac
+@@ -169,6 +169,7 @@ AC_MSG_RESULT([$target_thread_file])
+ case "$target" in
+  *aarch64*)
+     ACX_PROG_CC_WARNING_OPTS([-march=armv8-a+lse],[enable_aarch64_lse])
++    LIBAT_TEST_FEAT_LSE128()
+     ;;
+ esac
+ 
+-- 
+2.42.0
