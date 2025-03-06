@@ -1,8 +1,11 @@
 --- a/syntax/default.nanorc
 +++ b/syntax/default.nanorc
-@@ -26,5 +26,11 @@
+@@ -24,7 +24,13 @@
+ color brightgreen "^\[[^][]+\]$"
+ 
  # Comments.
- color cyan "^[[:blank:]]*#.*"
+-color cyan "^[[:blank:]]*#.*"
++color cyan "(^|[[:blank:]])#.*"
  
 +# Strings.
 +color brightyellow ""([^"\]|\\.)*"|'([^'\]|\\.)*'"
@@ -33,3 +36,31 @@
  
  # The arguments of two special commands
  color bold,purple "^[[:blank:]]*include[[:blank:]]+[^[:blank:]"]+"
+--- a/syntax/sh.nanorc
++++ b/syntax/sh.nanorc
+@@ -31,11 +31,11 @@
+ # More complicated variable names; handles braces and replacements and arrays.
+ color brightred "\$\{[#!]?([-@*#?$!]|[0-9]+|[[:alpha:]_][[:alnum:]_]*)(\[([[:blank:]]*[[:alnum:]_]+[[:blank:]]*|@)\])?(([#%/]|:?[-=?+])[^}]*\}|\[|\})"
+ 
++# Strings.
++color brightyellow ""([^"\]|\\.)*"|'([^'\]|\\.)*'"
++
+ # Comments.
+ color cyan "(^|[[:blank:]])#.*"
+ 
+-# Strings.
+-color brightyellow ""([^"\]|\\.)*"|'([^'\]|\\.)*'"
+-
+ # Trailing whitespace.
+ color ,green "[[:space:]]+$"
+--- a/syntax/patch.nanorc
++++ b/syntax/patch.nanorc
+@@ -2,7 +2,7 @@
+ 
+ ## Original author:  Mike Frysinger
+ 
+-syntax patch "\.(patch|diff|debdiff|rej)$"
++syntax patch "\.(patch|diff|debdiff|rej|disabled)$"
+ magic "diff output"
+ # There is no official support for comments in patch files.
+ comment ""
