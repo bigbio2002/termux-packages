@@ -44,5 +44,10 @@ termux_step_pre_configure() {
 	# when preceded by a matching AC_ARG_VAR - and xmlto's
 	# configure.ac very carefully does this before each AC_*_PROG.
 	sed -e 's/^AC_PATH_PROG/AC_CHECK_PROG/' -i configure.ac
+
+	mv NEWS.md NEWS
+	mv README.md README
+	mv AUTHORS.md AUTHORS
+
 	autoreconf -fi
 }
