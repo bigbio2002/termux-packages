@@ -11,7 +11,7 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="--features pcre2"
 
 termux_step_post_make_install() {
-	install -Dm644 /dev/null "${TERMUX_PREFIX}/share/man/man1/rg.1"
+	install -Dm600 /dev/null "${TERMUX_PREFIX}/share/man/man1/rg.1"
 
 	install -Dm644 /dev/null "${TERMUX_PREFIX}/share/bash-completion/completions/rg.bash"
 	install -Dm644 /dev/null "${TERMUX_PREFIX}/share/zsh/site-functions/_rg"
@@ -24,6 +24,12 @@ termux_step_create_debscripts() {
 		rg --generate complete-bash > ${TERMUX_PREFIX}/share/bash-completion/completions/rg.bash
 		rg --generate complete-zsh > ${TERMUX_PREFIX}/share/zsh/site-functions/_rg
 		rg --generate complete-fish > ${TERMUX_PREFIX}/share/fish/vendor_completions.d/rg.fish
+
 		rg --generate man > ${TERMUX_PREFIX}/share/man/man1/rg.1
+		rm -f ${TERMUX_PREFIX}/share/man/man1/rg.1.gz
+		gzip -9 ${TERMUX_PREFIX}/share/man/man1/rg.1
+
+		echo '.so man1/rg.1' > ${TERMUX_PREFIX}/share/man/man1/ripgrep.1
+		gzip -9 ${TERMUX_PREFIX}/share/man/man1/ripgrep.1
 	EOF
 }
