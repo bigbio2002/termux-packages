@@ -16,6 +16,6 @@ termux_step_make() {
 
 termux_step_make_install() {
 	local bin="$(basename $TERMUX_PKG_HOMEPAGE)"
-	install -D "$bin" -t "$TERMUX_PREFIX/bin"
-	install -D "$bin.1" -t "$TERMUX_PREFIX/share/man/man1"
+	install -Dm700 "$bin" -t "$TERMUX_PREFIX/bin"
+	install -Dm600 "$bin.1" -t "$TERMUX_PREFIX/share/man/man1"
 }
