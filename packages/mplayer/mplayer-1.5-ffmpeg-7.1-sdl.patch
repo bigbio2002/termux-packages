@@ -1,0 +1,85 @@
+--- src.orig/libao2/ao_sdl.c	2025-03-24 23:32:43.280636914 -0400
++++ src/libao2/ao_sdl.c	2025-03-24 23:51:55.496047567 -0400
+@@ -65,16 +65,17 @@
+ #define NUM_CHUNKS 8
+ #define BUFFSIZE (NUM_CHUNKS * CHUNK_SIZE)
+ 
+-static AVFifoBuffer *buffer;
++static AVFifo *buffer;
+ 
+ #ifdef USE_SDL_INTERNAL_MIXER
+ static unsigned char volume=SDL_MIX_MAXVOLUME;
+ #endif
+ 
+ static int write_buffer(unsigned char* data,int len){
+-  int free = av_fifo_space(buffer);
++  int free = av_fifo_can_write(buffer);
+   if (len > free) len = free;
+-  return av_fifo_generic_write(buffer, data, len, NULL);
++  av_fifo_write(buffer, data, len);
++  return len;
+ }
+ 
+ #ifdef USE_SDL_INTERNAL_MIXER
+@@ -84,12 +85,14 @@
+ #endif
+ 
+ static int read_buffer(unsigned char* data,int len){
+-  int buffered = av_fifo_size(buffer);
++  int buffered = av_fifo_can_read(buffer);
+   if (len > buffered) len = buffered;
+ #ifdef USE_SDL_INTERNAL_MIXER
+-  av_fifo_generic_read(buffer, data, len, mix_audio);
++  /*av_fifo_read(buffer, data, len, mix_audio);*/
++  av_fifo_read(buffer, data, len);
+ #else
+-  av_fifo_generic_read(buffer, data, len, NULL);
++  /*av_fifo_read(buffer, data, len, NULL);*/
++  av_fifo_read(buffer, data, len);
+ #endif
+   return len;
+ }
+@@ -138,7 +141,7 @@
+ 	SDL_AudioSpec aspec, obtained;
+ 
+ 	/* Allocate ring-buffer memory */
+-	buffer = av_fifo_alloc(BUFFSIZE);
++	buffer = av_fifo_alloc2(BUFFSIZE, 1, 0);
+ 
+ 	mp_msg(MSGT_AO,MSGL_INFO,MSGTR_AO_SDL_INFO, rate, (channels > 1) ? "Stereo" : "Mono", af_fmt2str_short(format));
+ 
+@@ -254,7 +257,7 @@
+ 	  usec_sleep(get_delay() * 1000 * 1000);
+ 	SDL_CloseAudio();
+ 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
+-	av_fifo_free(buffer);
++	av_fifo_freep2(&buffer);
+ }
+ 
+ // stop playing and empty buffers (for seeking/pause)
+@@ -264,7 +267,7 @@
+ 
+ 	SDL_PauseAudio(1);
+ 	/* Reset ring-buffer state */
+-	av_fifo_reset(buffer);
++	av_fifo_reset2(buffer);
+ 	SDL_PauseAudio(0);
+ }
+ 
+@@ -287,7 +290,7 @@
+ 
+ // return: how many bytes can be played without blocking
+ static int get_space(void){
+-    return av_fifo_space(buffer);
++    return av_fifo_can_write(buffer);
+ }
+ 
+ // plays 'len' bytes of 'data'
+@@ -314,6 +317,6 @@
+ 
+ // return: delay in seconds between first and last sample in buffer
+ static float get_delay(void){
+-    int buffered = av_fifo_size(buffer); // could be less
++    int buffered = av_fifo_can_read(buffer); // could be less
+     return (float)(buffered + ao_data.buffersize)/(float)ao_data.bps;
+ }
