@@ -1,9 +1,9 @@
 diff -u -r ../binutils-2.26/ld/emultempl/elf.em ./ld/emultempl/elf.em
---- ../binutils-2.26/ld/emultempl/elf.em	2015-11-13 03:27:42.000000000 -0500
-+++ ./ld/emultempl/elf.em	2016-01-28 10:20:11.534910516 -0500
-@@ -117,8 +117,13 @@
- static void
- gld${EMULATION_NAME}_after_parse (void)
+--- ../binutils-2.26/ld/ldelf.c	2015-11-13 03:27:42.000000000 -0500
++++ ./ld/ldelf.c	2016-01-28 10:20:11.534910516 -0500
+@@ -67,8 +67,13 @@
+ void
+ ldelf_after_parse (void)
  {
 +#ifndef __ANDROID__
 +  /* The Android linker does not support DF_1_PIE:
