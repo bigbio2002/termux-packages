@@ -1,0 +1,41 @@
+diff --git a/gcc/config/aarch64/aarch64.h b/gcc/config/aarch64/aarch64.h
+index 74236c3cffd..24767c747ba 100644
+--- a/gcc/config/aarch64/aarch64.h
++++ b/gcc/config/aarch64/aarch64.h
+@@ -105,6 +105,11 @@
+    port.  */
+ #define TARGET_PTRMEMFUNC_VBIT_LOCATION ptrmemfunc_vbit_in_delta
+ 
++
++/* Emit calls to libgcc helpers for atomic operations for runtime detection
++   of LSE instructions.  */
++#define TARGET_OUTLINE_ATOMICS (aarch64_flag_outline_atomics)
++
+ /* Align definitions of arrays, unions and structures so that
+    initializations and copies can be made more efficient.  This is not
+    ABI-changing, so it only affects places where we can see the
+diff --git a/gcc/config/aarch64/aarch64.opt b/gcc/config/aarch64/aarch64.opt
+index 37181b5baca..d99d14c137d 100644
+--- a/gcc/config/aarch64/aarch64.opt
++++ b/gcc/config/aarch64/aarch64.opt
+@@ -256,7 +256,7 @@ TargetVariable
+ long aarch64_stack_protector_guard_offset = 0
+ 
+ moutline-atomics
+-Target Report Mask(OUTLINE_ATOMICS) Save
++Target Report Var(aarch64_flag_outline_atomics) Init(2) Save
+ Generate local calls to out-of-line atomic operations.
+ 
+ -param=aarch64-sve-compare-costs=
+diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
+index 5bb7d94833e..527d362533a 100644
+--- a/gcc/doc/invoke.texi
++++ b/gcc/doc/invoke.texi
+@@ -16886,6 +16886,7 @@ instruction set.  If using a later revision, e.g. @option{-march=armv8.1-a}
+ or @option{-march=armv8-a+lse}, the ARMv8.1-Atomics instructions will be
+ used directly.  The same applies when using @option{-mcpu=} when the
+ selected cpu supports the @samp{lse} feature.
++This option is on by default.
+ 
+ @item -march=@var{name}
+ @opindex march

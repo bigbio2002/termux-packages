@@ -1,0 +1,25 @@
+--- a/libsanitizer/tsan/tsan_platform_linux.orig.cc	2024-07-11 00:24:35.414948014 -0400
++++ b/libsanitizer/tsan/tsan_platform_linux.cc	2024-07-10 21:27:12.475757995 -0400
+@@ -55,6 +55,10 @@
+ # undef sa_sigaction
+ #endif
+ 
++#ifdef __BIONIC__
++#define MAXNS 3
++#endif
++
+ #if SANITIZER_FREEBSD
+ extern "C" void *__libc_stack_end;
+ void *__libc_stack_end = 0;
+@@ -289,9 +293,9 @@
+ // This is required to properly "close" the fds, because we do not see internal
+ // closes within glibc. The code is a pure hack.
+ int ExtractResolvFDs(void *state, int *fds, int nfd) {
+-#if SANITIZER_LINUX
++#if SANITIZER_LINUX && !SANITIZER_ANDROID
+   int cnt = 0;
+-  struct __res_state *statp = (struct __res_state*)state;
++  __res_state *statp = (__res_state*)state;
+   for (int i = 0; i < MAXNS && cnt < nfd; i++) {
+     if (statp->_u._ext.nsaddrs[i] && statp->_u._ext.nssocks[i] != -1)
+       fds[cnt++] = statp->_u._ext.nssocks[i];

@@ -1,0 +1,16 @@
+--- a/libatomic/libatomic_i.h
++++ b/libatomic/libatomic_i.h
+@@ -126,10 +126,10 @@
+ 
+ /* Utility macros for GCC attributes.  */
+ #define UNUSED		__attribute__((unused))
+-#ifdef HAVE_ATTRIBUTE_VISIBILITY
+-# define HIDDEN		__attribute__((visibility("hidden")))
++#if !defined(HAVE_ATTRIBUTE_VISIBILITY) || !defined(__clang__)
++# define HIDDEN
+ #else
+-# define HIDDEN
++# define HIDDEN		__attribute__((visibility("hidden")))
+ #endif
+ 
+ /* Occasionally we have to play games with internal and external symbol

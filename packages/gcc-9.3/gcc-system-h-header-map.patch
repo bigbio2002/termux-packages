@@ -1,0 +1,11 @@
+diff -Naur gcc-4.9.2/gcc/system.h gcc-4.9.2_termux/gcc/system.h
+--- ../gcc-4.9.2/gcc/system.h	2014-01-02 17:23:26.000000000 -0500
++++ ./gcc/system.h	2024-02-21 23:47:37.877323689 -0500
+@@ -265,6 +265,7 @@
+    an error about 'using std::malloc'.  */
+ #ifdef __cplusplus
+ #include <cstdlib>
++#include <map>
+ #endif
+ 
+ /* Undef vec_free from AIX stdlib.h header which conflicts with vec.h.  */
