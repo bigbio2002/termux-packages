@@ -19,17 +19,17 @@
 -#if __ANDROID_API__ >= 29
 -int getloadavg(double __averages[_Nonnull], int __n) __INTRODUCED_IN(29);
 -#endif /* __ANDROID_API__ >= 29 */
-+static __inline__ int getloadavg(double averages[], int n) {
-+  if (n < 0) return -1;
-+  if (n > 3) n = 3;
++static __inline__ int getloadavg(double __averages[_Nonnull], int __n) {
++  if (__n < 0) return -1;
++  if (__n > 3) __n = 3;
 +
 +  struct sysinfo si;
 +  if (sysinfo(&si) == -1) return -1;
 +
-+  for (int i = 0; i < n; ++i) {
-+    averages[i] = (double)si.loads[i] / (double)(1 << SI_LOAD_SHIFT);
++  for (int i = 0; i < __n; ++i) {
++    __averages[i] = (double)si.loads[i] / (double)(1 << SI_LOAD_SHIFT);
 +  }
-+  return n;
++  return __n;
 +}
  
  
