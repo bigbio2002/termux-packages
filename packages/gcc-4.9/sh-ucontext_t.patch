@@ -1,0 +1,12 @@
+diff -Naur gcc-5.3.0/libgcc/config/sh/linux-unwind.h gcc-5.3.0_curr/libgcc/config/sh/linux-unwind.h
+--- gcc-5.3.0/libgcc/config/sh/linux-unwind.h	2015-01-05 07:33:28.000000000 -0500
++++ gcc-5.3.0_curr/libgcc/config/sh/linux-unwind.h	2024-07-02 00:45:47.192124358 -0400
+@@ -83,7 +83,7 @@
+ 	siginfo_t *pinfo;
+ 	void *puc;
+ 	siginfo_t info;
+-	struct ucontext uc;
++	ucontext_t uc;
+       } *rt_ = context->cfa;
+       /* The void * cast is necessary to avoid an aliasing warning.
+          The aliasing warning is correct, but should not be a problem

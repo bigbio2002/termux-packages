@@ -1,3 +1,5 @@
+https://bugs.gentoo.org/629502
+
 From ecf0d1a107133c715763940c2b197aa814710e1b Mon Sep 17 00:00:00 2001
 From: jsm28 <jsm28@138bc75d-0d04-0410-961f-82ee72b054a4>
 Date: Tue, 4 Jul 2017 10:25:10 +0000
@@ -46,7 +48,7 @@ git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-5-branch@249958 138bc75d-
  11 files changed, 25 insertions(+), 11 deletions(-)
 
 diff --git a/libgcc/config/aarch64/linux-unwind.h b/libgcc/config/aarch64/linux-unwind.h
-index 86d17b1..909f68f 100644
+index 86d17b1c798..909f68f7311 100644
 --- a/libgcc/config/aarch64/linux-unwind.h
 +++ b/libgcc/config/aarch64/linux-unwind.h
 @@ -52,7 +52,7 @@ aarch64_fallback_frame_state (struct _Unwind_Context *context,
@@ -59,7 +61,7 @@ index 86d17b1..909f68f 100644
  
    struct rt_sigframe *rt_;
 diff --git a/libgcc/config/alpha/linux-unwind.h b/libgcc/config/alpha/linux-unwind.h
-index d65474f..9a226b1 100644
+index d65474fec12..9a226b195b5 100644
 --- a/libgcc/config/alpha/linux-unwind.h
 +++ b/libgcc/config/alpha/linux-unwind.h
 @@ -51,7 +51,7 @@ alpha_fallback_frame_state (struct _Unwind_Context *context,
@@ -72,7 +74,7 @@ index d65474f..9a226b1 100644
        sc = &rt_->uc.uc_mcontext;
      }
 diff --git a/libgcc/config/bfin/linux-unwind.h b/libgcc/config/bfin/linux-unwind.h
-index 0c270e4..7fa95d2 100644
+index 0c270e435c7..7fa95d2dc96 100644
 --- a/libgcc/config/bfin/linux-unwind.h
 +++ b/libgcc/config/bfin/linux-unwind.h
 @@ -52,7 +52,7 @@ bfin_fallback_frame_state (struct _Unwind_Context *context,
@@ -85,7 +87,7 @@ index 0c270e4..7fa95d2 100644
  
        /* The void * cast is necessary to avoid an aliasing warning.
 diff --git a/libgcc/config/i386/linux-unwind.h b/libgcc/config/i386/linux-unwind.h
-index e54bf73..d35fc45 100644
+index e54bf73b1fd..d35fc4566ce 100644
 --- a/libgcc/config/i386/linux-unwind.h
 +++ b/libgcc/config/i386/linux-unwind.h
 @@ -58,7 +58,7 @@ x86_64_fallback_frame_state (struct _Unwind_Context *context,
@@ -107,7 +109,7 @@ index e54bf73..d35fc45 100644
        /* The void * cast is necessary to avoid an aliasing warning.
           The aliasing warning is correct, but should not be a problem
 diff --git a/libgcc/config/m68k/linux-unwind.h b/libgcc/config/m68k/linux-unwind.h
-index fb79a4d..b2f5ea4 100644
+index fb79a4d63cd..b2f5ea4cd7c 100644
 --- a/libgcc/config/m68k/linux-unwind.h
 +++ b/libgcc/config/m68k/linux-unwind.h
 @@ -33,7 +33,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
@@ -120,7 +122,7 @@ index fb79a4d..b2f5ea4 100644
  	mcontext_t	  uc_mcontext;
  	unsigned long	  uc_filler[80];
 diff --git a/libgcc/config/nios2/linux-unwind.h b/libgcc/config/nios2/linux-unwind.h
-index dff1c20..1d88afe 100644
+index dff1c20076e..1d88afecb12 100644
 --- a/libgcc/config/nios2/linux-unwind.h
 +++ b/libgcc/config/nios2/linux-unwind.h
 @@ -38,7 +38,7 @@ struct nios2_mcontext {
@@ -133,7 +135,7 @@ index dff1c20..1d88afe 100644
    struct nios2_mcontext uc_mcontext;
    sigset_t uc_sigmask;	/* mask last for extensibility */
 diff --git a/libgcc/config/pa/linux-unwind.h b/libgcc/config/pa/linux-unwind.h
-index 0149468..9157535 100644
+index 01494685ea4..91575356803 100644
 --- a/libgcc/config/pa/linux-unwind.h
 +++ b/libgcc/config/pa/linux-unwind.h
 @@ -80,7 +80,7 @@ pa32_fallback_frame_state (struct _Unwind_Context *context,
@@ -146,7 +148,7 @@ index 0149468..9157535 100644
  
    /* rt_sigreturn trampoline:
 diff --git a/libgcc/config/sh/linux-unwind.h b/libgcc/config/sh/linux-unwind.h
-index e63091f..67033f0 100644
+index e63091f287c..67033f06b4b 100644
 --- a/libgcc/config/sh/linux-unwind.h
 +++ b/libgcc/config/sh/linux-unwind.h
 @@ -180,7 +180,7 @@ sh_fallback_frame_state (struct _Unwind_Context *context,
@@ -159,7 +161,7 @@ index e63091f..67033f0 100644
        /* The void * cast is necessary to avoid an aliasing warning.
           The aliasing warning is correct, but should not be a problem
 diff --git a/libgcc/config/tilepro/linux-unwind.h b/libgcc/config/tilepro/linux-unwind.h
-index fd83ba7..e3c9ef0 100644
+index fd83ba7c275..e3c9ef0840d 100644
 --- a/libgcc/config/tilepro/linux-unwind.h
 +++ b/libgcc/config/tilepro/linux-unwind.h
 @@ -61,7 +61,7 @@ tile_fallback_frame_state (struct _Unwind_Context *context,
@@ -172,7 +174,7 @@ index fd83ba7..e3c9ef0 100644
  
    /* Return if this is not a signal handler.  */
 diff --git a/libgcc/config/xtensa/linux-unwind.h b/libgcc/config/xtensa/linux-unwind.h
-index 9a67b5d..98b7ea6 100644
+index 9a67b5d2b46..98b7ea60e81 100644
 --- a/libgcc/config/xtensa/linux-unwind.h
 +++ b/libgcc/config/xtensa/linux-unwind.h
 @@ -67,7 +67,7 @@ xtensa_fallback_frame_state (struct _Unwind_Context *context,
@@ -185,6 +187,5 @@ index 9a67b5d..98b7ea6 100644
  
    /* movi a2, __NR_rt_sigreturn; syscall */
 -- 
-2.9.3
-
+2.14.1
 
