@@ -142,7 +142,7 @@ termux_step_post_make_install() {
 }
 
 termux_step_create_debscripts() {
-	for i in postinst postrm triggers; do
+	for i in $(test "$TERMUX_PACKAGE_FORMAT" != "pacman" && echo postinst) postrm triggers; do
 		sed \
 			"s|@TERMUX_PREFIX@|${TERMUX_PREFIX}|g" \
 			"${TERMUX_PKG_BUILDER_DIR}/hooks/${i}.in" > ./${i}
