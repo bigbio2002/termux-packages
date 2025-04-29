@@ -13,6 +13,8 @@ TERMUX_PKG_GROUPS="base-devel"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="ac_cv_lib_elf_elf_begin=no"
 # Prevent linking against libiconv:
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" am_cv_func_iconv=no"
+# NDK v24 doesn't have getloadavg()
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_lib_util_getloadavg=no"
 
 TERMUX_PKG_CONFLICTS="make-guile"
 # Prevent linking against guile:
