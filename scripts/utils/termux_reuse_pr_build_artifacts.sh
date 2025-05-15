@@ -10,7 +10,7 @@ unset PR WORKFLOW_ID
 
 infoexit() {
 	echo "$@"
-	[[ -n "${PR}" && -n "${CI}" ]] && echo "::error ::Failed to reuse PR #${PR} ${WORKFLOW_ID:+"(workflow run ${WORKFLOW_ID})"} build artifacts, see \`Gathering build summary\` step logs."
+	[[ -n "${PR}" && "${CI-false}" == "true" ]] && echo "::error ::Failed to reuse PR #${PR} ${WORKFLOW_ID:+"(workflow run ${WORKFLOW_ID})"} build artifacts, see \`Gathering build summary\` step logs."
 	exit 1
 } >&2
 
@@ -61,7 +61,8 @@ download_ci_artifacts() {
 		--output "${CI_ARTIFACT_ZIP}" \
 		|| { echo "Failed to download PR artifact." >&2; return 1; }
 
-	unzip -p "${CI_ARTIFACT_ZIP}" '*.tar' | tar xvf - --wildcards --strip-components=1 -C output 'debs/*.deb' \
+	mkdir -p output
+	unzip -p "${CI_ARTIFACT_ZIP}" '*.tar' | tar xvf - --wildcards --strip-components=1 -C output 'debs/*' --exclude='*.txt' --exclude='.placeholder' \
 		|| { echo "Failed to unpack PR artifact." >&2; return 1; }
 }
 
