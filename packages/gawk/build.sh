@@ -14,6 +14,7 @@ TERMUX_PKG_RM_AFTER_INSTALL="bin/gawk-* bin/igawk share/man/man1/igawk.1"
 TERMUX_PKG_GROUPS="base-devel"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --disable-pma
+ac_cv_func_fwrite_unlocked=no
 "
 
 termux_step_pre_configure() {

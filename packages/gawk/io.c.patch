@@ -1,7 +1,7 @@
 diff -u -r ../gawk-4.2.1/io.c ./io.c
 --- ../gawk-4.2.1/io.c	2018-02-19 17:55:00.000000000 +0000
 +++ ./io.c	2018-02-27 11:12:19.067766916 +0000
-@@ -2025,7 +2025,7 @@
+@@ -2084,7 +2084,7 @@
  
  		set_sigpipe_to_default();
  
@@ -10,7 +10,7 @@ diff -u -r ../gawk-4.2.1/io.c ./io.c
  		_exit(errno == ENOENT ? 127 : 126);
  
  	case -1:
-@@ -2077,7 +2077,7 @@
+@@ -2136,7 +2136,7 @@
  
  		signal(SIGPIPE, SIG_DFL);
  
@@ -19,7 +19,7 @@ diff -u -r ../gawk-4.2.1/io.c ./io.c
  		_exit(errno == ENOENT ? 127 : 126);
  
  	case -1:
-@@ -2422,7 +2422,7 @@
+@@ -2475,7 +2475,7 @@
  			fatal(_("close of pipe failed (%s)"), strerror(errno));
  		/* stderr does NOT get dup'ed onto child's stdout */
  		set_sigpipe_to_default();
@@ -27,8 +27,8 @@ diff -u -r ../gawk-4.2.1/io.c ./io.c
 +		execl("@TERMUX_PREFIX@/bin/sh", "sh", "-c", str, NULL);
  		_exit(errno == ENOENT ? 127 : 126);
  	}
- #endif /* NOT __EMX__, NOT __MINGW32__ */
-@@ -2659,7 +2659,7 @@
+ #endif /* NOT __MINGW32__ */
+@@ -2706,7 +2706,7 @@
  		if (close(p[0]) == -1 || close(p[1]) == -1)
  			fatal(_("close of pipe failed (%s)"), strerror(errno));
  		set_sigpipe_to_default();
@@ -36,4 +36,4 @@ diff -u -r ../gawk-4.2.1/io.c ./io.c
 +		execl("@TERMUX_PREFIX@/bin/sh", "sh", "-c", cmd, NULL);
  		_exit(errno == ENOENT ? 127 : 126);
  	}
- #endif /* NOT __EMX__, NOT __MINGW32__ */
+ #endif /* NOT __MINGW32__ */

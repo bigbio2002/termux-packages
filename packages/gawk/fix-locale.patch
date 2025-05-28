@@ -26,8 +26,8 @@ https://github.com/termux/termux-packages/issues/15929
 +size_t __ctype_get_mb_cur_max(void);
 +#endif
  #include <string.h>
- #include <wctype.h>
- 
+ #if GAWK
+ /* Use ISO C 99 API.  */
 --- a/support/regex_internal.h
 +++ b/support/regex_internal.h
 @@ -23,6 +23,11 @@
