@@ -1,6 +1,6 @@
 --- a/gcc/config.orig.gcc	2024-10-03 16:11:36.828477709 -0400
 +++ b/gcc/config.gcc	2024-10-05 14:03:56.352909653 -0400
-@@ -3719,8 +3719,8 @@
+@@ -3715,8 +3715,8 @@
  		fi
  		for which in cpu arch tune; do
  			eval "val=\$with_$which"
@@ -11,7 +11,7 @@
  
  			if [ $which = arch ]; then
  			  def=aarch64-arches.def
-@@ -3762,32 +3762,40 @@
+@@ -3758,32 +3758,40 @@
  			    exit 1
  			  fi
  
@@ -73,7 +73,7 @@
  
  				  if [ $ext = $base_ext ]; then
  					# Adding extension
-@@ -3802,7 +3810,7 @@
+@@ -3798,7 +3806,7 @@
  				  echo "Unknown extension used in --with-$which=$val" 1>&2
  				  exit 1
  				fi
