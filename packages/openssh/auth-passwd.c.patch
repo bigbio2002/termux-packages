@@ -24,7 +24,7 @@
 +	if (authctxt->pw->pw_uid == 0 && strcmp(authctxt->user, "root") != 0) {
 +		return 0;
 +	}
-+	return termux_auth(authctxt->user, password);	
++	return termux_auth(authctxt->user, password);
 +}
  #elif !defined(CUSTOM_SYS_AUTH_PASSWD)
  int
