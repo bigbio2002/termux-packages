@@ -1,0 +1,5 @@
+#!/data/data/com.termux/files/usr/bin/sh
+
+if [ -r "$PREFIX"/var/run/ssh-agent.socket ]; then
+	rm -f "$PREFIX"/var/run/ssh-agent.socket
+fi
