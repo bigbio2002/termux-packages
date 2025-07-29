@@ -25,7 +25,7 @@ check_package_license() {
 			EUPL-1.1|EUPL-1.2|Eiffel-2.0|Entessa-1.0|Facebook-Platform|Fair|Frameworx-1.0);;
 			GPL-2.0|GPL-2.0-only|GPL-2.0-or-later);;
 			GPL-3.0|GPL-3.0-only|GPL-3.0-or-later);;
-			Go|HSQLDB|Historical|HPND|IBMPL-1.0|IJG|IPAFont-1.0|ISC|IU-Extreme-1.1.1);;
+			Go|hdparm|HSQLDB|Historical|HPND|IBMPL-1.0|IJG|IPAFont-1.0|ISC|IU-Extreme-1.1.1);;
 			ImageMagick|JA-SIG|JSON|JTidy);;
 			LGPL-2.0|LGPL-2.0-only|LGPL-2.0-or-later);;
 			LGPL-2.1|LGPL-2.1-only|LGPL-2.1-or-later);;
@@ -126,7 +126,7 @@ check_indentation() {
 # - Or specify one of the CI skip tags
 check_version_change() {
 	local base_commit commit_diff package="$1"
-	base_commit="$(git merge-base --fork-point origin/master)"
+	base_commit="$(git merge-base 'master@{upstream}' 'HEAD')"
 	commit_diff="$(git log --patch "${base_commit}.." -- "$package")"
 
 	# If the diff is empty there's no commit modifying that package on this branch, which is a PASS.
