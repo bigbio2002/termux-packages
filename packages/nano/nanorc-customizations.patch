@@ -1,6 +1,6 @@
 --- a/syntax/default.nanorc
 +++ b/syntax/default.nanorc
-@@ -24,7 +24,13 @@
+@@ -24,10 +24,16 @@
  color brightgreen "^\[[^][]+\]$"
  
  # Comments.
@@ -10,6 +10,9 @@
 +# Strings.
 +color brightyellow ""([^"\]|\\.)*"|'([^'\]|\\.)*'"
 +
+ # Make hard (non-breaking) spaces noticeable.
+ color ,#444 " "
+ 
  # Control codes.
  color orange "[[:cntrl:]]"
 +
@@ -42,14 +45,14 @@
  color green "-(eq|ne|gt|lt|ge|le|ef|ot|nt)\>"
  
  # Short and long options.
--color brightmagenta "[[:blank:]](-[A-Za-z]|--\<[A-Za-z-]+)\>"
+-color brightmagenta "[[:blank:]](-[[:alpha:]]|--\<[[:alpha:]-]+)\>"
 +color brightmagenta "[[:blank:]](-[A-Za-z0-9]|--\<[A-Za-z0-9-]+)\>"
  
  # Common commands.
  color brightblue "\<(awk|cat|cd|ch(grp|mod|own)|cp|cut|echo|env|grep|head|install|ln|make|mkdir|mv|popd|printf|pushd|rm|rmdir|sed|set|sort|tail|tar|touch|umask|unset)\>"
 @@ -31,11 +31,11 @@
  # More complicated variable names; handles braces and replacements and arrays.
- color brightred "\$\{[#!]?([-@*#?$!]|[0-9]+|[[:alpha:]_][[:alnum:]_]*)(\[([[:blank:]]*[[:alnum:]_]+[[:blank:]]*|@)\])?(([#%/]|:?[-=?+])[^}]*\}|\[|\})"
+ color brightred "\$\{[#!]?([-@*#?$!]|[[:digit:]]+|[[:alpha:]_][[:alnum:]_]*)(\[([[:blank:]]*[[:alnum:]_]+[[:blank:]]*|@)\])?(([#%/]|:?[-=?+])[^}]*\}|\[|\})"
  
 +# Strings.
 +color brightyellow ""([^"\]|\\.)*"|'([^'\]|\\.)*'"
@@ -64,9 +67,9 @@
  color ,green "[[:space:]]+$"
 --- a/syntax/patch.nanorc
 +++ b/syntax/patch.nanorc
-@@ -2,7 +2,7 @@
- 
+@@ -3,7 +3,7 @@
  ## Original author:  Mike Frysinger
+ ## License:  GPL version 3 or newer
  
 -syntax patch "\.(patch|diff|debdiff|rej)$"
 +syntax patch "\.(patch|diff|debdiff|rej|disabled)$"
