@@ -109,6 +109,7 @@ termux_step_pre_configure() {
 		TERMUX_PKG_BUILDER_DIR="$TERMUX_SCRIPTDIR/packages/gobject-introspection"
 		TERMUX_PKG_BUILDDIR="$TERMUX_PKG_TMPDIR/gobject-introspection-build"
 		TERMUX_PKG_SRCDIR="$TERMUX_PKG_TMPDIR/gobject-introspection-src"
+		LDFLAGS+=" -L${_PREFIX}/lib"
 		mkdir -p "$TERMUX_PKG_BUILDDIR" "$TERMUX_PKG_SRCDIR"
 		# Sourcing another build script for nested build
 		. "$TERMUX_PKG_BUILDER_DIR/build.sh"
@@ -132,6 +133,7 @@ termux_step_pre_configure() {
 	termux_setup_gir
 
 	# The package will be built with using gobject-introspection we built before...
+	export TERMUX_MESON_ENABLE_SOVERSION=1
 }
 
 termux_step_post_make_install() {
@@ -141,6 +143,24 @@ termux_step_post_make_install() {
 		sed "s|\${bindir}|${TERMUX_PREFIX}/opt/glib/cross/bin|g" \
 			"${TERMUX_PREFIX}/lib/pkgconfig/${pc}" \
 			> "${TERMUX_PREFIX}/opt/glib/cross/lib/x86_64-linux-gnu/pkgconfig/${pc}"
+	done
+}
+
+termux_step_post_massage() {
+	# Do not forget to bump revision of reverse dependencies and rebuild them
+	# after SOVERSION is changed.
+	local _SOVERSION_GUARD_FILES=(
+		'lib/libgio-2.0.so.0'
+		'lib/libgirepository-2.0.so.0'
+		'lib/libglib-2.0.so.0'
+		'lib/libgmodule-2.0.so.0'
+		'lib/libgobject-2.0.so.0'
+		'lib/libgthread-2.0.so.0'
+	)
+
+	local f
+	for f in "${_SOVERSION_GUARD_FILES[@]}"; do
+		[ -e "${f}" ] || termux_error_exit "SOVERSION guard check failed."
 	done
 }
 
