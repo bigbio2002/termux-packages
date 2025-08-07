@@ -15,12 +15,12 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 termux_step_post_get_source() {
 	# Do not forget to bump revision of reverse dependencies and rebuild them
 	# after SOVERSION is changed.
-	local _ENC_SOVERSION=2
+	local _ENC_SOVERSION=3
 
 	local _enc_soverion=$(sed -En 's/^set\(ENC_VERSION_MAJOR\s+([0-9.]+).*/\1/p' \
 			Source/Lib/CMakeLists.txt)
 	if [ ! "${_enc_soverion}" ] || [ "${_ENC_SOVERSION}" != "${_enc_soverion}" ]; then
-		termux_error_exit "SOVERSION guard check failed."
+		termux_error_exit "SOVERSION guard check failed. Expected ${_enc_soversion}, got ${_ENC_SOVERSION}."
 	fi
 }
 
