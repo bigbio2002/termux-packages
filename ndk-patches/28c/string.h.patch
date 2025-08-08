@@ -1,0 +1,11 @@
+--- a/usr/include/string.h
++++ b/usr/include/string.h
+@@ -239,7 +239,7 @@
+ #endif
+ 
+ /* Const-correct overloads. Placed after FORTIFY so we call those functions, if possible. */
+-#if defined(__cplusplus)
++#if defined(__cplusplus) && __has_attribute(enable_if)
+ /* libcxx tries to provide these. Suppress that, since libcxx's impl doesn't respect FORTIFY. */
+ #define __CORRECT_ISO_CPP_STRING_H_PROTO
+ /* Used to make these preferable over regular <string.h> signatures for overload resolution. */

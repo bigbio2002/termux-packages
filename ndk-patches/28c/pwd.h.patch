@@ -1,26 +1,23 @@
---- ./usr/include/pwd.h.orig
-+++ ./usr/include/pwd.h
-@@ -89,13 +89,60 @@
- struct passwd* _Nullable getpwent(void) __INTRODUCED_IN(26);
- 
+--- ./usr/include/pwd.h	2025-08-07 08:21:34.382754322 -0400
++++ ./usr/include/pwd.h	2025-07-09 18:03:54.000000000 -0400
+@@ -91,6 +91,56 @@
  void setpwent(void) __INTRODUCED_IN(26);
--void endpwent(void) __INTRODUCED_IN(26);
- #endif /* __ANDROID_API__ >= 26 */
+ #endif /* __BIONIC_AVAILABILITY_GUARD(26) */
  
- 
- int getpwnam_r(const char* _Nonnull __name, struct passwd* _Nonnull __pwd, char* _Nonnull __buf, size_t __n, struct passwd* _Nullable * _Nonnull __result);
- int getpwuid_r(uid_t __uid, struct passwd* _Nonnull __pwd, char* _Nonnull __buf, size_t __n, struct passwd* _Nullable * _Nonnull __result);
- 
-+int access(const char* _Nonnull __path, int __mode);
++
++int getpwnam_r(const char* _Nonnull __name, struct passwd* _Nonnull __pwd, char* _Nonnull __buf, size_t __n, struct passwd* _Nullable * _Nonnull __result);
++int getpwuid_r(uid_t __uid, struct passwd* _Nonnull __pwd, char* _Nonnull __buf, size_t __n, struct passwd* _Nullable * _Nonnull __result);
++
++int access(const char* __path, int __mode);
 +
 +static void android_setup_pwd(struct passwd* pw) {
-+       char const* result = "@TERMUX_PREFIX@/bin/login";
++       char const* result = "/data/data/com.termux/files/usr/bin/login";
 +       if (result == NULL || access(result, /*X_OK*/1) == -1) {
-+               pw->pw_shell = "@TERMUX_PREFIX@/bin/bash";
++               pw->pw_shell = "/data/data/com.termux/files/usr/bin/bash";
 +       } else {
 +               pw->pw_shell = (char*) result;
 +       }
-+       pw->pw_dir = "@TERMUX_HOME@";
++       pw->pw_dir = "/data/data/com.termux/files/home";
 +       pw->pw_passwd = "*";
 +#ifdef __LP64__
 +       pw->pw_gecos = ""; /* Avoid NULL field. */
@@ -56,8 +53,6 @@
 +#define getpwuid android_polyfill_getpwuid
 +#define getpwuid_r android_polyfill_getpwuid_r
 +static void endpwent(void) { /* Do nothing. */ }
-+
-+
 +
  __END_DECLS
  

@@ -1,0 +1,26 @@
+--- ./usr/include/android/versioning.h	2025-07-09 18:03:54.000000000 -0400
++++ ./usr/include/android/versioning.h	2025-08-07 07:51:47.222755601 -0400
+@@ -31,7 +31,11 @@
+ // minSdkVersion is less than the __what argument. This allows the libraries to
+ // load even on systems too old to contain the API, but calls must be guarded
+ // with `__builtin_available(android api_level, *)` to avoid segfaults.
++#if __has_attribute(availability)
+ #define __BIONIC_AVAILABILITY(__what, ...) __attribute__((__availability__(android,__what __VA_OPT__(,) __VA_ARGS__)))
++#else
++#define __BIONIC_AVAILABILITY(__what, ...)
++#endif
+ 
+ // When the caller is using weak API references, we should expose the decls for
+ // APIs which are not available in the caller's minSdkVersion, otherwise there's
+@@ -44,7 +48,11 @@
+ // `__builtin_available()` for run-time availability checking, and so would not
+ // compile in this mode (or worse, if the build doesn't use
+ // -Werror=unguarded-availability, it would build but crash at runtime).
++#if __has_attribute(availability)
+ #define __BIONIC_AVAILABILITY(__what, ...) __attribute__((__availability__(android,strict,__what __VA_OPT__(,) __VA_ARGS__)))
++#else
++#define __BIONIC_AVAILABILITY(__what, ...)
++#endif
+ 
+ // When the caller is using strict API references, we hide APIs which are not
+ // available in the caller's minSdkVersion. This is a bionic-only deviation in

@@ -1,24 +1,25 @@
---- ./usr/include/stdlib.h.orig	2021-08-16 11:50:47.432239182 +0200
-+++ ./usr/include/stdlib.h	2021-08-16 11:51:31.102222894 +0200
-@@ -33,7 +33,11 @@
+diff -u -r /home/builder/lib/android-ndk-r28b/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/stdlib.h ./usr/include/stdlib.h
+--- /home/builder/lib/android-ndk-r28b/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/stdlib.h	2024-11-14 00:52:25.000000000 +0000
++++ ./usr/include/stdlib.h	2025-05-28 17:41:34.420388013 +0000
+@@ -35,6 +35,11 @@
  #include <bits/wait.h>
  #include <malloc.h>
  #include <stddef.h>
 +#if !defined(__swift__)
 +#include <stdint.h>
 +#endif
- #include <sys/cdefs.h>
++
 +#include <sys/sysinfo.h>
  #include <xlocale.h>
  
  __BEGIN_DECLS
-@@ -191,9 +195,18 @@
+@@ -205,9 +210,18 @@
   * Returns the number of samples written to `__averages` (at most 3), and returns -1 on failure.
   */
  
--#if __ANDROID_API__ >= 29
+-#if __BIONIC_AVAILABILITY_GUARD(29)
 -int getloadavg(double __averages[_Nonnull], int __n) __INTRODUCED_IN(29);
--#endif /* __ANDROID_API__ >= 29 */
+-#endif /* __BIONIC_AVAILABILITY_GUARD(29) */
 +static __inline__ int getloadavg(double __averages[_Nonnull], int __n) {
 +  if (__n < 0) return -1;
 +  if (__n > 3) __n = 3;
@@ -34,7 +35,18 @@
  
  
  /* BSD compatibility. */
-@@ -207,8 +220,7 @@
+@@ -217,9 +231,7 @@
+ void setprogname(const char* _Nonnull __name);
+ 
+ 
+-#if __BIONIC_AVAILABILITY_GUARD(26)
+-int mblen(const char* _Nullable __s, size_t __n) __INTRODUCED_IN(26);
++int mblen(const char* _Nullable __s, size_t __n);
+-#endif /* __BIONIC_AVAILABILITY_GUARD(26) */
+ 
+ size_t mbstowcs(wchar_t* _Nullable __dst, const char* _Nullable __src, size_t __n);
+ int mbtowc(wchar_t* _Nullable __wc_ptr, const char*  _Nullable __s, size_t __n);
+@@ -227,8 +239,7 @@
  
  size_t wcstombs(char* _Nullable __dst, const wchar_t* _Nullable __src, size_t __n);
  

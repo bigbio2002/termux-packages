@@ -89,16 +89,17 @@
  
  /*
   * GNU C version 2.96 added explicit branch prediction so that
-@@ -140,14 +193,36 @@
+@@ -140,15 +193,37 @@
  #define	__predict_true(exp)	__builtin_expect((exp) != 0, 1)
  #define	__predict_false(exp)	__builtin_expect((exp) != 0, 0)
  
--#define __wur __attribute__((__warn_unused_result__))
+-#define __nodiscard __attribute__((__warn_unused_result__))
 +#if __has_attribute(warn_unused_result)
-+# define __wur __attribute__((__warn_unused_result__))
++# define __nodiscard __attribute__((__warn_unused_result__))
 +#else
-+# define __wur
++# define __nodiscard
 +#endif
+ #define __wur __nodiscard
  
 -#define __errorattr(msg) __attribute__((__unavailable__(msg)))
 -#define __warnattr(msg) __attribute__((__deprecated__(msg)))
@@ -133,7 +134,7 @@
  
  #if defined(ANDROID_STRICT)
  /*
-@@ -236,12 +311,8 @@
+@@ -237,12 +312,8 @@
  
  // As we move some FORTIFY checks to be always on, __bos needs to be
  // always available.
@@ -148,7 +149,7 @@
  #else
  #  define __bos_level 0
  #endif
-@@ -251,7 +322,11 @@
+@@ -252,7 +323,11 @@
  
  #if defined(__BIONIC_FORTIFY)
  #  define __bos0(s) __bosn((s), 0)
@@ -161,21 +162,21 @@
  /*
   * FORTIFY'ed functions all have either enable_if or pass_object_size, which
   * makes taking their address impossible. Saying (&read)(foo, bar, baz); will
-@@ -263,8 +338,12 @@
+@@ -264,8 +339,12 @@
   * them available externally. FORTIFY'ed functions try to be as close to possible as 'invisible';
   * having stack protectors detracts from that (b/182948263).
   */
 -#  define __BIONIC_FORTIFY_INLINE static __inline __attribute__((__no_stack_protector__)) \
 +#  if __has_attribute(no_stack_protector)
 +#    define __BIONIC_FORTIFY_INLINE static __inline __attribute__((__no_stack_protector__)) \
-       __always_inline __VERSIONER_FORTIFY_INLINE
+       __always_inline
 +#  else
-+#    define __BIONIC_FORTIFY_INLINE static __inline __always_inline __VERSIONER_FORTIFY_INLINE
++#    define __BIONIC_FORTIFY_INLINE static __inline __always_inline
 +#  endif /* __has_attribute(no_stack_protector) */
  /*
   * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
   * for variadic functions because compilers cannot inline them.
-@@ -277,7 +356,8 @@
+@@ -278,7 +357,8 @@
  #else
  /* Further increase sharing for some inline functions */
  #  define __pass_object_size_n(n)
@@ -185,7 +186,7 @@
  #define __pass_object_size __pass_object_size_n(__bos_level)
  #define __pass_object_size0 __pass_object_size_n(0)
  
-@@ -303,10 +383,19 @@
+@@ -304,10 +384,19 @@
  #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
  #endif
  
@@ -207,7 +208,7 @@
  /* Used to tag non-static symbols that are private and never exposed by the shared library. */
  #define __LIBC_HIDDEN__ __attribute__((__visibility__("hidden")))
  
-@@ -320,6 +409,11 @@
+@@ -321,6 +410,11 @@
  #define __LIBC32_LEGACY_PUBLIC__ __attribute__((__visibility__("default")))
  #endif
  

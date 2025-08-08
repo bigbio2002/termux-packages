@@ -23,14 +23,14 @@
  
 @@ -276,8 +281,6 @@
  FILE* _Nullable freopen64(const char* _Nullable __path, const char* _Nonnull __mode, FILE* _Nonnull __fp) __INTRODUCED_IN(24);
- #endif /* __ANDROID_API__ >= 24 */
+ #endif /* __BIONIC_AVAILABILITY_GUARD(24) */
  
 -FILE* _Nullable tmpfile(void);
 -
- #if __ANDROID_API__ >= 24
- FILE* _Nullable tmpfile64(void) __INTRODUCED_IN(24);
- #endif /* __ANDROID_API__ >= 24 */
-@@ -291,10 +294,17 @@
+ #if __BIONIC_AVAILABILITY_GUARD(24)
+ __nodiscard FILE* _Nullable tmpfile64(void) __INTRODUCED_IN(24);
+ #endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+@@ -291,9 +294,17 @@
  
  #define L_ctermid 1024 /* size for ctermid() */
  
@@ -39,7 +39,7 @@
 -#endif /* __ANDROID_API__ >= 26 */
 +/* Needed by gnulibs freading(). */
 +#define __sferror(p)    (((p)->_flags & __SERR) != 0)
- 
++
 +/* Used by perl, fish, and others. */
 +#if !defined(__swift__)
 +static __inline__ char* _Nonnull ctermid(char* _Nullable s) {
@@ -48,10 +48,10 @@
 +	return s;
 +}
 +#endif
+  
  
- FILE* _Nullable fdopen(int __fd, const char* _Nonnull __mode);
- int fileno(FILE* _Nonnull __fp);
-@@ -363,6 +373,30 @@
+ 
+@@ -364,6 +375,30 @@
  #include <bits/fortify/stdio.h>
  #endif
  
