@@ -39,7 +39,7 @@
 -#endif /* __ANDROID_API__ >= 26 */
 +/* Needed by gnulibs freading(). */
 +#define __sferror(p)    (((p)->_flags & __SERR) != 0)
-+
++ 
 +/* Used by perl, fish, and others. */
 +#if !defined(__swift__)
 +static __inline__ char* _Nonnull ctermid(char* _Nullable s) {
@@ -50,8 +50,8 @@
 +#endif
   
  
- 
-@@ -364,6 +375,30 @@
+ __nodiscard FILE* _Nullable fdopen(int __fd, const char* _Nonnull __mode);
+@@ -363,6 +374,30 @@
  #include <bits/fortify/stdio.h>
  #endif
  
