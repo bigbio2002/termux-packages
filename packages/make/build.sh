@@ -2,10 +2,10 @@ TERMUX_PKG_HOMEPAGE=https://www.gnu.org/software/make/
 TERMUX_PKG_DESCRIPTION="Tool to control the generation of non-source files from source files"
 TERMUX_PKG_LICENSE="GPL-3.0"
 TERMUX_PKG_MAINTAINER="@termux"
-# Update both make and make-guile to the same version in one PR.
-TERMUX_PKG_VERSION=4.4.1
+TERMUX_PKG_VERSION=4.2.1
+TERMUX_PKG_REVISION=3
 TERMUX_PKG_SRCURL=https://mirrors.kernel.org/gnu/make/make-${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=dd16fb1d67bfab79a72f5e8390735c49e3e8e70b4945a15ab1f81ddb78658fb3
+TERMUX_PKG_SHA256=e40b8f018c1da64edd1cc9a6fce5fa63b2e707e404e20cad91fbae337c98a5b7
 TERMUX_PKG_BREAKS="make-dev"
 TERMUX_PKG_REPLACES="make-dev"
 TERMUX_PKG_GROUPS="base-devel"
@@ -13,12 +13,14 @@ TERMUX_PKG_GROUPS="base-devel"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="ac_cv_lib_elf_elf_begin=no"
 # Prevent linking against libiconv:
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" am_cv_func_iconv=no"
-# NDK v24 doesn't have getloadavg()
-TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_lib_util_getloadavg=no"
 
 TERMUX_PKG_CONFLICTS="make-guile"
 # Prevent linking against guile:
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --without-guile"
+
+# NDK v24 doesn't have getloadavg()
+#TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_lib_util_getloadavg=no"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_have_decl_getloadavg=no"
 
 termux_step_pre_configure() {
 	if [ "$TERMUX_ARCH" = arm ]; then
