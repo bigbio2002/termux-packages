@@ -1,0 +1,16 @@
+--- a/sv-disable
++++ b/sv-disable
+@@ -17,4 +17,4 @@
+     exit 1
+ fi
+ touch "$SVDIR/$1/down"
+-sv down $1
++#sv down $1
+--- a/sv-enable
++++ b/sv-enable
+@@ -17,4 +17,4 @@
+     exit 1
+ fi
+ rm -f "$SVDIR/$1/down"
+-sv up $1
++#sv up $1
