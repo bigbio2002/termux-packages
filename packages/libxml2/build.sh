@@ -30,7 +30,7 @@ termux_step_post_massage() {
 		termux_error_exit "SONAME for libxml2.so is not properly set."
 	fi
 
-	local _GUARD_FILE="lib/libxml2.so.2"
+	local _GUARD_FILE="lib/libxml2.so.16"
 	if [ ! -e "${_GUARD_FILE}" ]; then
 		termux_error_exit "Error: file ${_GUARD_FILE} not found."
 	fi
