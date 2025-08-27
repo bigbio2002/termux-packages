@@ -12,6 +12,9 @@ TERMUX_PKG_GIT_BRANCH=master
 TERMUX_PKG_DEPENDS="libandroid-posix-semaphore, libc++"
 TERMUX_PKG_BREAKS="libx265-dev"
 TERMUX_PKG_REPLACES="libx265-dev"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
+-DCMAKE_POLICY_VERSION_MINIMUM=3.5
+"
 
 termux_step_post_get_source() {
 	git fetch --unshallow
@@ -68,7 +71,7 @@ termux_step_pre_configure() {
 
 	if [ "$TERMUX_ARCH" = arm ] || [ "$TERMUX_ARCH" = i686 ]; then
 		# Avoid text relocations and/or build failure.
-		TERMUX_PKG_EXTRA_CONFIGURE_ARGS="-DENABLE_ASSEMBLY=OFF"
+		TERMUX_PKG_EXTRA_CONFIGURE_ARGS+="-DENABLE_ASSEMBLY=OFF"
 	fi
 
 	TERMUX_PKG_SRCDIR="$TERMUX_PKG_SRCDIR/source"
