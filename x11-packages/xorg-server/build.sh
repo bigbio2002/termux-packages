@@ -76,7 +76,7 @@ termux_step_pre_configure() {
 
 	# fixing automake version mismatch
 	cd ${TERMUX_PKG_SRCDIR}
-	files=`find . -name configure -o -name config.status -o -name Makefile.in`
+	files=`find . -name configure -o -name config\\.status -o -name Makefile\\.in`
 	for file in $files; do rm $file; done
 	unset files
 

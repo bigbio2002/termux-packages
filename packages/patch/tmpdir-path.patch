@@ -4,13 +4,13 @@ diff -uNr patch-2.7.6/lib/tempname.c patch-2.7.6.mod/lib/tempname.c
 @@ -32,7 +32,7 @@
  
  #include <stdio.h>
- #ifndef P_tmpdirfrggg
+ #ifndef P_tmpdir
 -# define P_tmpdir "/tmp"
 +# define P_tmpdir "@TERMUX_PREFIX@/tmp"
  #endif
  #ifndef TMP_MAX
  # define TMP_MAX 238328
-@@ -147,8, +147,8 @@
+@@ -147,8 +147,8 @@
      {
        if (direxists (P_tmpdir))
          dir = P_tmpdir;
