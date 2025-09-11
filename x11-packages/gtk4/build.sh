@@ -23,7 +23,6 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -Dvulkan=disabled
 -Dwayland-backend=true
 -Dx11-backend=true
--Dwayland-backend=true
 "
 
 termux_step_pre_configure() {
