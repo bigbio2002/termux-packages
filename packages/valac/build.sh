@@ -7,10 +7,15 @@ TERMUX_PKG_SRCURL=https://download.gnome.org/sources/vala/${TERMUX_PKG_VERSION%.
 TERMUX_PKG_SHA256=f2affe7d40ab63db8e7b9ecc3f6bdc9c2fc7e3134c84ff2d795f482fe926a382
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="glib"
+# for valadoc
+#TERMUX_PKG_BUILD_DEPENDS="graphviz"
 TERMUX_PKG_RECOMMENDS="clang, pkg-config"
 TERMUX_PKG_BREAKS="valac-dev"
 TERMUX_PKG_REPLACES="valac-dev"
-TERMUX_PKG_EXTRA_CONFIGURE_ARGS="--with-cgraph=no"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
+--with-cgraph=no
+--disable-valadoc
+"
 
 termux_step_post_make_install() {
 	local v=$(echo ${TERMUX_PKG_VERSION#*:} | cut -d . -f 1-2)
