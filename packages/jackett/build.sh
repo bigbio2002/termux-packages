@@ -2,9 +2,9 @@ TERMUX_PKG_HOMEPAGE="https://github.com/jackett/jackett"
 TERMUX_PKG_DESCRIPTION="API Support for your favorite torrent trackers"
 TERMUX_PKG_LICENSE="GPL-2.0-or-later"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="0.23.20"
+TERMUX_PKG_VERSION="0.23.59"
 TERMUX_PKG_SRCURL="https://github.com/Jackett/Jackett/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz"
-TERMUX_PKG_SHA256=231bd266d7f90c4aa4e908570d56e6beb648b584887317acfd9ebfee50fe473b
+TERMUX_PKG_SHA256=0574b5b95ff1937da3f45e79cbc2bb730d21063896c2f015171597e018f2a36c
 TERMUX_PKG_BUILD_DEPENDS="aspnetcore-targeting-pack-8.0, dotnet-targeting-pack-8.0"
 TERMUX_PKG_DEPENDS="aspnetcore-runtime-8.0, dotnet-host, dotnet-runtime-8.0"
 TERMUX_PKG_BUILD_IN_SRC=true
@@ -38,6 +38,8 @@ termux_step_make() {
 }
 
 termux_step_make_install() {
+	rm -fr "${TERMUX_PREFIX}/lib/jackett"
+	mkdir -p "${TERMUX_PREFIX}/lib"
 	cp -r build "${TERMUX_PREFIX}/lib/jackett"
 	cat > $TERMUX_PREFIX/bin/jackett <<-HERE
 	#!$TERMUX_PREFIX/bin/sh

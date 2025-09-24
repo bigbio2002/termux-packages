@@ -144,6 +144,7 @@ termux_setup_toolchain_28c() {
 		_NDK_ARCHNAME=x86
 	fi
 	cp $NDK/toolchains/llvm/prebuilt/linux-x86_64 $_TERMUX_TOOLCHAIN_TMPDIR -r
+	cp $NDK/source.properties $_TERMUX_TOOLCHAIN_TMPDIR
 
 	# Remove android-support header wrapping not needed on android-21:
 	rm -Rf $_TERMUX_TOOLCHAIN_TMPDIR/sysroot/usr/local
