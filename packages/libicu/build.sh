@@ -10,7 +10,7 @@ TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="77.1"
 TERMUX_PKG_REVISION=2
 TERMUX_PKG_SRCURL=https://github.com/unicode-org/icu/releases/download/release-${TERMUX_PKG_VERSION//./-}/icu4c-${TERMUX_PKG_VERSION//./_}-src.tgz
-TERMUX_PKG_SHA256=cb968df3e4d2e87e8b11c49a5d01c787bd13b9545280fc6642f826527618caef
+TERMUX_PKG_SHA256=588e431f77327c39031ffbb8843c0e3bc122c211374485fa87dc5f3faff24061
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_UPDATE_METHOD=repology
 TERMUX_PKG_DEPENDS="libc++"
@@ -28,7 +28,7 @@ termux_step_post_get_source() {
 }
 
 termux_step_post_massage() {
-	local _GUARD_FILE="lib/libicuuc.so.75"
+	local _GUARD_FILE="lib/libicuuc.so.77"
 	if [ ! -e "${_GUARD_FILE}" ]; then
 		termux_error_exit "Error: file ${_GUARD_FILE} not found."
 	fi
