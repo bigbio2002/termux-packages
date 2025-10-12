@@ -1,0 +1,11 @@
+--- ./src/CMakeLists.txt.orig	2025-09-28 07:54:56.029702938 -0400
++++ ./src/CMakeLists.txt	2025-09-28 07:58:33.625263024 -0400
+@@ -67,7 +67,7 @@
+ FOREACH (header ${PUB_HDRS})
+   SET (header ${CMAKE_CURRENT_SOURCE_DIR}/${header})
+ 
+-  EXEC_PROGRAM(${CMAKE_COMMAND} ARGS -E copy_if_different ${header} ${incDir})
++  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy_if_different ${header} ${incDir} OUTPUT_STRIP_TRAILING_WHITESPACE)
+ 
+   ADD_CUSTOM_COMMAND(TARGET yajl_s POST_BUILD
+       COMMAND ${CMAKE_COMMAND} -E copy_if_different ${header} ${incDir})
