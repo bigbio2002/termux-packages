@@ -76,6 +76,10 @@ source "$TERMUX_SCRIPTDIR/scripts/build/termux_download.sh"
 # shellcheck source=scripts/build/setup/termux_setup_proot.sh
 source "$TERMUX_SCRIPTDIR/scripts/build/setup/termux_setup_proot.sh"
 
+# Utility function to setup blueprint-compiler (may be used by gnome-calculator and epiphany).
+# shellcheck source=scripts/build/setup/termux_setup_bpc.sh.
+source "$TERMUX_SCRIPTDIR/scripts/build/setup/termux_setup_bpc.sh"
+
 # Installing packages if necessary for the full operation of CGCT.
 # shellcheck source=scripts/build/termux_step_setup_cgct_environment.sh
 source "$TERMUX_SCRIPTDIR/scripts/build/termux_step_setup_cgct_environment.sh"
@@ -424,7 +428,7 @@ fi
 # Check if the package is in the compiled list
 termux_check_package_in_built_packages_list() {
 	[[ ! -f "$TERMUX_BUILD_PACKAGE_CALL_BUILT_PACKAGES_LIST_FILE_PATH" ]] && \
-		termux_error_exit "ERROR: file '$TERMUX_BUILD_PACKAGE_CALL_BUILT_PACKAGES_LIST_FILE_PATH' not found."
+		termux_error_exit "file '$TERMUX_BUILD_PACKAGE_CALL_BUILT_PACKAGES_LIST_FILE_PATH' not found."
 	# slightly faster than `grep -q $word $file`
 	[[ " $(< "$TERMUX_BUILD_PACKAGE_CALL_BUILT_PACKAGES_LIST_FILE_PATH") " == *" $1 "* ]]
 	return $?
@@ -440,7 +444,7 @@ termux_add_package_to_built_packages_list() {
 # Check if the package is in the compiling list
 termux_check_package_in_building_packages_list() {
 	[[ ! -f "$TERMUX_BUILD_PACKAGE_CALL_BUILDING_PACKAGES_LIST_FILE_PATH" ]] && \
-		termux_error_exit "ERROR: file '$TERMUX_BUILD_PACKAGE_CALL_BUILDING_PACKAGES_LIST_FILE_PATH' not found."
+		termux_error_exit "file '$TERMUX_BUILD_PACKAGE_CALL_BUILDING_PACKAGES_LIST_FILE_PATH' not found."
 	# slightly faster than `grep -q $word $file`
 	[[ $'\n'"$(<"$TERMUX_BUILD_PACKAGE_CALL_BUILDING_PACKAGES_LIST_FILE_PATH")"$'\n' == *$'\n'"$1"$'\n'* ]]
 	return $?
