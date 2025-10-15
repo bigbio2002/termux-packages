@@ -1,10 +1,12 @@
 diff -uNr util-linux-2.36.1/include/pathnames.h util-linux-2.36.1.mod/include/pathnames.h
 --- util-linux-2.36.1/include/pathnames.h	2020-11-16 10:41:16.338846226 +0000
 +++ util-linux-2.36.1.mod/include/pathnames.h	2020-11-22 21:23:16.999470089 +0000
-@@ -206,4 +206,107 @@
- # define _PATH_VENDORDIR	"/usr/etc"
+@@ -250,4 +250,107 @@
+ # define UL_VENDORDIR_PATH      NULL
  #endif
  
+-#endif /* PATHNAMES_H */
+\No newline at end of file
 +// On Android (Termux) paths are different.
 +#if defined(__ANDROID__)
 +# undef _PATH_DEFPATH
@@ -108,7 +110,7 @@ diff -uNr util-linux-2.36.1/include/pathnames.h util-linux-2.36.1.mod/include/pa
 +# define _PATH_ADJTIME         "@TERMUX_PREFIX@/etc/adjtime"
 +#endif
 +
- #endif /* PATHNAMES_H */
++#endif /* PATHNAMES_H */
 diff -uNr util-linux-2.36.1/lib/exec_shell.c util-linux-2.36.1.mod/lib/exec_shell.c
 --- util-linux-2.36.1/lib/exec_shell.c	2020-11-13 11:33:31.084801627 +0000
 +++ util-linux-2.36.1.mod/lib/exec_shell.c	2020-11-22 21:23:17.000470088 +0000
@@ -124,7 +126,7 @@ diff -uNr util-linux-2.36.1/lib/exec_shell.c util-linux-2.36.1.mod/lib/exec_shel
 diff -uNr util-linux-2.36.1/lib/loopdev.c util-linux-2.36.1.mod/lib/loopdev.c
 --- util-linux-2.36.1/lib/loopdev.c	2020-11-16 10:41:16.338846226 +0000
 +++ util-linux-2.36.1.mod/lib/loopdev.c	2020-11-22 21:23:17.000470088 +0000
-@@ -105,13 +105,13 @@
+@@ -128,13 +128,13 @@
  	/* set new */
  	if (device) {
  		if (*device != '/') {
@@ -138,7 +140,7 @@ diff -uNr util-linux-2.36.1/lib/loopdev.c util-linux-2.36.1.mod/lib/loopdev.c
  					return -1;
 -				device += 4;
 +				device += 10;
- 				dir = _PATH_DEV_LOOP "/";	/* _PATH_DEV uses tailing slash */
+ 				dir = _PATH_DEV_LOOP "/";	/* _PATH_DEV uses trailing slash */
  			}
  			snprintf(lc->device, sizeof(lc->device), "%s%s",
 diff -uNr util-linux-2.36.1/libblkid/src/blkidP.h util-linux-2.36.1.mod/libblkid/src/blkidP.h
@@ -222,8 +224,8 @@ diff -uNr util-linux-2.36.1/libmount/src/tab.c util-linux-2.36.1.mod/libmount/sr
  			int flags = 0;
  
  			if (!mnt_fs_get_srcpath(fs) ||
--			    !startswith(mnt_fs_get_srcpath(fs), "/dev/loop"))
-+			    !startswith(mnt_fs_get_srcpath(fs), "/dev/block/loop"))
+-			    !ul_startswith(mnt_fs_get_srcpath(fs), "/dev/loop"))
++			    !ul_startswith(mnt_fs_get_srcpath(fs), "/dev/block/loop"))
  				continue;	/* does not look like loopdev */
  
  			if (mnt_fs_get_option(fstab_fs, "offset", &val, &len) == 0) {
@@ -293,10 +295,10 @@ diff -uNr util-linux-2.36.1/login-utils/sulogin.c util-linux-2.36.1.mod/login-ut
 diff -uNr util-linux-2.36.1/misc-utils/whereis.c util-linux-2.36.1.mod/misc-utils/whereis.c
 --- util-linux-2.36.1/misc-utils/whereis.c	2020-11-16 10:41:16.343846201 +0000
 +++ util-linux-2.36.1.mod/misc-utils/whereis.c	2020-11-22 21:23:17.005470083 +0000
-@@ -97,84 +97,20 @@
+@@ -101,84 +101,20 @@
  };
  
- static const char *bindirs[] = {
+ static const char *const bindirs[] = {
 -	"/usr/bin",
 -	"/usr/sbin",
 -	"/bin",
@@ -359,7 +361,7 @@ diff -uNr util-linux-2.36.1/misc-utils/whereis.c util-linux-2.36.1.mod/misc-util
  	NULL
  };
  
- static const char *mandirs[] = {
+ static const char *const mandirs[] = {
 -	"/usr/man/*",
 -	"/usr/share/man/*",
 -	"/usr/X386/man/*",
@@ -373,7 +375,7 @@ diff -uNr util-linux-2.36.1/misc-utils/whereis.c util-linux-2.36.1.mod/misc-util
  	NULL
  };
  
- static const char *srcdirs[] = {
+ static const char *const srcdirs[] = {
 -	"/usr/src/*",
 -	"/usr/src/lib/libc/*",
 -	"/usr/src/lib/libc/net/*",
