@@ -35,6 +35,15 @@ fi
 
 # See http://llvm.org/docs/CMake.html:
 ## mlir is disabled under LLVM_ENABLE_PROJECTS
+#
+## full list for LLVM_ENABLE_PROJECTS:
+# bolt;clang;clang-tools-extra;compiler-rt;cross-project-tests;libc;libclc;lld;lldb;mlir;openmp;polly
+#
+## full list for LLVM_ENABLE_RUNTIMES:
+# libc;libunwind;libcxxabi;libcxx;compiler-rt;openmp;llvm-libgcc;offload;flang-rt;libclc
+#
+## full list for LLVM_TARGETS_TO_BUILD as of August 2025 is:
+# AArch64;AMDGPU;ARM;AVR;BPF;Hexagon;Lanai;LoongArch;Mips;MSP430;NVPTX;PowerPC;RISCV;Sparc;SPIRV;SystemZ;VE;WebAssembly;X86;XCore
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -DANDROID_PLATFORM_LEVEL=$TERMUX_PKG_API_LEVEL
 -DPYTHON_EXECUTABLE=$(command -v python${TERMUX_PYTHON_VERSION})
@@ -60,14 +69,15 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -DLLVM_ENABLE_SPHINX=ON
 -DSPHINX_OUTPUT_MAN=ON
 -DSPHINX_WARNINGS_AS_ERRORS=OFF
--DLLVM_TARGETS_TO_BUILD=all
--DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=ARC;CSKY;M68k;VE
+-DLLVM_TARGETS_TO_BUILD="AArch64;ARM;X86"
 -DPERL_EXECUTABLE=$(command -v perl)
 -DLLVM_ENABLE_FFI=ON
 -DLLVM_INSTALL_UTILS=ON
 -DLLVM_BINUTILS_INCDIR=$TERMUX_PREFIX/include
 -DMLIR_INSTALL_AGGREGATE_OBJECTS=OFF
 "
+#-DLLVM_TARGETS_TO_BUILD=all
+#-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=ARC;CSKY;M68k;VE
 
 if [ x$TERMUX_ARCH_BITS = x32 ]; then
 	# Do not set _FILE_OFFSET_BITS=64
