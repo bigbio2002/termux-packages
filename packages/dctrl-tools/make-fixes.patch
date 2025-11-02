@@ -1,0 +1,74 @@
+--- a/GNUmakefile.old	2025-11-02 14:23:07.936606654 -0500
++++ b/GNUmakefile	2025-11-02 14:24:43.444529296 -0500
+@@ -13,8 +13,8 @@
+ man8dir = $(mandir)/man8
+ localedir = $(datarootdir)/locale
+ 
+-CC = gcc 
+-CFLAGS ?= -g -O2 -Wall -Wextra -Werror
++CC ?= gcc 
++CFLAGS ?= -g -O2 -Wall -Wextra
+ ALL_CFLAGS = $(CPPFLAGS) $(CFLAGS) -std=gnu99 -Ilib \
+ 	 -DENABLE_L_DEBUG -D_GNU_SOURCE -DSYSCONF=\"$(sysconfdir)\" \
+          -DHAVE_GETTEXT -DPACKAGE=\"dctrl-tools\" -DLOCALEDIR=\"$(localedir)\" 
+@@ -46,7 +46,7 @@
+ 	tbl-dctrl/tbl-dctrl \
+ 	join-dctrl/join-dctrl
+ 
+-LDLIBS = -L. -ldctrl
++LDLIBS = -L. -ldctrl -largp
+ 
+ # List of translated languages is given in langs.mk
+ include langs.mk
+@@ -70,20 +70,20 @@
+ 	$(INSTALL_PROGRAM) sort-dctrl/sort-dctrl $(DESTDIR)$(bindir)
+ 	$(INSTALL_PROGRAM) grep-dctrl/grep-dctrl $(DESTDIR)$(bindir)
+ 	set -e ; for dest in $(aliases) ; do \
+-		ln -s grep-dctrl $(DESTDIR)$(bindir)/$$dest ; \
++		ln -s -f grep-dctrl $(DESTDIR)$(bindir)/$$dest ; \
+ 	 done
+ 	$(INSTALL_DATA) man/sync-available.8 $(DESTDIR)$(man8dir)/
+-	gzip -9 $(DESTDIR)$(man8dir)/sync-available.8
++	gzip -9 -f $(DESTDIR)$(man8dir)/sync-available.8
+ 	$(INSTALL_DATA) man/sort-dctrl.1 $(DESTDIR)$(man1dir)/
+-	gzip -9 $(DESTDIR)$(man1dir)/sort-dctrl.1
++	gzip -9 -f $(DESTDIR)$(man1dir)/sort-dctrl.1
+ 	$(INSTALL_DATA) man/tbl-dctrl.1 $(DESTDIR)$(man1dir)/
+-	gzip -9 $(DESTDIR)$(man1dir)/tbl-dctrl.1
++	gzip -9 -f $(DESTDIR)$(man1dir)/tbl-dctrl.1
+ 	$(INSTALL_DATA) man/join-dctrl.1 $(DESTDIR)$(man1dir)/
+-	gzip -9 $(DESTDIR)$(man1dir)/join-dctrl.1
++	gzip -9 -f $(DESTDIR)$(man1dir)/join-dctrl.1
+ 	$(INSTALL_DATA) man/grep-dctrl.1 $(DESTDIR)$(man1dir)/
+-	gzip -9 $(DESTDIR)$(man1dir)/grep-dctrl.1
++	gzip -9 -f $(DESTDIR)$(man1dir)/grep-dctrl.1
+ 	set -e ; for dest in $(aliases) ; do \
+-		ln -s grep-dctrl.1.gz $(DESTDIR)$(man1dir)/$$dest.1.gz ; \
++		ln -s -f grep-dctrl.1.gz $(DESTDIR)$(man1dir)/$$dest.1.gz ; \
+ 	done
+ 	set -e ; for d in man/translated/*; do \
+ 		lang=`echo $$d | cut -c16-`; \
+@@ -90,7 +90,7 @@
+ 		if [ -e $$d/sync-available.8 ]; then \
+ 			$(INSTALL_DIR) $(DESTDIR)$(mandir)/$$lang/man8; \
+ 			$(INSTALL_DATA) $$d/sync-available.8 $(DESTDIR)$(mandir)/$$lang/man8/; \
+-			gzip -9 $(DESTDIR)$(mandir)/$$lang/man8/sync-available.8; \
++			gzip -9 -f $(DESTDIR)$(mandir)/$$lang/man8/sync-available.8; \
+ 		fi; \
+ 		for file in sort-dctrl.1 tbl-dctrl.1 join-dctrl.1 grep-dctrl.1; do \
+ 			if [ -e $$d/$$file ]; then \
+@@ -98,12 +98,12 @@
+ 					$(INSTALL_DIR) $(DESTDIR)$(mandir)/$$lang/man1; \
+ 				fi; \
+ 				$(INSTALL_DATA) $$d/$$file $(DESTDIR)$(mandir)/$$lang/man1/; \
+-				gzip -9 $(DESTDIR)$(mandir)/$$lang/man1/$$file; \
++				gzip -9 -f $(DESTDIR)$(mandir)/$$lang/man1/$$file; \
+ 			fi; \
+ 		done; \
+ 		if [ -e $(DESTDIR)$(mandir)/$$lang/man1/grep-dctrl.1.gz ]; then \
+ 			for dest in $(aliases) ; do \
+-				ln -s grep-dctrl.1.gz $(DESTDIR)$(mandir)/$$lang/man1/$$dest.1.gz ; \
++				ln -s -f grep-dctrl.1.gz $(DESTDIR)$(mandir)/$$lang/man1/$$dest.1.gz ; \
+ 			done; \
+ 		fi; \
+ 	done;

@@ -1,0 +1,11 @@
+--- a/lib/fnutil.c
++++ b/lib/fnutil.c
+@@ -68,8 +68,8 @@
+ 
+ 	/* Do we just need to prepend the current directory? */
+ 	if (path[0] != '~') {
+-		char * cwd = get_current_dir_name();
++		char * cwd = getcwd(NULL, 0);
+ 		if (cwd == 0) return 0;
+ 		len = strlen(cwd);
+ 		size = len + 1 + strlen(path) + 1; /* +2 for '/' and '\0' */
