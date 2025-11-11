@@ -1,0 +1,58 @@
+From 9dd5291b00687516217068d9e9500f59c42e906c Mon Sep 17 00:00:00 2001
+Message-ID: <9dd5291b00687516217068d9e9500f59c42e906c.1745017007.git.sam@gentoo.org>
+From: Sam James <sam@gentoo.org>
+Date: Fri, 18 Apr 2025 23:54:56 +0100
+Subject: [PATCH] Revert "match: Reject non-ssa name/min invariants in
+ gimple_extract [PR116412]"
+
+This reverts commit de622c307743cc03f45f1ba7b0c2f8df0b378206.
+
+Let's apply the version from master instead as it applies cleanly
+with our gimple split backports.
+---
+ gcc/gimple-match-head.cc                  | 6 ------
+ gcc/testsuite/gcc.dg/torture/pr116412-1.c | 6 ------
+ 2 files changed, 12 deletions(-)
+ delete mode 100644 gcc/testsuite/gcc.dg/torture/pr116412-1.c
+
+diff --git a/gcc/gimple-match-head.cc b/gcc/gimple-match-head.cc
+index b3e7792a8fae..21843d7870b3 100644
+--- a/gcc/gimple-match-head.cc
++++ b/gcc/gimple-match-head.cc
+@@ -945,9 +945,6 @@ gimple_extract (gimple *stmt, gimple_match_op *res_op,
+ 		|| code == VIEW_CONVERT_EXPR)
+ 	      {
+ 		tree op0 = TREE_OPERAND (gimple_assign_rhs1 (stmt), 0);
+-		/* op0 needs to be a SSA name or an min invariant. */
+-		if (TREE_CODE (op0) != SSA_NAME && !is_gimple_min_invariant (op0))
+-		  return false;
+ 		res_op->set_op (code, type, valueize_op (op0));
+ 		return true;
+ 	      }
+@@ -955,9 +952,6 @@ gimple_extract (gimple *stmt, gimple_match_op *res_op,
+ 	      {
+ 		tree rhs1 = gimple_assign_rhs1 (stmt);
+ 		tree op0 = valueize_op (TREE_OPERAND (rhs1, 0));
+-		/* op0 needs to be a SSA name or an min invariant. */
+-		if (TREE_CODE (op0) != SSA_NAME && !is_gimple_min_invariant (op0))
+-		  return false;
+ 		res_op->set_op (code, type, op0,
+ 				TREE_OPERAND (rhs1, 1),
+ 				TREE_OPERAND (rhs1, 2),
+diff --git a/gcc/testsuite/gcc.dg/torture/pr116412-1.c b/gcc/testsuite/gcc.dg/torture/pr116412-1.c
+deleted file mode 100644
+index 3bc26ecd8b83..000000000000
+--- a/gcc/testsuite/gcc.dg/torture/pr116412-1.c
++++ /dev/null
+@@ -1,6 +0,0 @@
+-/* { dg-do compile } */
+-double f(_Complex double a, _Complex double *b, int c)
+-{
+-  if (c) return __real__ a;
+-  return __real__ *b;
+-}
+
+base-commit: e8e9c25cbaee08f54b7be3051ba5c444a042a958
+-- 
+2.49.0
+

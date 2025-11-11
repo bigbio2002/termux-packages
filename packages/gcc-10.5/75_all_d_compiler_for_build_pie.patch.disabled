@@ -1,0 +1,63 @@
+https://bugs.gentoo.org/855902
+https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;h=d3ae0f515d0c675d42f4f18fc267e8e75f6b6f26
+
+From d3ae0f515d0c675d42f4f18fc267e8e75f6b6f26 Mon Sep 17 00:00:00 2001
+From: Iain Buclaw <ibuclaw@gdcproject.org>
+Date: Sun, 16 Jun 2019 18:12:47 +0200
+Subject: [PATCH] d: Use COMPILER_FOR_BUILD to build all D front-end generator
+ programs
+
+This means the correct config headers are included when building the
+D front-end in a Canadian cross configuration.
+
+gcc/d/ChangeLog:
+
+	* Make-lang.in (DMDGEN_COMPILE): Remove.
+	(d/%.dmdgen.o): Use COMPILER_FOR_BUILD and BUILD_COMPILERFLAGS to
+	build all D generator programs.
+	(D_SYSTEM_H): New macro.
+	(d/idgen.dmdgen.o): Add dependencies to build.
+	(d/impcnvgen.dmdgen.o): Likewise.
+	* d-system.h: Include bconfig.h if GENERATOR_FILE is defined.
+--- a/gcc/d/Make-lang.in
++++ b/gcc/d/Make-lang.in
+@@ -52,7 +52,6 @@ d-warn = $(filter-out -pedantic -Woverloaded-virtual, $(STRICT_WARN))
+ # Also filter out warnings for missing format attributes in the D Frontend.
+ DMD_WARN_CXXFLAGS = $(filter-out -Wmissing-format-attribute, $(WARN_CXXFLAGS))
+ DMD_COMPILE = $(subst $(WARN_CXXFLAGS), $(DMD_WARN_CXXFLAGS), $(COMPILE))
+-DMDGEN_COMPILE = $(subst $(COMPILER), $(COMPILER_FOR_BUILD), $(DMD_COMPILE))
+ 
+ # D Frontend object files.
+ D_FRONTEND_OBJS = \
+@@ -360,6 +359,15 @@ d/id.h: d/id.c
+ d/impcnvtab.c: d/impcnvgen$(build_exeext)
+ 	cd d && ./impcnvgen$(build_exeext)
+ 
++# Compile the generator programs.
+ d/%.dmdgen.o: $(srcdir)/d/dmd/%.c
+-	$(DMDGEN_COMPILE) $(D_INCLUDES) $<
+-	$(POSTCOMPILE)
++	$(COMPILER_FOR_BUILD) -c $(BUILD_COMPILERFLAGS) $(D_INCLUDES) \
++		$(BUILD_CPPFLAGS) -o $@ $<
++
++# Header dependencies for the generator programs.
++D_SYSTEM_H = d/dmd/root/dsystem.h d/d-system.h
++
++d/idgen.dmdgen.o: d/dmd/idgen.c $(D_SYSTEM_H) $(BCONFIG_H) $(SYSTEM_H)
++
++d/impcnvgen.dmdgen.o: d/dmd/impcnvgen.c d/dmd/mtype.h $(D_SYSTEM_H) \
++	$(BCONFIG_H) $(SYSTEM_H)
+--- a/gcc/d/d-system.h
++++ b/gcc/d/d-system.h
+@@ -19,7 +19,11 @@
+ #ifndef GCC_D_SYSTEM_H
+ #define GCC_D_SYSTEM_H
+ 
++#ifdef GENERATOR_FILE
++#include "bconfig.h"
++#else
+ #include "config.h"
++#endif
+ #include "system.h"
+ 
+ /* Used by the dmd front-end to determine if we have POSIX-style IO.  */

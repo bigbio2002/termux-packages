@@ -1,0 +1,77 @@
+From c7b76a076cb2c6ded7ae208464019b04cb0531a2 Mon Sep 17 00:00:00 2001
+Message-ID: <c7b76a076cb2c6ded7ae208464019b04cb0531a2.1745017147.git.sam@gentoo.org>
+From: Andrew Pinski <quic_apinski@quicinc.com>
+Date: Mon, 19 Aug 2024 08:06:36 -0700
+Subject: [PATCH] match: Reject non-ssa name/min invariants in gimple_extract
+ [PR116412]
+
+After the conversion for phiopt's conditional operand
+to use maybe_push_res_to_seq, it was found that gimple_extract
+will extract out from REALPART_EXPR/IMAGPART_EXPR/VCE and BIT_FIELD_REF,
+a memory load. But that extraction was not needed as memory loads are not
+simplified in match and simplify. So gimple_extract should return false
+in those cases.
+
+Changes since v1:
+* Move the rejection to gimple_extract from factor_out_conditional_operation.
+
+Bootstrapped and tested on x86_64-linux-gnu.
+
+	PR tree-optimization/116412
+
+gcc/ChangeLog:
+
+	* gimple-match-exports.cc (gimple_extract): Return false if op0
+	was not a SSA name nor a min invariant for REALPART_EXPR/IMAGPART_EXPR/VCE
+	and BIT_FIELD_REF.
+
+gcc/testsuite/ChangeLog:
+
+	* gcc.dg/torture/pr116412-1.c: New test.
+
+Signed-off-by: Andrew Pinski <quic_apinski@quicinc.com>
+---
+ gcc/gimple-match-exports.cc               | 6 ++++++
+ gcc/testsuite/gcc.dg/torture/pr116412-1.c | 6 ++++++
+ 2 files changed, 12 insertions(+)
+ create mode 100644 gcc/testsuite/gcc.dg/torture/pr116412-1.c
+
+diff --git a/gcc/gimple-match-exports.cc b/gcc/gimple-match-exports.cc
+index 15d54b7d8438..86e40100899a 100644
+--- a/gcc/gimple-match-exports.cc
++++ b/gcc/gimple-match-exports.cc
+@@ -740,6 +740,9 @@ gimple_extract (gimple *stmt, gimple_match_op *res_op,
+ 		|| code == VIEW_CONVERT_EXPR)
+ 	      {
+ 		tree op0 = TREE_OPERAND (gimple_assign_rhs1 (stmt), 0);
++		/* op0 needs to be a SSA name or an min invariant. */
++		if (TREE_CODE (op0) != SSA_NAME && !is_gimple_min_invariant (op0))
++		  return false;
+ 		res_op->set_op (code, type, valueize_op (op0));
+ 		return true;
+ 	      }
+@@ -747,6 +750,9 @@ gimple_extract (gimple *stmt, gimple_match_op *res_op,
+ 	      {
+ 		tree rhs1 = gimple_assign_rhs1 (stmt);
+ 		tree op0 = valueize_op (TREE_OPERAND (rhs1, 0));
++		/* op0 needs to be a SSA name or an min invariant. */
++		if (TREE_CODE (op0) != SSA_NAME && !is_gimple_min_invariant (op0))
++		  return false;
+ 		res_op->set_op (code, type, op0,
+ 				TREE_OPERAND (rhs1, 1),
+ 				TREE_OPERAND (rhs1, 2),
+diff --git a/gcc/testsuite/gcc.dg/torture/pr116412-1.c b/gcc/testsuite/gcc.dg/torture/pr116412-1.c
+new file mode 100644
+index 000000000000..3bc26ecd8b83
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/torture/pr116412-1.c
+@@ -0,0 +1,6 @@
++/* { dg-do compile } */
++double f(_Complex double a, _Complex double *b, int c)
++{
++  if (c) return __real__ a;
++  return __real__ *b;
++}
+-- 
+2.49.0
+

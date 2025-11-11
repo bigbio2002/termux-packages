@@ -14,7 +14,7 @@ Subject: [PATCH] backport: re PR sanitizer/92154 (new glibc breaks arm
 --
 --- a/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc
 +++ b/libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc
-@@ -1059,16 +1059,13 @@ CHECK_SIZE_AND_OFFSET(ipc_perm, gid);
+@@ -1070,16 +1070,13 @@ CHECK_SIZE_AND_OFFSET(ipc_perm, gid);
  CHECK_SIZE_AND_OFFSET(ipc_perm, cuid);
  CHECK_SIZE_AND_OFFSET(ipc_perm, cgid);
  #ifndef __GLIBC_PREREQ

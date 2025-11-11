@@ -1,0 +1,337 @@
+https://bugs.gentoo.org/928234
+https://gcc.gnu.org/PR109760
+https://gcc.gnu.org/PR110095
+https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=55914b016de8c8514c58eb59822677a69e44135c
+
+From 55914b016de8c8514c58eb59822677a69e44135c Mon Sep 17 00:00:00 2001
+From: Die Li <lidie@eswincomputing.com>
+Date: Fri, 19 May 2023 23:00:13 -0600
+Subject: [PATCH] Fix riscv_expand_conditional_move.
+
+Two issues have been observed in current riscv_expand_conditional_move
+implementation.
+1. Before introduction of TARGET_XTHEADCONDMOV, op0 of comparision expression
+is used for mode comparision with word_mode, but after TARGET_XTHEADCONDMOV
+megered with TARGET_SFB_ALU, dest of if-then-else is used for mode comparision with
+word_mode, and from md file mode of dest is DI or SI which can be different with
+word_mode in RV64.
+
+2. TARGET_XTHEADCONDMOV cannot be generated when the mode of the comparison is E_VOID.
+
+This patch solves the issues above.
+
+Provide an example from the newly added test case.
+
+Testcase:
+int ConNmv_reg_reg_reg(int x, int y, int z, int n){
+  if (x != y) return z;
+  return n;
+}
+
+Cflags:
+-O2 -march=rv64gc_xtheadcondmov -mabi=lp64d
+
+before patch:
+ConNmv_reg_reg_reg:
+	bne	a0,a1,.L23
+	mv	a2,a3
+.L23:
+	mv	a0,a2
+	ret
+
+after patch:
+ConNmv_reg_reg_reg:
+	sub	a1,a0,a1
+	th.mveqz	a2,zero,a1
+	th.mvnez	a3,zero,a1
+	or	a0,a2,a3
+	ret
+
+Co-Authored by: Fei Gao <gaofei@eswincomputing.com>
+Signed-off-by: Die Li <lidie@eswincomputing.com>
+
+gcc/ChangeLog:
+
+	* config/riscv/riscv.cc (riscv_expand_conditional_move): Fix mode
+	checking.
+
+gcc/testsuite/ChangeLog:
+
+	* gcc.target/riscv/xtheadcondmov-indirect-rv32.c: New test.
+	* gcc.target/riscv/xtheadcondmov-indirect-rv64.c: New test.
+---
+ gcc/config/riscv/riscv.cc                     |   4 +-
+ .../riscv/xtheadcondmov-indirect-rv32.c       | 116 ++++++++++++++++++
+ .../riscv/xtheadcondmov-indirect-rv64.c       | 116 ++++++++++++++++++
+ 3 files changed, 234 insertions(+), 2 deletions(-)
+ create mode 100644 gcc/testsuite/gcc.target/riscv/xtheadcondmov-indirect-rv32.c
+ create mode 100644 gcc/testsuite/gcc.target/riscv/xtheadcondmov-indirect-rv64.c
+
+diff --git a/gcc/config/riscv/riscv.cc b/gcc/config/riscv/riscv.cc
+index 2a7b43849e5..7bb38978261 100644
+--- a/gcc/config/riscv/riscv.cc
++++ b/gcc/config/riscv/riscv.cc
+@@ -3488,7 +3488,7 @@ riscv_expand_conditional_move (rtx dest, rtx op, rtx cons, rtx alt)
+       && GET_MODE_CLASS (mode) == MODE_INT
+       && reg_or_0_operand (cons, mode)
+       && reg_or_0_operand (alt, mode)
+-      && GET_MODE (op) == mode
++      && (GET_MODE (op) == mode || GET_MODE (op) == E_VOIDmode)
+       && GET_MODE (op0) == mode
+       && GET_MODE (op1) == mode
+       && (code == EQ || code == NE))
+@@ -3497,7 +3497,7 @@ riscv_expand_conditional_move (rtx dest, rtx op, rtx cons, rtx alt)
+       return true;
+     }
+   else if (TARGET_SFB_ALU
+-	   && mode == word_mode)
++	   && GET_MODE (op0) == word_mode)
+     {
+       riscv_emit_int_compare (&code, &op0, &op1);
+       rtx cond = gen_rtx_fmt_ee (code, GET_MODE (op0), op0, op1);
+diff --git a/gcc/testsuite/gcc.target/riscv/xtheadcondmov-indirect-rv32.c b/gcc/testsuite/gcc.target/riscv/xtheadcondmov-indirect-rv32.c
+new file mode 100644
+index 00000000000..9afdc2eabfd
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/riscv/xtheadcondmov-indirect-rv32.c
+@@ -0,0 +1,116 @@
++/* { dg-do compile } */
++/* { dg-options "-O2 -march=rv32gc_xtheadcondmov -mabi=ilp32 -mriscv-attribute" } */
++/* { dg-skip-if "" { *-*-* } { "-O0" "-Os" "-Og" } } */
++/* { dg-final { check-function-bodies "**" ""  } } */
++
++/*
++**ConEmv_imm_imm_reg:
++**	addi	a5,a0,-1000
++**	li	a0,10
++**	th.mvnez	a0,zero,a5
++**	th.mveqz	a1,zero,a5
++**	or	a0,a0,a1
++**	ret
++*/
++int ConEmv_imm_imm_reg(int x, int y){
++  if (x == 1000) return 10;
++  return y;
++}
++
++/*
++**ConEmv_imm_reg_reg:
++**	addi	a5,a0,-1000
++**	th.mvnez	a1,zero,a5
++**	th.mveqz	a2,zero,a5
++**	or	a0,a1,a2
++**	ret
++*/
++int ConEmv_imm_reg_reg(int x, int y, int z){
++  if (x == 1000) return y;
++  return z;
++}
++
++/*
++**ConEmv_reg_imm_reg:
++**	sub	a1,a0,a1
++**	li	a0,10
++**	th.mvnez	a0,zero,a1
++**	th.mveqz	a2,zero,a1
++**	or	a0,a0,a2
++**	ret
++*/
++int ConEmv_reg_imm_reg(int x, int y, int z){
++  if (x == y) return 10;
++  return z;
++}
++
++/*
++**ConEmv_reg_reg_reg:
++**	sub	a1,a0,a1
++**	th.mvnez	a2,zero,a1
++**	th.mveqz	a3,zero,a1
++**	or	a0,a2,a3
++**	ret
++*/
++int ConEmv_reg_reg_reg(int x, int y, int z, int n){
++  if (x == y) return z;
++  return n;
++}
++
++/*
++**ConNmv_imm_imm_reg:
++**	li	a5,9998336
++**	addi	a4,a0,-1000
++**	addi	a5,a5,1664
++**	th.mvnez	a1,zero,a4
++**	th.mveqz	a5,zero,a4
++**	or	a0,a1,a5
++**	ret
++*/
++int ConNmv_imm_imm_reg(int x, int y){
++  if (x != 1000) return 10000000;
++  return y;
++}
++
++/*
++**ConNmv_imm_reg_reg:
++**	addi	a5,a0,-1000
++**	th.mveqz	a1,zero,a5
++**	th.mvnez	a2,zero,a5
++**	or	a0,a1,a2
++**	ret
++*/
++int ConNmv_imm_reg_reg(int x, int y, int z){
++  if (x != 1000) return y;
++  return z;
++}
++
++/*
++**ConNmv_reg_imm_reg:
++**	sub	a1,a0,a1
++**	li	a0,10
++**	th.mveqz	a0,zero,a1
++**	th.mvnez	a2,zero,a1
++**	or	a0,a0,a2
++**	ret
++*/
++int ConNmv_reg_imm_reg(int x, int y, int z){
++  if (x != y) return 10;
++  return z;
++}
++
++/*
++**ConNmv_reg_reg_reg:
++**	sub	a1,a0,a1
++**	th.mveqz	a2,zero,a1
++**	th.mvnez	a3,zero,a1
++**	or	a0,a2,a3
++**	ret
++*/
++int ConNmv_reg_reg_reg(int x, int y, int z, int n){
++  if (x != y) return z;
++  return n;
++}
++
++
++/* { dg-final { scan-assembler ".attribute arch, \"rv32i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_zicsr2p0_zifencei2p0_xtheadcondmov1p0\"" } } */
+diff --git a/gcc/testsuite/gcc.target/riscv/xtheadcondmov-indirect-rv64.c b/gcc/testsuite/gcc.target/riscv/xtheadcondmov-indirect-rv64.c
+new file mode 100644
+index 00000000000..a1982fd90bd
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/riscv/xtheadcondmov-indirect-rv64.c
+@@ -0,0 +1,116 @@
++/* { dg-do compile } */
++/* { dg-options "-O2 -march=rv64gc_xtheadcondmov -mabi=lp64d -mriscv-attribute" } */
++/* { dg-skip-if "" { *-*-* } { "-O0" "-Os" "-Og" } } */
++/* { dg-final { check-function-bodies "**" ""  } } */
++
++/*
++**ConEmv_imm_imm_reg:
++**	addi	a5,a0,-1000
++**	li	a0,10
++**	th.mvnez	a0,zero,a5
++**	th.mveqz	a1,zero,a5
++**	or	a0,a0,a1
++**	ret
++*/
++int ConEmv_imm_imm_reg(int x, int y){
++  if (x == 1000) return 10;
++  return y;
++}
++
++/*
++**ConEmv_imm_reg_reg:
++**	addi	a5,a0,-1000
++**	th.mvnez	a1,zero,a5
++**	th.mveqz	a2,zero,a5
++**	or	a0,a1,a2
++**	ret
++*/
++int ConEmv_imm_reg_reg(int x, int y, int z){
++  if (x == 1000) return y;
++  return z;
++}
++
++/*
++**ConEmv_reg_imm_reg:
++**	sub	a1,a0,a1
++**	li	a0,10
++**	th.mvnez	a0,zero,a1
++**	th.mveqz	a2,zero,a1
++**	or	a0,a0,a2
++**	ret
++*/
++int ConEmv_reg_imm_reg(int x, int y, int z){
++  if (x == y) return 10;
++  return z;
++}
++
++/*
++**ConEmv_reg_reg_reg:
++**	sub	a1,a0,a1
++**	th.mvnez	a2,zero,a1
++**	th.mveqz	a3,zero,a1
++**	or	a0,a2,a3
++**	ret
++*/
++int ConEmv_reg_reg_reg(int x, int y, int z, int n){
++  if (x == y) return z;
++  return n;
++}
++
++/*
++**ConNmv_imm_imm_reg:
++**	li	a5,9998336
++**	addi	a4,a0,-1000
++**	addi	a5,a5,1664
++**	th.mvnez	a1,zero,a4
++**	th.mveqz	a5,zero,a4
++**	or	a0,a1,a5
++**	ret
++*/
++int ConNmv_imm_imm_reg(int x, int y){
++  if (x != 1000) return 10000000;
++  return y;
++}
++
++/*
++**ConNmv_imm_reg_reg:
++**	addi	a5,a0,-1000
++**	th.mveqz	a1,zero,a5
++**	th.mvnez	a2,zero,a5
++**	or	a0,a1,a2
++**	ret
++*/
++int ConNmv_imm_reg_reg(int x, int y, int z){
++  if (x != 1000) return y;
++  return z;
++}
++
++/*
++**ConNmv_reg_imm_reg:
++**	sub	a1,a0,a1
++**	li	a0,10
++**	th.mveqz	a0,zero,a1
++**	th.mvnez	a2,zero,a1
++**	or	a0,a0,a2
++**	ret
++*/
++int ConNmv_reg_imm_reg(int x, int y, int z){
++  if (x != y) return 10;
++  return z;
++}
++
++/*
++**ConNmv_reg_reg_reg:
++**	sub	a1,a0,a1
++**	th.mveqz	a2,zero,a1
++**	th.mvnez	a3,zero,a1
++**	or	a0,a2,a3
++**	ret
++*/
++int ConNmv_reg_reg_reg(int x, int y, int z, int n){
++  if (x != y) return z;
++  return n;
++}
++
++
++/* { dg-final { scan-assembler ".attribute arch, \"rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_zicsr2p0_zifencei2p0_xtheadcondmov1p0\"" } } */
+-- 
+2.39.3

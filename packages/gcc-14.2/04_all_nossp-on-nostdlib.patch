@@ -1,4 +1,5 @@
-│Disable ssp on -nostdlib, -nodefaultlibs and -ffreestanding
+Disable ssp on -nostdlib, -nodefaultlibs and -ffreestanding
+
 https://bugs.gentoo.org/484714
 --- a/gcc/gcc.cc
 +++ b/gcc/gcc.cc
@@ -7,7 +8,7 @@ https://bugs.gentoo.org/484714
  #endif
  
 +#ifdef ENABLE_DEFAULT_SSP
-+#define NO_SSP_SPEC "%{nostdlib|nodefaultlibs|ffreestanding:-fno-stack-protector} "
++#define NO_SSP_SPEC "%{nostdlib|nodefaultlibs|ffreestanding:-fno-stack-protector} -foffload-options=-fno-stack-protector "
 +#else
 +#define NO_SSP_SPEC ""
 +#endif

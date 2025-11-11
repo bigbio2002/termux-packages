@@ -106,7 +106,7 @@ Upstream-Status: Inappropriate [distribution: codesourcery]
     This is quite expensive. */
 --- a/gcc/gcc.c
 +++ b/gcc/gcc.c
-@@ -835,6 +835,8 @@ proper position among the other output f
+@@ -848,6 +848,8 @@ proper position among the other output f
     "%{fuse-ld=*:-fuse-ld=%*} " LINK_COMPRESS_DEBUG_SPEC \
     "%X %{o*} %{e*} %{N} %{n} %{r}\
      %{s} %{t} %{u*} %{z} %{Z} %{!nostdlib:%{!nostartfiles:%S}} " VTABLE_VERIFICATION_SPEC " \
