@@ -3,7 +3,7 @@ TERMUX_PKG_DESCRIPTION="Tools and libraries to manipulate a wide range of multim
 TERMUX_PKG_LICENSE="GPL-3.0"
 TERMUX_PKG_MAINTAINER="@termux"
 # Please align version with `ffplay` package.
-TERMUX_PKG_VERSION="8.0"
+TERMUX_PKG_VERSION="8.0.1"
 TERMUX_PKG_SRCURL=https://www.ffmpeg.org/releases/ffmpeg-${TERMUX_PKG_VERSION}.tar.xz
 TERMUX_PKG_SHA256=b2751fccb6cc4c77708113cd78b561059b6fa904b24162fa0be2d60273d27b8e
 TERMUX_PKG_DEPENDS="fontconfig, freetype, fribidi, game-music-emu, glslang, harfbuzz, libaom, libandroid-glob, libandroid-stub, libass, libbluray, libbz2, libdav1d, libfdk-aac, libgnutls, libiconv, liblzma, libmp3lame, libopencore-amr, libopenmpt, libopus, libplacebo, librav1e, libsoxr, libsrt, libssh, libtheora, libv4l, libvidstab, libvmaf, libvo-amrwbenc, libvorbis, libvpx, libwebp, libx264, libx265, libxml2, libzimg, libzmq, littlecms, ocl-icd, rubberband, svt-av1, vulkan-icd, xvidcore, zlib"
