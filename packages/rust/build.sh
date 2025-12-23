@@ -3,14 +3,10 @@ TERMUX_PKG_HOMEPAGE=https://www.rust-lang.org/
 TERMUX_PKG_DESCRIPTION="Systems programming language focused on safety, speed and concurrency"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="1.91.1"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_VERSION="1.92.0"
 TERMUX_PKG_SRCURL=https://static.rust-lang.org/dist/rustc-${TERMUX_PKG_VERSION}-src.tar.xz
-TERMUX_PKG_SHA256=66401bb815e236cc6b2aacbbe23b61b286c1fe27a67902e7c0222cfe77b3dbab
-_LLVM_MAJOR_VERSION=$(. $TERMUX_SCRIPTDIR/packages/libllvm/build.sh; echo $LLVM_MAJOR_VERSION)
-_LLVM_MAJOR_VERSION_NEXT=$((_LLVM_MAJOR_VERSION + 1))
-_LZMA_VERSION=$(. $TERMUX_SCRIPTDIR/packages/liblzma/build.sh; echo $TERMUX_PKG_VERSION)
-TERMUX_PKG_DEPENDS="clang, libandroid-execinfo, libc++, libllvm (<< ${_LLVM_MAJOR_VERSION_NEXT}), lld, openssl, zlib"
+TERMUX_PKG_SHA256=ebee170bfe4c4dfc59521a101de651e5534f4dae889756a5c97ca9ea40d0c307
+TERMUX_PKG_DEPENDS="clang, libandroid-execinfo, libc++, libllvm (<< $TERMUX_LLVM_NEXT_MAJOR_VERSION), lld, openssl, zlib"
 TERMUX_PKG_BUILD_DEPENDS="wasi-libc"
 TERMUX_PKG_SUGGESTS="rust-analyzer"
 TERMUX_PKG_NO_REPLACE_GUESS_SCRIPTS=true
@@ -66,6 +62,11 @@ termux_pkg_auto_update() {
 		return
 	fi
 
+	if [[ "${BUILD_PACKAGES}" == "false" ]]; then
+		echo "INFO: package needs to be updated to ${latest_version}."
+		return
+	fi
+
 	sed \
 		-e "s/^\tlocal BOOTSTRAP_VERSION=.*/\tlocal BOOTSTRAP_VERSION=${TERMUX_PKG_VERSION}/" \
 		-i "${TERMUX_PKG_BUILDER_DIR}/build.sh"
@@ -116,7 +117,7 @@ termux_step_pre_configure() {
 
 	# we can't use -L$PREFIX/lib since it breaks things but we need to link against libLLVM-9.so
 	ln -vfst "${RUST_LIBDIR}" \
-		${TERMUX_PREFIX}/lib/libLLVM-${_LLVM_MAJOR_VERSION}.so
+		"${TERMUX_PREFIX}/lib/libLLVM-${TERMUX_LLVM_MAJOR_VERSION}.so"
 
 	# https://github.com/termux/termux-packages/issues/18379
 	# NDK r26 multiple ld.lld: error: undefined symbol: __cxa_*
@@ -143,7 +144,7 @@ termux_step_configure() {
 	# like 30 to 40 + minutes ... so lets get it right
 
 	# upstream tests build using versions N and N-1
-	local BOOTSTRAP_VERSION=1.91.0
+	local BOOTSTRAP_VERSION=1.91.1
 	if [[ "${TERMUX_ON_DEVICE_BUILD}" == "false" ]]; then
 		if ! rustup install "${BOOTSTRAP_VERSION}"; then
 			echo "WARN: ${BOOTSTRAP_VERSION} is unavailable, fallback to stable version!"
@@ -162,7 +163,7 @@ termux_step_configure() {
 	mkdir -p "${WASI_SDK_PATH}"/{bin,share}
 	ln -fsv "${TERMUX_PREFIX}/share/wasi-sysroot" "${WASI_SDK_PATH}/share/wasi-sysroot"
 	local clang
-	for clang in wasm32-wasip{1,2}-clang{,++}; do
+	for clang in wasm32-wasip{1,2,3}-clang{,++}; do
 		ln -fsv "$(command -v clang)" "${WASI_SDK_PATH}/bin/${clang}"
 	done
 
@@ -240,6 +241,7 @@ termux_step_make_install() {
 	[[ ! -e "${TERMUX_PREFIX}/share/wasi-sysroot" ]] && termux_error_exit "wasi-sysroot not found"
 	"${TERMUX_PKG_SRCDIR}/x.py" install -j "${TERMUX_PKG_MAKE_PROCESSES}" --target wasm32-wasip1 --stage 2 std
 	"${TERMUX_PKG_SRCDIR}/x.py" install -j "${TERMUX_PKG_MAKE_PROCESSES}" --target wasm32-wasip2 --stage 2 std
+	"${TERMUX_PKG_SRCDIR}/x.py" install -j "${TERMUX_PKG_MAKE_PROCESSES}" --target wasm32-wasip3 --stage 2 std
 
 	"${TERMUX_PKG_SRCDIR}/x.py" dist -j "${TERMUX_PKG_MAKE_PROCESSES}" --stage 2 rustc-dev
 

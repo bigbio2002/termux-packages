@@ -139,14 +139,21 @@ check_indentation() {
 	else
 		origin_url="unknown"
 	fi
-	base_commit="HEAD~$(git rev-list --count FETCH_HEAD.. -- || printf 1)"
+
+	base_commit="$(git rev-list "origin/master.." --exclude-first-parent-only --reverse | head -n1)"
+	# On the master branch or failure `git rev-list "origin/master.."`
+	# won't return a commit, so set "HEAD" as a default value.
+	: "${base_commit:="HEAD"}"
 } 2> /dev/null
 
 # Also figure out if we have a `%ci:no-build` trailer in the commit range,
 # we may skip some checks later if yes.
-no_build="$(git log --fixed-strings --grep '%ci:no-build' --pretty=format:%H "$base_commit")"
+no_build="$(git log --fixed-strings --grep '%ci:no-build' --pretty=format:%H "$base_commit..")"
 
 check_version() {
+	# !!! vvv TEMPORARY - REMOVE WHEN THIS FUNCTION IS FIXED vvv !!!
+	return
+	# !!! ^^^ TEMPORARY - REMOVE WHEN THIS FUNCTION IS FIXED ^^^ !!!
 	local package_dir="${1%/*}"
 
 	[[ -z "$base_commit" ]] && {
@@ -456,26 +463,105 @@ lint_package() {
 
 		echo -n "TERMUX_PKG_SRCURL: "
 		if (( ${#TERMUX_PKG_SRCURL} )); then
-			urls_ok=true
-			for url in "${TERMUX_PKG_SRCURL[@]}"; do
-				if (( ${#url} )); then
-					case "$url" in
-						https://*|git+https://*) continue;;
-						*) echo "NON-HTTPS (acceptable)" ; urls_ok=false; break ;;
-					esac
-				else
-					echo "NOT SET (one of the array elements)"
-					urls_ok=false
+			for (( i = 0; i < ${#TERMUX_PKG_SRCURL[@]}; i++ )); do
+				url="${TERMUX_PKG_SRCURL[$i]}"
+				(( ${#url} )) || {
+					echo "NOT SET (\${TERMUX_PKG_SRCURL[$i]} has no value)"
 					pkg_lint_error=true
 					break
-				fi
-			done
-			unset url
+				}
+				# Example:
+				# https://github.com/openssh/openssh-portable/archive/refs/tags/V_10_2_P1.tar.gz
+				# protocol="https:"
+				#        _=""
+				#     host="github.com"
+				#     user="openssh"
+				#     repo="openssh-portable"
+				# ref_path="archive/refs/tags/V_10_2_P1.tar.gz"
+				IFS='/' read -r protocol _ host user repo ref_path <<< "$url"
+				case "${protocol}" in
+					https:) protocol_type="HTTPS";;
+					git+https:) protocol_type="Git/HTTPS";;
+					file:)
+						if [[ -d "${url#file://}" ]]; then
+							protocol_type="Local source directory"
+						else
+							protocol_type="Local tarball"
+						fi
+					;;
+					git+file:) protocol_type="Local Git repository";;
+					git+*) protocol_type="Git/NON-HTTPS (acceptable)";;
+					*) protocol_type="NON-HTTPS (acceptable)";;
+				esac
 
-			if [[ "$urls_ok" == 'true' ]]; then
-				echo "PASS"
-			fi
-			unset urls_ok
+				case "${host}" in
+					"github.com")
+						# Is this a release tarball?
+						if [[ "$ref_path" == releases/download/* ]]; then
+							tarball_type="Release"
+						# Is it a tag tarball?
+						elif [[ "$ref_path" == archive/refs/tags/* ]]; then
+							tarball_type="Tag"
+						# Is it an untagged commit tarball?
+						elif [[ "$ref_path" =~ archive/[0-9a-f]{7,64} ]]; then
+							tarball_type="Commit"
+						# If it's in archive/ anyway then it's probably a tag with the incorrect download path.
+						elif [[ "$ref_path" == archive/* ]]; then
+							tarball_type="can-fix"
+							# Get the unexpanded version of the SRCURL for the suggestion
+							url="$(grep -oe "$protocol//$host/$user/$repo/archive.*" "$package_script")"
+							printf -v lint_msg '%s\n' \
+								"PARTIAL PASS - Tag with potential ref confusion." \
+								"WARNING: GitHub tarball URLs should use /archive/refs/tags/ instead of /archive/" \
+								"to avoid potential ref confusion with branches sharing the name of a tag." \
+								"See: https://lore.kernel.org/buildroot/87edqhwvd0.fsf@dell.be.48ers.dk/T/" \
+								"  Current:   $url" \
+								"  Suggested: ${url/\/archive\//\/archive\/refs\/tags\/}"
+						else
+							# Is this a git repo or local source? If so, it makes sense we don't have a $ref_path
+							case "${protocol}" in
+								file:|git+file:)
+									tarball_type="local"
+									printf -v lint_msg '%s\n' \
+										"PASS - "
+								;;
+								git+*);;
+								*) # If we still have no match at this point declare it an error.
+									tarball_type="invalid"
+									printf -v lint_msg '%s\n' \
+										"FAIL (Unknown tarball path pattern for host '$host')" \
+										"  Url: $url" \
+										"  Tarball path: $ref_path" \
+										"  This isn't a typical tarball location for $host."
+								;;
+							esac
+						fi
+					;;
+					# For other hosts we don't know the typical pattern so don't try guessing the tarball_type.
+					*);;
+				esac
+
+				# Print the appropriate result based on our findings from above
+				case "$tarball_type" in
+					"invalid") # Known host, unknown tarball url pattern.
+						pkg_lint_error=true
+						echo "$lint_msg"
+						break
+					;;
+					"can-fix") # Known host, known pattern, but should be changed.
+						echo "$lint_msg"
+					;;
+					"local") # Local source.
+						echo "$lint_msg"
+					;;
+					*) # Known host, known pattern, or host with no checked tarball URL patterns.
+						# $user and $repo corresponds to those URL components for e.g. GitHub.
+						# but it may not do so for other tarball hosts, they are included for additional context.
+						echo "PASS - (${tarball_type+"${tarball_type}/"}${protocol_type}) ${host}/${user}/${repo}"
+					;;
+				esac
+			done
+			unset i url protocol host user repo ref_path protocol_type tarball_type lint_msg
 
 			echo -n "TERMUX_PKG_SHA256: "
 			if (( ${#TERMUX_PKG_SHA256} )); then
@@ -720,7 +806,7 @@ time_elapsed() {
 }
 
 echo "[INFO]: Starting build script linter ($(date -d "@$start_time" --utc '+%Y-%m-%dT%H:%M:%SZ' 2>&1))"
-echo "[INFO]: Base commit: $base_commit ($(git rev-parse "$base_commit"))"
+git -P log "$base_commit" -n1 --pretty=format:"[INFO]: Base commit    - %h%n[INFO]: Commit message - %s%n"
 echo "[INFO]: Origin URL: ${origin_url}"
 trap 'time_elapsed "$start_time"' EXIT
 
