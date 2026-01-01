@@ -8,10 +8,14 @@ TERMUX_PKG_SRCURL=https://download.gnome.org/sources/libxml2/${TERMUX_PKG_VERSIO
 TERMUX_PKG_SHA256=c008bac08fd5c7b4a87f7b8a71f283fa581d80d80ff8d2efd3b26224c39bc54c
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SETUP_PYTHON=true
+# disabled due to compiler warnings
+#	-Dthread-alloc=enabled
+#	-Dtls=enabled
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
---with-http
---with-legacy
---with-python
+	-Ddocs=enabled
+	-Dhttp=enabled
+	-Dicu=enabled
+	-Dlegacy=enabled
 "
 # Python bindings
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+="
@@ -43,6 +47,8 @@ termux_step_configure() {
 	termux_step_configure_meson
 }
 
+
+.jiï
 termux_step_post_massage() {
 	# Check if SONAME is properly set:
 	if ! readelf -d lib/libxml2.so | grep -q '(SONAME).*\[libxml2\.so\.'; then
