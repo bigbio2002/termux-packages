@@ -18,11 +18,15 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --enable-readline
 --enable-rtree
 --enable-session
+--with-tcl=$TERMUX_PREFIX/lib
+--with-tclsh=$(command -v tclsh)
 "
 
 termux_step_pre_configure() {
 	CPPFLAGS+=" -Werror -DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_ENABLE_UPDATE_DELETE_LIMIT=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1"
 	LDFLAGS+=" -lm"
+	export TCL_CONFIG_SH="$TERMUX_PREFIX/lib/tclConfig.sh"
+	export TCLLIBDIR="$TERMUX_PREFIX/lib"
 }
 
 # See: https://github.com/termux/termux-packages/issues/23268#issuecomment-2685308408
