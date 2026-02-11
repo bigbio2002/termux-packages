@@ -2,9 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://getfresh.dev/
 TERMUX_PKG_DESCRIPTION="Text editor for your terminal: easy, powerful and fast"
 TERMUX_PKG_LICENSE="GPL-2.0-only"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="0.1.88"
+TERMUX_PKG_VERSION="0.2.2"
 TERMUX_PKG_SRCURL="https://github.com/sinelaw/fresh/releases/download/v$TERMUX_PKG_VERSION/fresh-editor-$TERMUX_PKG_VERSION-source.tar.gz"
-TERMUX_PKG_SHA256=e7bc9dbbb85471b8fd5521e35f30be250daf664c1c358ffe266e234c03890e7d
+TERMUX_PKG_SHA256=cfcd25a2bed6b60e379103958ad39b948a082a0d2543d644184cb9595767bb36
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_BUILD_IN_SRC=true
 
@@ -27,6 +27,11 @@ termux_step_pre_configure() {
 
 	local patch="$TERMUX_PKG_BUILDER_DIR/rust-cc-do-not-concatenate-all-the-CFLAGS.diff"
 	local dir="vendor/cc"
+	echo "Applying patch: $patch"
+	patch -p1 -d "$dir" < "$patch"
+
+	patch="$TERMUX_PKG_BUILDER_DIR/trash-rs-implement-get_mount_points-android.diff"
+	dir="vendor/trash"
 	echo "Applying patch: $patch"
 	patch -p1 -d "$dir" < "$patch"
 
