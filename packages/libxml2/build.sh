@@ -47,8 +47,6 @@ termux_step_configure() {
 	termux_step_configure_meson
 }
 
-
-.jiï
 termux_step_post_massage() {
 	# Check if SONAME is properly set:
 	if ! readelf -d lib/libxml2.so | grep -q '(SONAME).*\[libxml2\.so\.'; then
