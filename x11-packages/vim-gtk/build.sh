@@ -10,10 +10,9 @@ TERMUX_PKG_CONFLICTS="vim"
 TERMUX_PKG_BREAKS="vim-python"
 TERMUX_PKG_REPLACES="vim-python"
 TERMUX_PKG_PROVIDES="vim-python"
-TERMUX_PKG_VERSION="9.2.0"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_VERSION="9.2.0050"
 TERMUX_PKG_SRCURL="https://github.com/vim/vim/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz"
-TERMUX_PKG_SHA256=9c60fc4488d78bbca9069e74e9cfafd006bdfcece5bb0971eac6268531f1b51f
+TERMUX_PKG_SHA256=593ef4ea24c3a969628ab8ced197ee170ea27313fb7963a6ecf358c2d4121f5d
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_CONFFILES="share/vim/vimrc"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
@@ -56,8 +55,11 @@ termux_pkg_auto_update() {
 	# remember to apply that change to the other as well.
 	local latest_tag current_patch latest_patch
 	latest_tag="$(termux_github_api_get_tag)"
-	latest_patch="${latest_tag##*.}"
-	current_patch="${TERMUX_PKG_VERSION##*.}"
+	# Specify Base 10 with the `10#` prefix.
+	# This is necessary to suppress automatic interpretation
+	# of the value as octal when there is a leading 0.
+	latest_patch="10#${latest_tag##*.}"
+	current_patch="10#${TERMUX_PKG_VERSION##*.}"
 
 	# Vim releases nearly every commit as a new tag.
 	# To avoid auto update spam, we only update Vim every 50th patch.
@@ -70,7 +72,8 @@ termux_pkg_auto_update() {
 		return
 	fi
 
-	termux_pkg_upgrade_version "${latest_tag%.*}.${latest_patch}"
+	# Pad the patch component of the version back to 4 digits in accordance with Vim's tag naming.
+	termux_pkg_upgrade_version "$(printf '%s.%04d' "${latest_tag%.*}" "${latest_patch}")"
 }
 
 termux_step_pre_configure() {
