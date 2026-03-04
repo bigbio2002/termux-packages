@@ -1,0 +1,17 @@
+--- gcc-12.4.0_orig/libstdc++-v3/include/c_global/cwctype.orig	2026-02-26 00:25:19.507118423 -0500
++++ gcc-12.4.0/libstdc++-v3/include/c_global/cwctype	2026-02-25 20:10:34.838260792 -0500
+@@ -98,10 +98,14 @@
+   using ::iswspace;
+   using ::iswupper;
+   using ::iswxdigit;
++#ifndef __TERMUX__
+   using ::towctrans;
++#endif
+   using ::towlower;
+   using ::towupper;
++#ifndef __TERMUX__
+   using ::wctrans;
++#endif
+   using ::wctype;
+ } // namespace
+ 

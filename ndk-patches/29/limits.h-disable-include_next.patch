@@ -1,0 +1,15 @@
+--- ./usr/include/limits.h.orig	2026-02-27 13:28:31.500795503 -0500
++++ ./usr/include/limits.h	2026-02-27 03:20:32.888809418 -0500
+@@ -48,8 +48,10 @@
+  * and we need to paper over that difference here until/unless
+  * the OS build changes.
+  */
+-#if __has_include_next(<limits.h>)
+-#include_next <limits.h>
++#if defined(__has_include_next) && 0
++#  if __has_include_next(<limits.h>)
++#    include_next <limits.h>
++#  endif
+ #endif
+ 
+ #include <sys/cdefs.h>

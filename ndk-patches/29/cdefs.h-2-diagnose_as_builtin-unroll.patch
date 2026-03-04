@@ -1,0 +1,40 @@
+--- ./usr/include/sys/cdefs.h.orig	2026-02-27 03:27:55.368809249 -0500
++++ ./usr/include/sys/cdefs.h	2026-02-24 23:40:50.069978963 -0500
+@@ -391,9 +391,13 @@
+ #endif
+ 
+ #if __has_attribute(diagnose_as_builtin)
+-# define __diagnose_as_builtin(...) __attribute__((__diagnose_as_builtin__(__VA_ARGS__)))
++# define __diagnose_as_builtin2(__builtin, __one, __two) __attribute__((__diagnose_as_builtin__(__builtin,__one,__two)))
++# define __diagnose_as_builtin(__builtin, __one, __two, __three) __attribute__((__diagnose_as_builtin__(__builtin,__one,__two,__three)))
++# define __diagnose_as_builtin4(__builtin, __one, __two, __three, __four) __attribute__((__diagnose_as_builtin__(__builtin,__one,__two,__three, __four)))
+ #else
+-# define __diagnose_as_builtin(...)
++# define __diagnose_as_builtin2(__builtin, __one, __two)
++# define __diagnose_as_builtin(__builtin, __one, __two, __three)
++# define __diagnose_as_builtin4(__builtin, __one, __two, __three, __four)
+ #endif
+ 
+ #if __has_attribute(visibility)
+--- ./usr/include/bits/fortify/stdio.h.orig	2026-02-27 00:02:35.183531138 -0500
++++ ./usr/include/bits/fortify/stdio.h	2026-02-21 02:19:48.570714373 -0500
+@@ -44,7 +44,7 @@
+ /* No diag -- clang diagnoses misuses of this on its own.  */
+ __BIONIC_FORTIFY_INLINE __printflike(3, 0)
+ int vsnprintf(char* const __BIONIC_COMPLICATED_NULLNESS __pass_object_size dest, size_t size, const char* _Nonnull format, va_list ap)
+-        __diagnose_as_builtin(__builtin_vsnprintf, 1, 2, 3, 4)
++        __diagnose_as_builtin4(__builtin_vsnprintf, 1, 2, 3, 4)
+         __overloadable {
+     return __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, ap);
+ }
+--- ./usr/include/bits/fortify/string.h.orig	2026-02-27 00:04:26.647531095 -0500
++++ ./usr/include/bits/fortify/string.h	2026-02-21 02:20:11.602714364 -0500
+@@ -95,7 +95,7 @@
+ 
+ __BIONIC_FORTIFY_INLINE
+ char* _Nonnull strcpy(char* _Nonnull const dst __pass_object_size, const char* _Nonnull src)
+-        __diagnose_as_builtin(__builtin_strcpy, 1, 2)
++        __diagnose_as_builtin2(__builtin_strcpy, 1, 2)
+         __overloadable
+         __clang_error_if(__bos_unevaluated_le(__bos(dst), __builtin_strlen(src)),
+                          "'strcpy' called with string bigger than buffer") {

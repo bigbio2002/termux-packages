@@ -1,0 +1,170 @@
+--- ./usr/include/linux/stddef.h.orig	2026-02-27 00:09:41.867530975 -0500
++++ ./usr/include/linux/stddef.h	2026-02-23 15:28:35.901157941 -0500
+@@ -10,7 +10,7 @@
+ #ifndef __always_inline
+ #define __always_inline inline
+ #endif
+-#define __struct_group(TAG,NAME,ATTRS,MEMBERS...) union { struct { MEMBERS } ATTRS; struct TAG { MEMBERS } ATTRS NAME; } ATTRS
++/*#define __struct_group(TAG,NAME,ATTRS,MEMBERS...) union { struct { MEMBERS } ATTRS; struct TAG { MEMBERS } ATTRS NAME; } ATTRS*/
+ #ifdef __cplusplus
+ #define __DECLARE_FLEX_ARRAY(T,member) T member[0]
+ #else
+--- ./usr/include/linux/ip.h.orig	2026-02-27 13:16:03.152795788 -0500
++++ ./usr/include/linux/ip.h	2026-02-27 03:15:02.004809544 -0500
+@@ -75,9 +75,16 @@
+   __u8 ttl;
+   __u8 protocol;
+   __sum16 check;
+-  __struct_group(, addrs,, __be32 saddr;
+-  __be32 daddr;
+- );
++  union {
++    struct {
++      __be32 saddr;
++      __be32 daddr;
++    };
++    struct {
++      __be32 saddr;
++      __be32 daddr;
++    } addrs;
++  };
+ };
+ struct ip_auth_hdr {
+   __u8 nexthdr;
+--- ./usr/include/linux/ipv6.h.orig	2026-02-27 13:16:03.152795788 -0500
++++ ./usr/include/linux/ipv6.h	2026-02-27 03:15:09.756809541 -0500
+@@ -76,9 +76,16 @@
+   __be16 payload_len;
+   __u8 nexthdr;
+   __u8 hop_limit;
+-  __struct_group(, addrs,, struct in6_addr saddr;
+-  struct in6_addr daddr;
+- );
++  union {
++    struct {
++      struct in6_addr saddr;
++      struct in6_addr daddr;
++    };
++    struct {
++      struct in6_addr saddr;
++      struct in6_addr daddr;
++    } addrs;
++  };
+ };
+ enum {
+   DEVCONF_FORWARDING = 0,
+--- ./usr/include/linux/pkt_cls.h.orig	2026-02-27 13:17:02.128795766 -0500
++++ ./usr/include/linux/pkt_cls.h	2026-02-27 03:15:56.720809523 -0500
+@@ -184,15 +184,28 @@
+    ** a type declared in an anonymous union. This is being fixed upstream
+    ** and should be corrected by the next kernel import.
+    */
+-  __struct_group(/*tc_u32_sel_hdr*/, hdr,, unsigned char flags;
+-  unsigned char offshift;
+-  unsigned char nkeys;
+-  __be16 offmask;
+-  __u16 off;
+-  short offoff;
+-  short hoff;
+-  __be32 hmask;
+- );
++  union {
++    struct {
++      unsigned char flags;
++      unsigned char offshift;
++      unsigned char nkeys;
++      __be16 offmask;
++      __u16 off;
++      short offoff;
++      short hoff;
++      __be32 hmask;
++    };
++    struct /*tc_u32_sel_hdr*/ {
++      unsigned char flags;
++      unsigned char offshift;
++      unsigned char nkeys;
++      __be16 offmask;
++      __u16 off;
++      short offoff;
++      short hoff;
++      __be32 hmask;
++    } hdr;
++  };
+   struct tc_u32_key keys[];
+ };
+ struct tc_u32_mark {
+--- ./usr/include/linux/omap3isp.h.orig	2026-02-27 13:17:02.128795766 -0500
++++ ./usr/include/linux/omap3isp.h	2026-02-27 03:15:43.912809528 -0500
+@@ -77,11 +77,20 @@
+ struct omap3isp_stat_data {
+   struct timeval ts;
+   void  * buf;
+-  __struct_group(, frame,, __u32 buf_size;
+-  __u16 frame_number;
+-  __u16 cur_frame;
+-  __u16 config_counter;
+- );
++  union {
++    struct {
++      __u32 buf_size;
++      __u16 frame_number;
++      __u16 cur_frame;
++      __u16 config_counter;
++    };
++    struct {
++      __u32 buf_size;
++      __u16 frame_number;
++      __u16 cur_frame;
++      __u16 config_counter;
++    } frame;
++  };
+ };
+ #define OMAP3ISP_HIST_BINS_32 0
+ #define OMAP3ISP_HIST_BINS_64 1
+--- ./usr/include/linux/usb/functionfs.h.orig	2026-02-27 13:17:24.332795757 -0500
++++ ./usr/include/linux/usb/functionfs.h	2026-02-27 03:16:33.688809509 -0500
+@@ -72,9 +72,16 @@
+ struct usb_ext_compat_desc {
+   __u8 bFirstInterfaceNumber;
+   __u8 Reserved1;
+-  __struct_group(, IDs,, __u8 CompatibleID[8];
+-  __u8 SubCompatibleID[8];
+- );
++  union {
++    struct {
++      __u8 CompatibleID[8];
++      __u8 SubCompatibleID[8];
++    };
++    struct {
++      __u8 CompatibleID[8];
++      __u8 SubCompatibleID[8];
++    } IDs;
++  };
+   __u8 Reserved2[6];
+ };
+ struct usb_ext_prop_desc {
+--- ./usr/include/linux/netfilter_bridge/ebtables.h.orig	2026-02-27 13:16:38.304795775 -0500
++++ ./usr/include/linux/netfilter_bridge/ebtables.h	2026-02-27 03:15:31.932809533 -0500
+@@ -117,10 +117,18 @@
+   unsigned char sourcemsk[ETH_ALEN];
+   unsigned char destmac[ETH_ALEN];
+   unsigned char destmsk[ETH_ALEN];
+-  __struct_group(, offsets,, unsigned int watchers_offset;
+-  unsigned int target_offset;
+-  unsigned int next_offset;
+- );
++  union {
++    struct {
++      unsigned int watchers_offset;
++      unsigned int target_offset;
++      unsigned int next_offset;
++    };
++    struct {
++      unsigned int watchers_offset;
++      unsigned int target_offset;
++      unsigned int next_offset;
++    } offsets;
++  };
+   unsigned char elems[] __attribute__((aligned(__alignof__(struct ebt_replace))));
+ };
+ #define EBT_BASE_CTL 128
