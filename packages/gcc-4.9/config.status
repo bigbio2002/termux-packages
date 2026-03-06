@@ -436,7 +436,7 @@ Copyright (C) 2009 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/data/data/com.termux/files/home/sources/gcc-4-termux'
+ac_pwd='/data/data/com.termux/files/home/sources/gcc-49-termux'
 srcdir='../gcc-4.9.4'
 INSTALL='/data/data/com.termux/files/usr/bin/install -c'
 AWK='gawk'
