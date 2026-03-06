@@ -1,0 +1,18 @@
+--- gcc-12.4.0_orig/libgomp/config/linux/proc.c.orig	2026-02-26 21:47:11.228372742 -0500
++++ gcc-12.4.0/libgomp/config/linux/proc.c	2026-02-26 00:35:54.651118181 -0500
+@@ -194,6 +194,7 @@
+     n_onln = nthreads_var;
+ 
+   loadavg = 0;
++#if 0
+ #ifdef HAVE_GETLOADAVG
+   {
+     double dloadavg[3];
+@@ -204,6 +205,7 @@
+       }
+   }
+ #endif
++#endif
+ 
+   if (loadavg >= n_onln)
+     return 1;
