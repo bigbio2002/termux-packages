@@ -1,0 +1,18 @@
+Index: gcc-4.8.1/gcc/double-int.h
+===================================================================
+--- ../gcc-4.8.1.orig/gcc/double-int.h	2013-01-30 11:04:30.000000000 +0000
++++ ./gcc/double-int.h	2013-08-19 11:41:51.564012719 +0000
+@@ -429,11 +429,13 @@
+ 
+ 
+ #ifndef GENERATOR_FILE
++#ifndef GENERATOR_FILE2
+ /* Conversion to and from GMP integer representations.  */
+ 
+ void mpz_set_double_int (mpz_t, double_int, bool);
+ double_int mpz_get_double_int (const_tree, mpz_t, bool);
+ #endif
++#endif
+ 
+ namespace wi
+ {

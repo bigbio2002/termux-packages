@@ -1,0 +1,21 @@
+diff -Naur gcc-5.3.0/libgomp/config/linux/proc.c gcc-5.3.0_my/libgomp/config/linux/proc.c
+--- gcc-5.3.0/libgomp/config/linux/proc.c	2015-01-10 14:10:37.000000000 -0500
++++ gcc-5.3.0_my/libgomp/config/linux/proc.c	2024-06-07 07:16:06.222072212 -0400
+@@ -35,6 +35,8 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ #ifdef HAVE_GETLOADAVG
++#undef HAVE_GETLOADAVG
++#define HAVE_GETLOADAVG 0
+ # ifdef HAVE_SYS_LOADAVG_H
+ #  include <sys/loadavg.h>
+ # endif
+@@ -194,7 +196,7 @@
+     n_onln = nthreads_var;
+ 
+   loadavg = 0;
+-#ifdef HAVE_GETLOADAVG
++#if defined HAVE_GETLOADAVG && HAVE_GETLOADAVG
+   {
+     double dloadavg[3];
+     if (getloadavg (dloadavg, 3) == 3)
