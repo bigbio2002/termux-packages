@@ -21,23 +21,3 @@ Enable -Wformat and -Wformat-security by default.
  Warn about printf/scanf/strftime/strfmon format string anomalies
  
  Wignored-qualifiers
---- a/gcc/doc/gcc.info
-+++ b/gcc/doc/gcc.info
-@@ -3482,6 +3482,8 @@
-           `-Wno-format-extra-args', and `-Wno-format-zero-length'.
-           `-Wformat' is enabled by `-Wall'.
- 
-+          This option is enabled by default in Gentoo.
-+
-     `-Wno-format-contains-nul'
-           If `-Wformat' is specified, do not warn about format strings
-           that contain NUL bytes.
-@@ -3527,6 +3529,8 @@
-           future warnings may be added to `-Wformat-security' that are
-           not included in `-Wformat-nonliteral'.)
- 
-+          This option is enabled by default in Gentoo.
-+
-     `-Wformat-y2k'
-           If `-Wformat' is specified, also warn about `strftime'
-           formats that may yield only a two-digit year.
