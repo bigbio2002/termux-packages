@@ -1,5 +1,5 @@
 diff -u -r ../binutils-2.26/bfd/hosts/x86-64linux.h ./bfd/hosts/x86-64linux.h
---- ../binutils-2.26/bfd/hosts/x86-64linux.h	2015-11-13 03:27:40.000000000 -0500
+--- ./bfd/hosts/x86-64linux.h	2015-11-13 03:27:40.000000000 -0500
 +++ ./bfd/hosts/x86-64linux.h	2016-06-16 17:27:10.497607224 -0400
 @@ -33,6 +33,15 @@
  #include <sys/procfs.h>
