@@ -7,7 +7,7 @@ TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=https://github.com/mate-desktop/libmateweather/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
 TERMUX_PKG_SHA256=d81e65e2bddd22edffe42a2c8748321d6f7ad2da1bce2f9c275d88c567ec29eb
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="atk, gdk-pixbuf, glib, gtk3, harfbuzz, libcairo, libsoup, libxml2, pango, zlib"
+TERMUX_PKG_DEPENDS="atk, gdk-pixbuf, glib, gtk3, harfbuzz, libcairo, libsoup3, libxml2, pango, zlib"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --enable-locations-compression
 "
