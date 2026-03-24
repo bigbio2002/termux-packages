@@ -45,16 +45,17 @@ termux_step_pre_configure() {
 
 	LIB_BITS=
 
-	cd $TERMUX_PKG_SRCDIR
+	#cd $TERMUX_PKG_SRCDIR
 	if (( TERMUX_ARCH_BITS == 64 )); then
-		for patch64 in ./packages/${TERMUX_PKG_NAME}/*.patch64; do
-			patch -Np1 < $patch64
-		done
+	#	for patch64 in ./packages/${TERMUX_PKG_NAME}/*.patch64; do
+	#		patch -Np1 < ${patch64}
+	#	done
 		LIB_BITS="64"
-	elif (( TERMUX_ARCH_BITS == 64 )); then
-		for patch32 in ./packages/${TERMUX_PKG_NAME}/*.patch32; do
-			patch -Np1 < $patch32
-		done
+	elif (( TERMUX_ARCH_BITS == 32 )); then
+	#	for patch32 in ./packages/${TERMUX_PKG_NAME}/*.patch32; do
+	#		patch -Np1 < ${patch32}
+	#	done
+		true
 	else
 		termux_error_exit "Unsupported bitness: $TERMUX_ARCH_BITS"
 	fi
