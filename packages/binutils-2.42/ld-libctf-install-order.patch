@@ -1,0 +1,26 @@
+from https://sourceware.org/bugzilla/show_bug.cgi?id=27250
+---
+ Makefile.def | 1 +
+ Makefile.in  | 1 +
+ 2 files changed, 2 insertions(+)
+--- a/Makefile.def	
++++ a/Makefile.def	
+@@ -448,6 +448,7 @@ dependencies = { module=all-binutils; on=all-intl; };
+ dependencies = { module=all-binutils; on=all-gas; };
+ dependencies = { module=all-binutils; on=all-libctf; };
+ dependencies = { module=all-ld; on=all-libctf; };
++dependencies = { module=install-ld; on=install-libctf; };
+ 
+ // We put install-opcodes before install-binutils because the installed
+ // binutils might be on PATH, and they might need the shared opcodes
+--- a/Makefile.in	
++++ a/Makefile.in	
+@@ -52111,6 +52111,7 @@ all-stage3-ld: maybe-all-stage3-libctf
+ all-stage4-ld: maybe-all-stage4-libctf
+ all-stageprofile-ld: maybe-all-stageprofile-libctf
+ all-stagefeedback-ld: maybe-all-stagefeedback-libctf
++install-ld: maybe-install-libctf
+ install-binutils: maybe-install-opcodes
+ install-strip-binutils: maybe-install-strip-opcodes
+ install-opcodes: maybe-install-bfd
+-- 
