@@ -2,9 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://github.com/topgrade-rs/topgrade/
 TERMUX_PKG_DESCRIPTION="Upgrade all the things"
 TERMUX_PKG_LICENSE="GPL-3.0"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="17.1.0"
+TERMUX_PKG_VERSION="17.2.1"
 TERMUX_PKG_SRCURL="https://github.com/topgrade-rs/topgrade/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz"
-TERMUX_PKG_SHA256=70f8fd6e2bbfe51ddcdde037a84796134afc2bbdbefefc310ec682f7cab9de20
+TERMUX_PKG_SHA256=f8a0868885a75b3591ab7d77f2e1d7d9a0178331ae058f613dac219bf47e03e6
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_BUILD_IN_SRC=true
 
