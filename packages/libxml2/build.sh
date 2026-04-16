@@ -65,6 +65,8 @@ termux_step_post_massage() {
 		termux_error_exit "SONAME for libxml2.so is not properly set."
 	fi
 
+	# If this has been bumped, remember to rebuild all reverse dependencies of libxml2!
+	# `./scripts/bin/revbump --dependencies libxml2` can find them for you.
 	local _SOVERSION=16
 	if [[ ! -e "lib/libxml2.so.${_SOVERSION}" ]]; then
 		echo "ERROR - Expected: lib/libxml2.so.${_SOVERSION}" >&2
