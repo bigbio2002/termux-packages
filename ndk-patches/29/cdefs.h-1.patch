@@ -1,11 +1,18 @@
 --- ./usr/include/sys/cdefs.orig.h	2024-09-13 21:47:46.423683397 -0400
 +++ ./usr/include/sys/cdefs.h	2024-09-14 14:28:53.876590326 -0400
-@@ -42,6 +42,16 @@
+@@ -42,6 +42,23 @@
   */
  #define __BIONIC__ 1
  
 +#if !defined __has_attribute
 +# define __has_attribute(attr) 0
++#endif
++
++#if !defined __has_feature
++# define __has_feature(feat) 0
++#endif
++#if !defined __has_extension
++# define __has_extension __has_feature
 +#endif
 +
 +#if !defined(__clang__)
@@ -17,7 +24,7 @@
  #if defined(__cplusplus)
  #define __BEGIN_DECLS extern "C" {
  #define __END_DECLS }
-@@ -94,20 +104,63 @@
+@@ -94,20 +111,63 @@
  // downstream in vendor or app code).
  #define	__inline __inline__
  
@@ -89,7 +96,7 @@
  
  /*
   * GNU C version 2.96 added explicit branch prediction so that
-@@ -140,15 +193,37 @@
+@@ -140,15 +200,37 @@
  #define	__predict_true(exp)	__builtin_expect((exp) != 0, 1)
  #define	__predict_false(exp)	__builtin_expect((exp) != 0, 0)
  
@@ -134,7 +141,7 @@
  
  #if defined(ANDROID_STRICT)
  /*
-@@ -237,12 +312,8 @@
+@@ -237,12 +319,8 @@
  
  // As we move some FORTIFY checks to be always on, __bos needs to be
  // always available.
@@ -149,7 +156,7 @@
  #else
  #  define __bos_level 0
  #endif
-@@ -252,7 +323,11 @@
+@@ -252,7 +330,11 @@
  
  #if defined(__BIONIC_FORTIFY)
  #  define __bos0(s) __bosn((s), 0)
@@ -162,7 +169,7 @@
  /*
   * FORTIFY'ed functions all have either enable_if or pass_object_size, which
   * makes taking their address impossible. Saying (&read)(foo, bar, baz); will
-@@ -264,8 +339,12 @@
+@@ -264,8 +346,12 @@
   * them available externally. FORTIFY'ed functions try to be as close to possible as 'invisible';
   * having stack protectors detracts from that (b/182948263).
   */
@@ -176,7 +183,7 @@
  /*
   * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
   * for variadic functions because compilers cannot inline them.
-@@ -278,7 +357,8 @@
+@@ -278,7 +364,8 @@
  #else
  /* Further increase sharing for some inline functions */
  #  define __pass_object_size_n(n)
@@ -186,7 +193,7 @@
  #define __pass_object_size __pass_object_size_n(__bos_level)
  #define __pass_object_size0 __pass_object_size_n(0)
  
-@@ -304,10 +384,19 @@
+@@ -304,10 +391,19 @@
  #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
  #endif
  
@@ -208,7 +215,7 @@
  /* Used to tag non-static symbols that are private and never exposed by the shared library. */
  #define __LIBC_HIDDEN__ __attribute__((__visibility__("hidden")))
  
-@@ -321,6 +410,11 @@
+@@ -321,6 +417,11 @@
  #define __LIBC32_LEGACY_PUBLIC__ __attribute__((__visibility__("default")))
  #endif
  

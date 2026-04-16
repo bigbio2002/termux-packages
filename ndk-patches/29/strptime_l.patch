@@ -1,6 +1,6 @@
 --- ./usr/include/time.h.orig	2026-02-27 03:22:15.752809379 -0500
 +++ ./usr/include/time.h	2026-02-24 23:41:41.365978943 -0500
-@@ -255,7 +255,7 @@
+@@ -253,7 +253,7 @@
  /**
   * Equivalent to strptime() on Android where only C/POSIX locales are available.
   */
