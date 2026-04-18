@@ -1,0 +1,37 @@
+--- a/usr/include/limits.h
++++ b/usr/include/limits.h
+@@ -60,6 +60,34 @@
+ /* Many of the POSIX limits come from the kernel. */
+ #include <linux/limits.h>
+ 
++#ifndef CHAR_BIT
++#define CHAR_BIT 8
++#endif
++
++#ifndef TYPE_SIGNED
++#define TYPE_SIGNED(t)	(! ((t) 0 < (t) -1))
++#endif
++
++#ifndef TYPE_WIDTH
++#define TYPE_WIDTH(t)	(sizeof (t) * CHAR_BIT)
++#endif
++
++#ifndef TYPE_MAXIMUM
++#define TYPE_MAXIMUM(t) \
++	((t) (! TYPE_SIGNED (t) \
++		? (t) -1 \
++		: ((((t) 1 << (TYPE_WIDTH (t) - 2)) - 1) * 2 + 1)))
++#endif
++
++#ifndef TYPE_MINIMUM
++#define TYPE_MINIMUM(t)	((t) ~ TYPE_MAXIMUM (t))
++#endif
++
++#ifndef INT_MAX
++#define INT_MAX TYPE_MAXIMUM(int)
++#define INT_MIN TYPE_MINIMUM(int)
++#define UINT_MAX ((unsigned int) ~(unsigned int)0)
++#endif
+ 
+ /** Maximum number of positional arguments in a printf()/scanf() format string. */
+ #define NL_ARGMAX 9
