@@ -1,12 +1,11 @@
 diff -uNr util-linux-2.36.1/include/pathnames.h util-linux-2.36.1.mod/include/pathnames.h
 --- util-linux-2.36.1/include/pathnames.h	2020-11-16 10:41:16.338846226 +0000
 +++ util-linux-2.36.1.mod/include/pathnames.h	2020-11-22 21:23:16.999470089 +0000
-@@ -250,4 +250,107 @@
+@@ -250,4 +250,110 @@
  # define UL_VENDORDIR_PATH      NULL
  #endif
  
 -#endif /* PATHNAMES_H */
-\No newline at end of file
 +// On Android (Termux) paths are different.
 +#if defined(__ANDROID__)
 +# undef _PATH_DEFPATH
@@ -27,15 +26,16 @@ diff -uNr util-linux-2.36.1/include/pathnames.h util-linux-2.36.1.mod/include/pa
 +# undef _PATH_GROUP
 +# undef _PATH_SHADOW_PASSWD
 +# undef _PATH_SHELLS
++# undef _PATH_TMP
 +# undef _PATH_BTMP
-+# undef _PATH_ISSUE
-+# undef _PATH_ISSUEDIR
 +# undef _PATH_OS_RELEASE_ETC
 +# undef _PATH_OS_RELEASE_USR
 +# undef _PATH_LOGINDEFS
 +# undef _PATH_WORDS
 +# undef _PATH_WORDS_ALT
 +# undef _PATH_FILESYSTEMS
++# undef _PATH_SUBUID
++# undef _PATH_SUBGID
 +# undef _PATH_MOUNTED
 +# undef _PATH_MNTTAB
 +# undef _PATH_DEV_LOOP
@@ -75,11 +75,10 @@ diff -uNr util-linux-2.36.1/include/pathnames.h util-linux-2.36.1.mod/include/pa
 +// Ignored in Termux.
 +# define _PATH_SHELLS          "@TERMUX_PREFIX@/etc/shells"
 +
++# define _PATH_TMP             "@TERMUX_PREFIX@/tmp/"
++
 +// btmp, (and utmp/wtmp) files are unsupported.
 +# define _PATH_BTMP            "@TERMUX_PREFIX@/var/log/btmp"
-+
-+# define _PATH_ISSUE           "@TERMUX_PREFIX@/etc/issue"
-+# define _PATH_ISSUEDIR        _PATH_ISSUE ".d"
 +
 +// os release definition is not available in Termux.
 +# define _PATH_OS_RELEASE_ETC  "@TERMUX_PREFIX@/etc/os-release"
@@ -93,6 +92,9 @@ diff -uNr util-linux-2.36.1/include/pathnames.h util-linux-2.36.1.mod/include/pa
 +
 +// Not available.
 +# define _PATH_FILESYSTEMS     "@TERMUX_PREFIX@/etc/filesystems"
++
++# define _PATH_SUBUID          "@TERMUX_PREFIX@/etc/subuid"
++# define _PATH_SUBGID          "@TERMUX_PREFIX@/etc/subgid"
 +
 +# define _PATH_MOUNTED         "/proc/self/mounts"
 +
@@ -111,18 +113,6 @@ diff -uNr util-linux-2.36.1/include/pathnames.h util-linux-2.36.1.mod/include/pa
 +#endif
 +
 +#endif /* PATHNAMES_H */
-diff -uNr util-linux-2.36.1/lib/exec_shell.c util-linux-2.36.1.mod/lib/exec_shell.c
---- util-linux-2.36.1/lib/exec_shell.c	2020-11-13 11:33:31.084801627 +0000
-+++ util-linux-2.36.1.mod/lib/exec_shell.c	2020-11-22 21:23:17.000470088 +0000
-@@ -28,7 +28,7 @@
- 
- #include "exec_shell.h"
- 
--#define DEFAULT_SHELL "/bin/sh"
-+#define DEFAULT_SHELL "@TERMUX_PREFIX@/bin/sh"
- 
- void __attribute__((__noreturn__)) exec_shell(void)
- {
 diff -uNr util-linux-2.36.1/lib/loopdev.c util-linux-2.36.1.mod/lib/loopdev.c
 --- util-linux-2.36.1/lib/loopdev.c	2020-11-16 10:41:16.338846226 +0000
 +++ util-linux-2.36.1.mod/lib/loopdev.c	2020-11-22 21:23:17.000470088 +0000
@@ -162,8 +152,8 @@ diff -uNr util-linux-2.36.1/libblkid/src/blkidP.h util-linux-2.36.1.mod/libblkid
 -#define BLKID_CACHE_FILE_OLD	"/etc/blkid.tab"
 +#define BLKID_CACHE_FILE_OLD	"@TERMUX_PREFIX@/etc/blkid.tab"
  
- #define BLKID_PROBE_OK	 0
- #define BLKID_PROBE_NONE 1
+ #define BLKID_ERR_IO	 5
+ #define BLKID_ERR_SYSFS	 9
 diff -uNr util-linux-2.36.1/libblkid/src/topology/dm.c util-linux-2.36.1.mod/libblkid/src/topology/dm.c
 --- util-linux-2.36.1/libblkid/src/topology/dm.c	2020-02-27 09:26:34.573141186 +0000
 +++ util-linux-2.36.1.mod/libblkid/src/topology/dm.c	2020-11-22 21:23:17.001470087 +0000
@@ -255,43 +245,6 @@ diff -uNr util-linux-2.36.1/libuuid/src/uuidd.h util-linux-2.36.1.mod/libuuid/sr
  
  #define UUIDD_OP_GETPID			0
  #define UUIDD_OP_GET_MAXOP		1
-diff -uNr util-linux-2.36.1/login-utils/su-common.c util-linux-2.36.1.mod/login-utils/su-common.c
---- util-linux-2.36.1/login-utils/su-common.c	2020-11-16 10:41:16.342846207 +0000
-+++ util-linux-2.36.1.mod/login-utils/su-common.c	2020-11-22 21:23:17.004470084 +0000
-@@ -101,7 +101,7 @@
- #define is_pam_failure(_rc)	((_rc) != PAM_SUCCESS)
- 
- /* The shell to run if none is given in the user's passwd entry.  */
--#define DEFAULT_SHELL "/bin/sh"
-+#define DEFAULT_SHELL "@TERMUX_PREFIX@/bin/sh"
- 
- /* The user to become if none is specified.  */
- #define DEFAULT_USER "root"
-diff -uNr util-linux-2.36.1/login-utils/sulogin.c util-linux-2.36.1.mod/login-utils/sulogin.c
---- util-linux-2.36.1/login-utils/sulogin.c	2020-11-13 11:33:31.084801627 +0000
-+++ util-linux-2.36.1.mod/login-utils/sulogin.c	2020-11-22 21:24:51.388374725 +0000
-@@ -743,7 +743,7 @@
- 		if (pwd->pw_shell[0])
- 			su_shell = pwd->pw_shell;
- 		else
--			su_shell = "/bin/sh";
-+			su_shell = "@TERMUX_PREFIX@/bin/sh";
- 	}
- 	if ((p = strrchr(su_shell, '/')) == NULL)
- 		p = su_shell;
-@@ -792,9 +792,9 @@
- 	execl(su_shell, shell, (char *)NULL);
- 	warn(_("failed to execute %s"), su_shell);
- 
--	xsetenv("SHELL", "/bin/sh", 1);
--	execl("/bin/sh", profile ? "-sh" : "sh", (char *)NULL);
--	warn(_("failed to execute %s"), "/bin/sh");
-+	xsetenv("SHELL", "@TERMUX_PREFIX@/bin/sh", 1);
-+	execl("@TERMUX_PREFIX@/bin/sh", profile ? "-sh" : "sh", (char *)NULL);
-+	warn(_("failed to execute %s"), "@TERMUX_PREFIX@/bin/sh");
- }
- 
- static void usage(void)
 diff -uNr util-linux-2.36.1/misc-utils/whereis.c util-linux-2.36.1.mod/misc-utils/whereis.c
 --- util-linux-2.36.1/misc-utils/whereis.c	2020-11-16 10:41:16.343846201 +0000
 +++ util-linux-2.36.1.mod/misc-utils/whereis.c	2020-11-22 21:23:17.005470083 +0000
@@ -407,18 +360,6 @@ diff -uNr util-linux-2.36.1/sys-utils/setarch.c util-linux-2.36.1.mod/sys-utils/
  		shell_arg = "-sh";
  	}
  	if (verbose) {
-diff -uNr util-linux-2.36.1/sys-utils/setpriv.c util-linux-2.36.1.mod/sys-utils/setpriv.c
---- util-linux-2.36.1/sys-utils/setpriv.c	2020-07-01 10:36:00.074753746 +0000
-+++ util-linux-2.36.1.mod/sys-utils/setpriv.c	2020-11-22 21:23:17.006470082 +0000
-@@ -52,7 +52,7 @@
- #define SETPRIV_EXIT_PRIVERR 127	/* how we exit when we fail to set privs */
- 
- /* The shell to set SHELL env.variable if none is given in the user's passwd entry.  */
--#define DEFAULT_SHELL "/bin/sh"
-+#define DEFAULT_SHELL "@TERMUX_PREFIX@/bin/sh"
- 
- static gid_t get_group(const char *s, const char *err);
- 
 diff -uNr util-linux-2.36.1/text-utils/more.c util-linux-2.36.1.mod/text-utils/more.c
 --- util-linux-2.36.1/text-utils/more.c	2020-11-10 09:25:56.658809468 +0000
 +++ util-linux-2.36.1.mod/text-utils/more.c	2020-11-22 21:23:17.007470081 +0000

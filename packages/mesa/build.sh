@@ -11,8 +11,8 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="libandroid-shmem, libc++, libdrm, libglvnd, libwayland, libx11, libxext, libxfixes, libxshmfence, libxxf86vm, ncurses, vulkan-loader, zlib, zstd"
 #TERMUX_PKG_DEPENDS+=", libllvm (<< $TERMUX_LLVM_NEXT_MAJOR_VERSION)"
 TERMUX_PKG_SUGGESTS="mesa-dev"
-TERMUX_PKG_BUILD_DEPENDS="libclc, libwayland-protocols, libxrandr, spirv-tools, xorgproto"
-#TERMUX_PKG_BUILD_DEPENDS+=", llvm, llvm-tools, mlir"
+TERMUX_PKG_BUILD_DEPENDS="libwayland-protocols, libxrandr, spirv-tools, xorgproto"
+#TERMUX_PKG_BUILD_DEPENDS+=", libclc, llvm, llvm-tools, mlir"
 TERMUX_PKG_BREAKS="osmesa, osmesa-demos"
 TERMUX_PKG_CONFLICTS="libmesa, ndk-sysroot (<= 25b), osmesa"
 TERMUX_PKG_REPLACES="libmesa, osmesa"
@@ -29,18 +29,20 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -Dglx=dri
 -Dlegacy-x11=dri2
 -Dllvm=disabled
--Dshared-llvm=disabled
 -Dplatforms=x11,wayland
 -Dgallium-drivers=softpipe,virgl,zink
--Dgallium-rusticl=true
+-Dgallium-rusticl=false
 -Dglvnd=enabled
 -Dxmlconfig=disabled
 "
+#-Dshared-llvm=disabled
+#
 # original options
 #TERMUX_PKG_EXTRA_CONFIGURE_ARGS+="
 #-Dllvm=enabled
 #-Dshared-llvm=enabled
 #-Dgallium-drivers=llvmpipe
+#-Dgallium-rusticl=true
 #"
 
 termux_step_post_get_source() {
@@ -60,7 +62,7 @@ termux_step_pre_configure() {
 	: "${CARGO_HOME:=${HOME}/.cargo}"
 	export CARGO_HOME
 
-	cargo install --force --locked bindgen-cli
+	cargo install --locked bindgen-cli
 	if [[ "${TERMUX_ON_DEVICE_BUILD}" == "false" ]]; then
 		export BINDGEN_EXTRA_CLANG_ARGS="--sysroot ${TERMUX_STANDALONE_TOOLCHAIN}/sysroot"
 		case "${TERMUX_ARCH}" in
@@ -81,7 +83,7 @@ termux_step_pre_configure() {
 		chmod 0700 $_WRAPPER_BIN/cmake
 		termux_setup_wayland_cross_pkg_config_wrapper
 	fi
-	export LLVM_CONFIG="${TERMUX_PREFIX}/bin/llvm-config"
+	#export LLVM_CONFIG="${TERMUX_PREFIX}/bin/llvm-config"
 	export PATH="${_WRAPPER_BIN}:${CARGO_HOME}/bin:${PATH}"
 
 	#local _vk_drivers="swrast"
@@ -119,7 +121,8 @@ termux_step_post_make_install() {
 	# Create symlinks
 	ln -sf libEGL_mesa.so ${TERMUX_PREFIX}/lib/libEGL_mesa.so.0
 	ln -sf libGLX_mesa.so ${TERMUX_PREFIX}/lib/libGLX_mesa.so.0
-	ln -sf libRusticlOpenCL.so ${TERMUX_PREFIX}/lib/libRusticlOpenCL.so.1
+	#ln -sf libRusticlOpenCL.so ${TERMUX_PREFIX}/lib/libRusticlOpenCL.so.1
 
-	unset BINDGEN_EXTRA_CLANG_ARGS LLVM_CONFIG
+	unset BINDGEN_EXTRA_CLANG_ARGS
+	#unset LLVM_CONFIG
 }

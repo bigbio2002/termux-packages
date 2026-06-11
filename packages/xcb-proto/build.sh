@@ -17,6 +17,7 @@ am_cv_python_pythondir=$TERMUX_PYTHON_HOME/site-packages
 "
 termux_step_pre_configure() {
 	NOCONFIGURE=1 ./autogen.sh
+}
 
 termux_step_post_make_install() {
 	# We are using Ubuntu's host python for installing the package which may be of
