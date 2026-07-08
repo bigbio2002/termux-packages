@@ -8,6 +8,7 @@ TERMUX_PKG_SHA256=2cbd0186b76b7bb5b4a21c76b2f4b344c03194731729aac645465f33d665ef
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="gpgme"
 TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_DEPENDS="gpgme"
 
 termux_step_pre_configure() {
 	termux_setup_rust

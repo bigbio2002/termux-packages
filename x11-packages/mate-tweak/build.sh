@@ -17,14 +17,19 @@ local
 share/polkit-1
 "
 
+termux_step_make_install() {
+	#export PYTHONHOME=$TERMUX_PREFIX
+	python -m pip install --no-deps .
+}
+
 termux_step_post_make_install() {
 	# this software installs itself in a really messed-up directory structure.
 	# The easiest way to explain what is wrong is to just show commands fixing it after installation:
-	install -Dm755 -t "$TERMUX_PREFIX/bin" "$TERMUX_PREFIX/local/bin/marco-compton"
-	install -Dm755 -t "$TERMUX_PREFIX/bin" "$TERMUX_PREFIX/local/bin/marco-picom"
+#	install -Dm755 -t "$TERMUX_PREFIX/bin" "$TERMUX_PREFIX/local/bin/marco-compton"
+#	install -Dm755 -t "$TERMUX_PREFIX/bin" "$TERMUX_PREFIX/local/bin/marco-picom"
 	local prog
 	for prog in marco-glx marco-no-composite marco-xr_glx_hybrid marco-xrender mate-tweak; do
-		install -Dm755 -t "$TERMUX_PREFIX/bin" "$TERMUX_PREFIX/local/bin/$prog"
+		#install -Dm755 -t "$TERMUX_PREFIX/bin" "$TERMUX_PREFIX/bin/$prog"
 		install -Dm644 -t "$TERMUX_PREFIX/share/applications" "data/$prog.desktop"
 		install -Dm644 -t "$TERMUX_PREFIX/share/man/man1" "data/$prog.1"
 	done

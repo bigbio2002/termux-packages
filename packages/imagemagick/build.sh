@@ -6,7 +6,8 @@ TERMUX_PKG_VERSION="7.1.2.26"
 TERMUX_PKG_SRCURL="https://github.com/ImageMagick/ImageMagick/archive/refs/tags/${TERMUX_PKG_VERSION%.*}-${TERMUX_PKG_VERSION##*.}.tar.gz"
 TERMUX_PKG_SHA256=d63594e334e1c410f600fb9370d78d49e4dc6f315722ca4ba083e864e5c354cb
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="djvulibre, fftw, fontconfig, freetype, gdk-pixbuf, ghostscript, glib, graphviz, harfbuzz, imath, jbig2dec, libandroid-support, libbz2, libc++, libcairo, libheif, libjpeg-turbo, libjxl, liblqr, libltdl, liblzma, libpng, libraqm, libraw, librsvg, libtiff, libwebp, libx11, libxext, libxml2, libzip, littlecms, openexr, openjpeg, pango, zlib"
+TERMUX_PKG_DEPENDS="djvulibre, fftw, fontconfig, freetype, gdk-pixbuf, ghostscript, glib, harfbuzz, imath, jbig2dec, libandroid-support, libbz2, libc++, libcairo, libheif, libjpeg-turbo, libjxl, liblqr, libltdl, liblzma, libpng, libraqm, libraw, librsvg, libtiff, libwebp, libx11, libxext, libxml2, libzip, littlecms, openexr, openjpeg, pango, zlib"
+#TERMUX_PKG_DEPENDS+=", graphviz"
 TERMUX_PKG_BREAKS="imagemagick-dev, imagemagick-x"
 TERMUX_PKG_REPLACES="imagemagick-dev, imagemagick-x"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
@@ -20,7 +21,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --with-fpx=no
 --with-freetype=yes
 --with-gslib=yes
---with-gvc=yes
+--with-gvc=no
 --with-heic=yes
 --with-jbig=yes
 --with-jpeg=yes
@@ -50,6 +51,8 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --disable-openmp
 ac_cv_func_ftime=no
 "
+#TERMUX_PKG_EXTRA_CONFIGURE_ARGS+="--with-gvc=yes"
+
 # We do not currently have packages for:
 # `autotrace` AutoTrace
 # `dmr`       digital media repository

@@ -4,8 +4,12 @@ TERMUX_PKG_LICENSE="LGPL-2.1"
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION=0.30
 TERMUX_PKG_REVISION=9
-TERMUX_PKG_SRCURL=http://0pointer.de/lennart/projects/libcanberra/libcanberra-$TERMUX_PKG_VERSION.tar.xz
-TERMUX_PKG_SHA256=c2b671e67e0c288a69fc33dc1b6f1b534d07882c2aceed37004bf48c601afa72
+#TERMUX_PKG_SRCURL=https://github.com/Distrotech/libcanberra/archive/refs/tags/distrotech-libcanberra-$TERMUX_PKG_VERSION.tar.gz
+#TERMUX_PKG_SHA256=256fdfc3c1128b6fc47027f0a1e0e8aa1c5dac2a3118203199a8ec44a10e2d14
+TERMUX_PKG_SRCURL=https://github.com/Distrotech/libcanberra/archive/refs/tags/v$TERMUX_PKG_VERSION.tar.gz
+TERMUX_PKG_SHA256=6fd502e95abc0d5e1d3fd36a4a50ad5beb2449bd3f7db3ab4447711f472781bc
+#TERMUX_PKG_SRCURL=https://0pointer.de/lennart/projects/libcanberra/libcanberra-$TERMUX_PKG_VERSION.tar.xz
+#TERMUX_PKG_SHA256=c2b671e67e0c288a69fc33dc1b6f1b534d07882c2aceed37004bf48c601afa72
 TERMUX_PKG_DEPENDS="atk, gdk-pixbuf, glib, gstreamer, gtk3, harfbuzz, libcairo, libltdl, libvorbis, libx11, pango, pulseaudio, sound-theme-freedesktop"
 TERMUX_PKG_RECOMMENDS="zenity"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
@@ -21,4 +25,8 @@ termux_step_post_get_source() {
 	mv src/malloc.h src/malloc-private.h
 	find src -name 'Makefile.*' -o -name '*.c' | xargs -n 1 \
 		sed -i 's/malloc\.h/malloc-private.h/g'
+}
+
+termux_step_pre_configure() {
+	./autogen.sh
 }

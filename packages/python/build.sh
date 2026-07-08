@@ -34,7 +34,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_func_ftime=no"
 # Avoid trying to use AT_EACCESS which is not defined:
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_func_faccessat=no"
-TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --build=$TERMUX_BUILD_TUPLE --with-system-ffi --with-system-expat --without-ensurepip"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --build=$TERMUX_BUILD_TUPLE --with-system-expat --without-ensurepip"
 # Hard links do not work on Android 6:
 # https://github.com/termux/termux-packages/issues/29
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_func_link=no"
@@ -61,6 +61,8 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-build-python=python$_MAJOR_VERSION"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_header_sys_xattr_h=no"
 # https://github.com/termux/termux-packages/issues/28684 (termux has inline getgrent stub in grp.h header patch)
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_func_getgrent=yes"
+
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --with-lto=thin --disable-test-modules"
 
 TERMUX_PKG_RM_AFTER_INSTALL="
 lib/python${_MAJOR_VERSION}/test
