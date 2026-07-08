@@ -2,9 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://mise.jdx.dev/
 TERMUX_PKG_DESCRIPTION="dev tools, env vars, task runner"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="2026.6.14"
+TERMUX_PKG_VERSION="2026.7.3"
 TERMUX_PKG_SRCURL="https://github.com/jdx/mise/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz"
-TERMUX_PKG_SHA256=2480b1bd8ed693300551113b4dd7771828dcc65651e46edef8ec38e0e37a0fba
+TERMUX_PKG_SHA256=05a81b2e03465417cac0b588c3d9b9ed2933c823519f71e1e6238fd9c00b929d
 TERMUX_PKG_DEPENDS="bzip2, openssl"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
@@ -21,14 +21,8 @@ termux_step_pre_configure() {
 	cargo vendor vendor-termux
 	find ./vendor-termux \
 		-mindepth 1 -maxdepth 1 -type d \
-		! -wholename ./vendor-termux/rattler_pty \
 		! -wholename ./vendor-termux/cc \
 		-exec rm -rf '{}' \;
-
-	patch="$TERMUX_PKG_BUILDER_DIR/rattler_pty-android-target.diff"
-	dir="vendor-termux/rattler_pty"
-	echo "Applying patch: $patch"
-	patch -p1 -d "$dir" < "$patch"
 
 	patch="$TERMUX_PKG_BUILDER_DIR/rust-cc-do-not-concatenate-all-the-CFLAGS.diff"
 	dir="vendor-termux/cc"
@@ -38,7 +32,6 @@ termux_step_pre_configure() {
 	cat <<-EOL >> Cargo.toml
 
 		[patch.crates-io]
-		rattler_pty = { path = "./vendor-termux/rattler_pty" }
 		cc = { path = "./vendor-termux/cc" }
 	EOL
 
