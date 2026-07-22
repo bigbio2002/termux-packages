@@ -12,8 +12,9 @@ TERMUX_PKG_SETUP_PYTHON=true
 # disabled due to compiler warnings
 #	-Dthread-alloc=enabled
 #	-Dtls=enabled
+#	-Ddocs=enabled
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
-	-Ddocs=enabled
+	-Ddocs=disabled
 	-Dhttp=enabled
 	-Dicu=enabled
 	-Dlegacy=enabled
@@ -38,14 +39,14 @@ TERMUX_PKG_BREAKS="libxml2-dev"
 TERMUX_PKG_REPLACES="libxml2-dev"
 
 termux_step_host_build() {
-	if [[ "$TERMUX_ON_DEVICE_BUILD" == "false" ]]; then
+	if [[ "$TERMUX_ON_DEVICE_BUILD" == "false" && "true" == "false" ]]; then
 		# We need doxygen, other packages are it's dependencies
 		termux_download_ubuntu_packages doxygen libfmt10 libspdlog1.15 libxapian30
 	fi
 }
 
 termux_step_configure() {
-	if [[ "$TERMUX_ON_DEVICE_BUILD" == "false" ]]; then
+	if [[ "$TERMUX_ON_DEVICE_BUILD" == "false" && "true" == "false" ]]; then
 		export LD_LIBRARY_PATH="$TERMUX_PKG_HOSTBUILD_DIR/ubuntu_packages/usr/lib/x86_64-linux-gnu"
 		export PATH="$TERMUX_PKG_HOSTBUILD_DIR/ubuntu_packages/usr/bin:$PATH"
 	fi
