@@ -2,10 +2,12 @@ TERMUX_PKG_HOMEPAGE=https://www.sqlite.org
 TERMUX_PKG_DESCRIPTION="Library implementing a self-contained and transactional SQL database engine"
 TERMUX_PKG_LICENSE="Public Domain"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="3.51.2"
+TERMUX_PKG_VERSION="3.53.4"
+#TERMUX_PKG_VERSION="3.51.2"
 _SQLITE_YEAR=2026
 TERMUX_PKG_SRCURL=https://www.sqlite.org/${_SQLITE_YEAR}/sqlite-src-$(sed 's/\./''/; s/\./0/' <<< "$TERMUX_PKG_VERSION")00.zip
-TERMUX_PKG_SHA256=85110f762d5079414d99dd5d7917bc3ff7e05876e6ccbd13d8496a3817f20829
+TERMUX_PKG_SHA256=d18fa15aec74d8c17e1463f861095adc01b5ad190256acb4f91d22f0368d232b
+#TERMUX_PKG_SHA256=85110f762d5079414d99dd5d7917bc3ff7e05876e6ccbd13d8496a3817f20829
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="zlib"
 #TERMUX_PKG_BUILD_DEPENDS="tcl"
@@ -18,8 +20,8 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --update-limit
 --geopoly
 --rtree
---session
---dbstat
+- -session
+j--dbstat
 --column-metadata
 --disable-tcl
 "
