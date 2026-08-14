@@ -24,7 +24,7 @@
  ## Syntax highlighting for Makefiles.
  
 -syntax makefile "(^|/)((GNU)?m|M)akefile[^/]*$|\.(make|mk)$"
-+syntax makefile "(^|/)(((GNU)?m|M)akefile[^/]*$|\.(make|mak|mk)|rules)$"
++syntax makefile "(^|/)((GNU)?m|M)akefile[^/]*$|\.(make|mak|mk)|rules$"
  magic "makefile script"
  
  tabgives "	"
