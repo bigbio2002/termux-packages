@@ -15,3 +15,8 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --disable-locking
 --without-console-kit
 "
+
+termux_step_post_make_install() {
+	mv /data/data/com.termux/files/data/data/com.termux/files/usr/share/dbus-1/services/org.mate.ScreenSaver.service $TERMUX_PREFIX/share/dbus-1/services
+	rm -rf /data/data/com.termux/files/data/
+}

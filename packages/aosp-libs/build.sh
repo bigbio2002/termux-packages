@@ -14,7 +14,7 @@ external/iputils/NOTICE
 "
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="9.0.0-r76"
-TERMUX_PKG_REVISION=4
+TERMUX_PKG_REVISION=3
 TERMUX_PKG_SRCURL=https://android.googlesource.com/platform/manifest
 TERMUX_PKG_SHA256=SKIP_CHECKSUM
 TERMUX_PKG_AUTO_UPDATE=false
@@ -97,7 +97,7 @@ termux_step_host_build() {
 	export CC="clang-${TERMUX_HOST_LLVM_MAJOR_VERSION}"
 	export CXX="clang-${TERMUX_HOST_LLVM_MAJOR_VERSION}"
 	./configure --prefix="${PYTHON2_INSTALLDIR}"
-	make install -j"$TERMUX_PKG_MAKE_PROCESSES"
+	make install
 	popd
 	export PATH="${PYTHON2_INSTALLDIR}/bin:${PATH}"
 	python2 -m ensurepip

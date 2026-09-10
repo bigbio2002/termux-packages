@@ -20,8 +20,8 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --update-limit
 --geopoly
 --rtree
-- -session
-j--dbstat
+--session
+--dbstat
 --column-metadata
 --disable-tcl
 "

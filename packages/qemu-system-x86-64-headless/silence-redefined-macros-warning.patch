@@ -1,0 +1,20 @@
+--- a/include/qemu/osdep.h
++++ b/include/qemu/osdep.h
+@@ -366,7 +366,7 @@
+  * Gnulib, and are under the LGPL v2.1 or (at your option) any
+  * later version.
+  */
+-
++#if 0
+ /* True if the real type T is signed.  */
+ #define TYPE_SIGNED(t) (!((t)0 < (t)-1))
+ 
+@@ -380,7 +381,7 @@
+   ((t) (!TYPE_SIGNED(t)                                                \
+         ? (t)-1                                                        \
+         : ((((t)1 << (TYPE_WIDTH(t) - 2)) - 1) * 2 + 1)))
+-
++#endif
+ #ifndef TIME_MAX
+ #define TIME_MAX TYPE_MAXIMUM(time_t)
+ #endif
