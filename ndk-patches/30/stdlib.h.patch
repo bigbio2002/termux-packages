@@ -10,7 +10,7 @@ diff -u -r /home/builder/lib/android-ndk-r28b/toolchains/llvm/prebuilt/linux-x86
 +#endif
  #include <xlocale.h>
  
- __BEGIN_DECLS
+ #if !defined(__cplusplus) && __STDC_VERSION__ >= 202311L
 @@ -217,9 +220,7 @@
  const char* _Nullable getprogname(void);
  void setprogname(const char* _Nonnull __name);

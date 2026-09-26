@@ -2,9 +2,8 @@
 +++ b/usr/include/limits.h
 @@ -59,6 +59,39 @@
  
- /* Many of the POSIX limits come from the kernel. */
- #include <linux/limits.h>
-+
+ __BEGIN_DECLS
+ 
 +#ifndef CHAR_BIT
 +#define CHAR_BIT 8
 +#endif
@@ -37,6 +36,7 @@
 +#define INT_MIN TYPE_MINIMUM(int)
 +#define UINT_MAX UTYPE_MAXIMUM(unsigned int)
 +#endif
++
+ /** Maximum buffer size for getentropy(). */
+ #define GETENTROPY_MAX 256
  
- /** Maximum number of positional arguments in a printf()/scanf() format string. */
- #define NL_ARGMAX 9

@@ -15,21 +15,21 @@
 @@ -149,7 +154,7 @@
      __printflike(2, 0) __warnattr_strict("vsprintf is often misused; please use vsnprintf");
  char* _Nullable tmpnam(char* _Nullable __s)
-     __warnattr("tmpnam is unsafe, use mkstemp or tmpfile instead");
+     __attribute__((__deprecated__("tmpnam is unsafe, use mkstemp or tmpfile instead")));
 -#define P_tmpdir "/tmp/" /* deprecated */
 +#define P_tmpdir "/data/data/com.termux/files/usr/tmp/" /* deprecated */
  char* _Nullable tempnam(const char* _Nullable __dir, const char* _Nullable __prefix)
-     __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");
+     __attribute__((__deprecated__("tempnam is unsafe, use mkstemp or tmpfile instead")));
  
 @@ -276,8 +281,6 @@
- FILE* _Nullable freopen64(const char* _Nullable __path, const char* _Nonnull __mode, FILE* _Nonnull __fp) __INTRODUCED_IN(24);
- #endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+ int fseeko(FILE* _Nonnull __fp, off_t __offset, int __whence) __RENAME(fseeko64) __INTRODUCED_IN(24);
+ #endif
  
 -__nodiscard FILE* _Nullable tmpfile(void);
 -
  #if __BIONIC_AVAILABILITY_GUARD(24)
- __nodiscard FILE* _Nullable tmpfile64(void) __INTRODUCED_IN(24);
- #endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+ __nodiscard off_t ftello(FILE* _Nonnull __fp) __RENAME(ftello64) __INTRODUCED_IN(24);
+ #endif
 @@ -291,9 +294,17 @@
  
  #define L_ctermid 1024 /* size for ctermid() */
@@ -49,11 +49,11 @@
 +}
 +#endif
  
- 
  __nodiscard FILE* _Nullable fdopen(int __fd, const char* _Nonnull __mode);
+ __nodiscard int fileno(FILE* _Nonnull __fp);
 @@ -363,6 +374,30 @@
- #include <bits/fortify/stdio.h>
- #endif
+ 	return NULL;
+ }
  
 +int open(const char* _Nonnull, int, ...);
 +extern pid_t getpid(void);

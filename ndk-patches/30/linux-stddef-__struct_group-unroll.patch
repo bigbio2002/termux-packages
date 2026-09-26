@@ -1,11 +1,11 @@
 --- ./usr/include/linux/stddef.h.orig	2026-02-27 00:09:41.867530975 -0500
 +++ ./usr/include/linux/stddef.h	2026-02-23 15:28:35.901157941 -0500
-@@ -10,7 +10,7 @@
- #ifndef __always_inline
- #define __always_inline inline
+@@ -14,7 +14,7 @@
+ #else
+ #define __struct_group_tag(TAG)
  #endif
--#define __struct_group(TAG,NAME,ATTRS,MEMBERS...) union { struct { MEMBERS } ATTRS; struct TAG { MEMBERS } ATTRS NAME; } ATTRS
-+/*#define __struct_group(TAG,NAME,ATTRS,MEMBERS...) union { struct { MEMBERS } ATTRS; struct TAG { MEMBERS } ATTRS NAME; } ATTRS*/
+-#define __struct_group(TAG,NAME,ATTRS,MEMBERS...) union { struct { MEMBERS } ATTRS; struct __struct_group_tag(TAG) { MEMBERS } ATTRS NAME; } ATTRS
++/*#define __struct_group(TAG,NAME,ATTRS,MEMBERS...) union { struct { MEMBERS } ATTRS; struct __struct_group_tag(TAG) { MEMBERS } ATTRS NAME; } ATTRS*/
  #ifdef __cplusplus
  #define __DECLARE_FLEX_ARRAY(T,member) T member[0]
  #else
@@ -55,11 +55,11 @@
    DEVCONF_FORWARDING = 0,
 --- ./usr/include/linux/pkt_cls.h.orig	2026-02-27 13:17:02.128795766 -0500
 +++ ./usr/include/linux/pkt_cls.h	2026-02-27 03:15:56.720809523 -0500
-@@ -184,15 +184,28 @@
-    ** a type declared in an anonymous union. This is being fixed upstream
-    ** and should be corrected by the next kernel import.
-    */
--  __struct_group(/*tc_u32_sel_hdr*/, hdr,, unsigned char flags;
+@@ -179,15 +179,28 @@
+   int offmask;
+ };
+ struct tc_u32_sel {
+-  __struct_group(tc_u32_sel_hdr, hdr,, unsigned char flags;
 -  unsigned char offshift;
 -  unsigned char nkeys;
 -  __be16 offmask;
@@ -79,7 +79,7 @@
 +      short hoff;
 +      __be32 hmask;
 +    };
-+    struct /*tc_u32_sel_hdr*/ {
++    struct __struct_group_tag(tc_u32_sel_hdr) {
 +      unsigned char flags;
 +      unsigned char offshift;
 +      unsigned char nkeys;

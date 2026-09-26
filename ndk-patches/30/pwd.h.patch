@@ -1,10 +1,9 @@
 --- ./usr/include/pwd.h	2025-08-07 08:21:34.382754322 -0400
 +++ ./usr/include/pwd.h	2025-07-09 18:03:54.000000000 -0400
-@@ -91,6 +91,56 @@
+@@ -91,6 +91,55 @@
  void setpwent(void) __INTRODUCED_IN(26);
- #endif /* __BIONIC_AVAILABILITY_GUARD(26) */
+ #endif
  
-+
 +int getpwnam_r(const char* _Nonnull __name, struct passwd* _Nonnull __pwd, char* _Nonnull __buf, size_t __n, struct passwd* _Nullable * _Nonnull __result);
 +int getpwuid_r(uid_t __uid, struct passwd* _Nonnull __pwd, char* _Nonnull __buf, size_t __n, struct passwd* _Nullable * _Nonnull __result);
 +
