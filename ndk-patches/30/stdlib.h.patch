@@ -11,7 +11,7 @@ diff -u -r /home/builder/lib/android-ndk-r28b/toolchains/llvm/prebuilt/linux-x86
  #include <xlocale.h>
  
  #if !defined(__cplusplus) && __STDC_VERSION__ >= 202311L
-@@ -217,9 +220,7 @@
+@@ -363,9 +366,7 @@
  const char* _Nullable getprogname(void);
  void setprogname(const char* _Nonnull __name);
  
@@ -22,7 +22,7 @@ diff -u -r /home/builder/lib/android-ndk-r28b/toolchains/llvm/prebuilt/linux-x86
  
  size_t mbstowcs(wchar_t* _Nullable __dst, const char* _Nullable __src, size_t __n);
  int mbtowc(wchar_t* _Nullable __wc_ptr, const char*  _Nullable __s, size_t __n);
-@@ -227,8 +228,7 @@
+@@ -373,8 +374,7 @@
  
  size_t wcstombs(char* _Nullable __dst, const wchar_t* _Nullable __src, size_t __n);
  

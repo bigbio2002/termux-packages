@@ -1,6 +1,6 @@
 --- ./usr/include/pwd.h	2025-08-07 08:21:34.382754322 -0400
 +++ ./usr/include/pwd.h	2025-07-09 18:03:54.000000000 -0400
-@@ -91,6 +91,55 @@
+@@ -93,6 +93,55 @@
  void setpwent(void) __INTRODUCED_IN(26);
  #endif
  

@@ -12,7 +12,7 @@
  #include <bits/seek_constants.h>
  
  #if __ANDROID_API__ < 24
-@@ -149,7 +154,7 @@
+@@ -203,7 +208,7 @@
      __printflike(2, 0) __warnattr_strict("vsprintf is often misused; please use vsnprintf");
  char* _Nullable tmpnam(char* _Nullable __s)
      __attribute__((__deprecated__("tmpnam is unsafe, use mkstemp or tmpfile instead")));
@@ -21,16 +21,16 @@
  char* _Nullable tempnam(const char* _Nullable __dir, const char* _Nullable __prefix)
      __attribute__((__deprecated__("tempnam is unsafe, use mkstemp or tmpfile instead")));
  
-@@ -276,8 +281,6 @@
- int fseeko(FILE* _Nonnull __fp, off_t __offset, int __whence) __RENAME(fseeko64) __INTRODUCED_IN(24);
- #endif
+@@ -333,8 +338,6 @@
+ 
+ __nodiscard FILE* _Nullable fopen(const char* _Nonnull __path, const char* _Nonnull __mode);
  
 -__nodiscard FILE* _Nullable tmpfile(void);
 -
  #if __BIONIC_AVAILABILITY_GUARD(24)
- __nodiscard off_t ftello(FILE* _Nonnull __fp) __RENAME(ftello64) __INTRODUCED_IN(24);
+ __nodiscard FILE* _Nullable fopen64(const char* _Nonnull __path, const char* _Nonnull __mode) __INTRODUCED_IN(24);
  #endif
-@@ -291,9 +294,17 @@
+@@ -357,9 +360,17 @@
  
  #define L_ctermid 1024 /* size for ctermid() */
  
@@ -51,9 +51,9 @@
  
  __nodiscard FILE* _Nullable fdopen(int __fd, const char* _Nonnull __mode);
  __nodiscard int fileno(FILE* _Nonnull __fp);
-@@ -363,6 +374,30 @@
- 	return NULL;
- }
+@@ -444,6 +455,30 @@
+ #include <bits/fortify/stdio.h>
+ #endif
  
 +int open(const char* _Nonnull, int, ...);
 +extern pid_t getpid(void);

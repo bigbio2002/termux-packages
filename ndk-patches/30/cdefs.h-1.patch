@@ -24,7 +24,7 @@
  #if defined(__cplusplus)
  #define __BEGIN_DECLS extern "C" {
  #define __END_DECLS }
-@@ -94,20 +111,63 @@
+@@ -93,20 +110,63 @@
  // downstream in vendor or app code).
  #define	__inline __inline__
  
@@ -96,7 +96,7 @@
  
  /*
   * GNU C version 2.96 added explicit branch prediction so that
-@@ -140,12 +200,25 @@
+@@ -139,12 +199,25 @@
  #define	__predict_true(exp)	__builtin_expect((exp) != 0, 1)
  #define	__predict_false(exp)	__builtin_expect((exp) != 0, 0)
  
@@ -126,7 +126,7 @@
  
  #if defined(ANDROID_STRICT)
  /*
-@@ -237,12 +319,8 @@
+@@ -232,12 +305,8 @@
  
  // As we move some FORTIFY checks to be always on, __bos needs to be
  // always available.
@@ -141,7 +141,7 @@
  #else
  #  define __bos_level 0
  #endif
-@@ -252,9 +330,17 @@
+@@ -252,9 +321,17 @@
  #if defined(__BIONIC_FORTIFY)
  #  define __bos0(s) __bosn((s), 0)
  #  if _FORTIFY_SOURCE >= 3
@@ -161,7 +161,7 @@
  #  endif
 
  /*
-@@ -264,8 +346,12 @@
+@@ -268,8 +345,12 @@
   * them available externally. FORTIFY'ed functions try to be as close to possible as 'invisible';
   * having stack protectors detracts from that (b/182948263).
   */
@@ -175,7 +175,7 @@
  /*
   * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
   * for variadic functions because compilers cannot inline them.
-@@ -278,7 +364,8 @@
+@@ -282,7 +363,8 @@
  #else
  /* Further increase sharing for some inline functions */
  #  define __pass_object_size_n(n)
@@ -185,7 +185,7 @@
  #define __pass_object_size __pass_object_size_n(__bos_level)
  #define __pass_object_size0 __pass_object_size_n(0)
  
-@@ -304,10 +391,19 @@
+@@ -308,10 +390,19 @@
  #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
  #endif
  
@@ -207,7 +207,7 @@
  /* Used to tag non-static symbols that are private and never exposed by the shared library. */
  #define __LIBC_HIDDEN__ __attribute__((__visibility__("hidden")))
  
-@@ -321,6 +417,11 @@
+@@ -324,6 +415,11 @@
  #else
  #define __LIBC32_LEGACY_PUBLIC__ __attribute__((__visibility__("default")))
  #endif

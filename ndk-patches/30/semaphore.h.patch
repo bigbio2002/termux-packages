@@ -1,6 +1,6 @@
 --- ./usr/include/semaphore.h.orig
 +++ ./usr/include/semaphore.h
-@@ -71,9 +71,14 @@
+@@ -74,9 +74,14 @@
  int sem_trywait(sem_t* _Nonnull __sem);
  int sem_wait(sem_t* _Nonnull __sem);
  

@@ -1,6 +1,6 @@
 --- a/usr/include/string.h
 +++ b/usr/include/string.h
-@@ -239,7 +239,7 @@
+@@ -279,7 +279,7 @@
  #endif
  
  /* Const-correct overloads. Placed after FORTIFY so we call those functions, if possible. */
