@@ -17,7 +17,7 @@
  
  /** Path to the directory containing device files. */
  #define _PATH_DEV "/dev/"
-@@ -65,5 +65,10 @@
+@@ -65,4 +65,10 @@
  /** Path to the calling process' tty. */
  #define _PATH_TTY "/dev/tty"
  
@@ -26,5 +26,5 @@
 +#define        _PATH_VARDB     "/data/data/com.termux/files/usr/var/db/"
 +#define        _PATH_VARRUN    "/data/data/com.termux/files/usr/var/run/"
 +#define        _PATH_VARTMP    "/data/data/com.termux/files/usr/var/tmp/"
- 
++
  __END_DECLS
