@@ -1,4 +1,5 @@
-+++ ./src/utils/os_config_init.c
+--- a/src/utils/os_config_init.c
++++ b/src/utils/os_config_init.c
 @@ -527,10 +527,9 @@
  			if (check_file_exists("gui/gui.bt", app_path, file_path)) return 1;
  
