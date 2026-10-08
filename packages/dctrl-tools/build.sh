@@ -12,18 +12,19 @@ TERMUX_PKG_SRCURL=https://deb.debian.org/debian/pool/main/d/dctrl-tools/dctrl-to
 TERMUX_PKG_SHA256=949653246a777e5e5835dd490003c72573cee45184e82369fba2fdd037af15d1
 TERMUX_PKG_DEPENDS="argp"
 TERMUX_PKG_BUILD_IN_SRC=true
+
 termux_step_configure()
 {
-# no configure required
-true
+	# no configure required
+	true
 }
 termux_step_make()
 {
-#make grep-dctrl/grep-dctrl prefix=$TERMUX_PREFIX sysconfdir=$TERMUX_PREFIX/etc
-make all-no-mo mo prefix=$TERMUX_PREFIX sysconfdir=$TERMUX_PREFIX/etc
+	#make grep-dctrl/grep-dctrl prefix=$TERMUX_PREFIX sysconfdir=$TERMUX_PREFIX/etc
+	make all-no-mo mo prefix=$TERMUX_PREFIX sysconfdir=$TERMUX_PREFIX/etc
 }
 termux_step_make_install()
 {
-make install prefix=$TERMUX_PREFIX sysconfdir=$TERMUX_PREFIX/etc
-#install -m755 grep-dctrl/grep-dctrl $TERMUX_PREFIX/bin
+	make install prefix=$TERMUX_PREFIX sysconfdir=$TERMUX_PREFIX/etc
+	#install -m755 grep-dctrl/grep-dctrl $TERMUX_PREFIX/bin
 }
