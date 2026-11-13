@@ -2,9 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://mise.jdx.dev/
 TERMUX_PKG_DESCRIPTION="dev tools, env vars, task runner"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="2026.11.0"
+TERMUX_PKG_VERSION="2026.11.7"
 TERMUX_PKG_SRCURL="https://github.com/jdx/mise/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz"
-TERMUX_PKG_SHA256=d0335b5280fbff573af12c8f1568c36fed037bb577abc8ad80139b8f6b554cc1
+TERMUX_PKG_SHA256=665e8d8a4b6ee40e82e8db9d69420fda0930911e7aa712f7b590d1f6baa0375a
 TERMUX_PKG_DEPENDS="bzip2, openssl"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_MAKE_PROCESSES=1
@@ -37,6 +37,7 @@ termux_step_pre_configure() {
 		-mindepth 1 -maxdepth 1 -type d \
 		! -wholename ./vendor-termux/cc \
 		! -wholename ./vendor-termux/decmpfs \
+		! -wholename ./vendor-termux/rustls-platform-verifier \
 		! -wholename ./vendor-termux/sonic-rs \
 		! -wholename ./vendor-termux/sonic-simd \
 		-exec rm -rf '{}' \;
@@ -61,11 +62,18 @@ termux_step_pre_configure() {
 	echo "Applying patch: $patch"
 	patch -p1 -d "$dir" < "$patch"
 
+	find vendor-termux/rustls-platform-verifier -type f -print0 | \
+		xargs -0 sed -i \
+		-e 's|"android"|"disabling_this_because_it_is_for_building_an_apk"|g' \
+		-e "s|ANDROID|DISABLING_THIS_BECAUSE_IT_IS_FOR_BUILDING_AN_APK|g" \
+		-e 's|"linux"|"android"|g'
+
 	cat <<-EOL >> Cargo.toml
 
 		[patch.crates-io]
 		cc = { path = "./vendor-termux/cc" }
 		decmpfs = { path = "./vendor-termux/decmpfs" }
+		rustls-platform-verifier = { path = "./vendor-termux/rustls-platform-verifier" }
 		sonic-rs = { path = "./vendor-termux/sonic-rs" }
 		sonic-simd = { path = "./vendor-termux/sonic-simd" }
 	EOL
